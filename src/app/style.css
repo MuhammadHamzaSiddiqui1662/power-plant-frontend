@@ -1,0 +1,49 @@
+.carousel-inner {
+  height: 450px;
+}
+
+.carousel-item {
+  transition: opacity 1s ease-in-out;
+  opacity: 0;
+}
+
+.carousel-item.opacity-100 {
+  opacity: 1;
+}
+
+.carousel-button {
+  border: 2px solid white;
+}
+
+.carousel-button:hover,
+.selected {
+  background-color: #6bb955;
+  border: 1px solid #6bb955;
+}
+.carousel-mar {
+  margin: 0 4rem;
+  @media only screen and (max-width: 715px) {
+    margin: 0 3rem;
+  }
+  @media only screen and (max-width: 585px) {
+    margin: 0 2rem;
+  }
+}
+.sub-heading {
+  width: 40%;
+  @media only screen and (max-width: 1050px) {
+    width: 60%;
+  }
+  @media only screen and (max-width: 735px) {
+    width: 80%;
+  }
+}
+.heading {
+  font-size: 4rem;
+  @media only screen and (max-width: 940px) {
+    font-size: 3rem;
+  }
+  @media only screen and (max-width: 735px) {
+    font-size: 2.5rem;
+  }
+}

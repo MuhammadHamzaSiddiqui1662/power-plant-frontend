@@ -65,7 +65,7 @@ export default function Feature() {
         <div className="my-10 flex justify-center">
           <Link
             href="#"
-            className="btn bg-green-600 hover:bg-green-700 text-white text-center rounded-md mt-3"
+            className="btn bg-customGreen hover:bg-green-700 text-white text-center rounded-md mt-3"
           >
             Read More{" "}
           </Link>

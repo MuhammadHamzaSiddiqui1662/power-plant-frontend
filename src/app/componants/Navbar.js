@@ -484,7 +484,7 @@ export default function Navbar(props) {
               </li> */}
 
               <li>
-                <Link href="/contact" className="sub-menu-item">
+                <Link href="/pricing" className="sub-menu-item">
                   Pricing & Fees
                 </Link>
               </li>

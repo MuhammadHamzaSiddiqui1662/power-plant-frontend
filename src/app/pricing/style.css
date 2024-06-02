@@ -44,6 +44,11 @@
     width: 100%;
   }
 }
+@media (max-width: 1020px) {
+  .description-height {
+    height: 200px;
+  }
+}
 @media (max-width: 768px) {
   .description-height {
     height: auto;

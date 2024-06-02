@@ -16,33 +16,17 @@ export default function Aboutus() {
   return (
     <>
       <Navbar navClass="navbar-white" />
-      <section
-        style={{ backgroundImage: "url('/images/bg/01.jpg')" }}
-        className="relative table w-full py-32 lg:py-36 bg-no-repeat bg-center bg-cover"
-      >
-        <div className="absolute inset-0 bg-black opacity-80"></div>
+      <section className="relative table w-full py-30 lg:py-18 md:py-16 sm:py-16 bg-no-repeat bg-center bg-cover">
+        <div className="absolute inset-0 bg-customGreen"></div>
         <div className="container">
-          <div className="grid grid-cols-1 text-center mt-10">
-            <h3 className="md:text-4xl text-3xl md:leading-normal leading-normal font-medium text-white">
+          <div className="grid grid-cols-1 text-center mt-24">
+            <h3 className="md:text-4xl text-3xl md:leading-normal leading-normal font-bold text-white">
               About Us
             </h3>
           </div>
         </div>
       </section>
-      <div className="relative">
-        <div className="shape overflow-hidden z-1 text-white dark:text-slate-900">
-          <svg
-            viewBox="0 0 2880 48"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z"
-              fill="currentColor"
-            ></path>
-          </svg>
-        </div>
-      </div>
+
       <section className="relative md:pb-24 pb-16">
         <About />
         <Feature />
@@ -114,7 +98,6 @@ export default function Aboutus() {
       </section>
 
       <Footer />
-      <Switcher />
     </>
   );
 }

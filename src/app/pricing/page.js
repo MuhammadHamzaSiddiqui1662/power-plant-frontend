@@ -42,27 +42,27 @@ export default function Pricing() {
       amount: 20,
       btnName: "Publish my IP",
     },
-    {
-      title: "Broker Fees Structure",
-      time: "per innovation",
-      fearures: [
-        "Maximize the value of your intellectual property by showcasing it on our platform. Connect with legitimate investors and unlock the true potential of your IP. Publish now and take the first step towards realizing its worth.",
-      ],
-      amount: 20,
-      btnName: "Hire a Broker",
-      brokerPackages: [
-        {
-          title: "Broker IP deals for Businesses",
-          amount: 3500,
-          time: "per innovation",
-        },
-        {
-          title: "Broker Subscription",
-          amount: 20,
-          time: "per innovation",
-        },
-      ],
-    },
+    // {
+    //   title: "Broker Fees Structure",
+    //   time: "per innovation",
+    //   fearures: [
+    //     "Maximize the value of your intellectual property by showcasing it on our platform. Connect with legitimate investors and unlock the true potential of your IP. Publish now and take the first step towards realizing its worth.",
+    //   ],
+    //   amount: 20,
+    //   btnName: "Hire a Broker",
+    //   brokerPackages: [
+    //     {
+    //       title: "Broker IP deals for Businesses",
+    //       amount: 3500,
+    //       time: "per innovation",
+    //     },
+    //     {
+    //       title: "Broker Subscription",
+    //       amount: 20,
+    //       time: "per innovation",
+    //     },
+    //   ],
+    // },
   ];
 
   return (
@@ -77,7 +77,7 @@ export default function Pricing() {
             {pricingPlan.map((item, index) => {
               return (
                 <div
-                  className={`group rounded-md border border-gray-300 hover:border-green-500 ${
+                  className={`group rounded-md border border-gray-300 hover:border-customGreen-500 ${
                     index === 1
                       ? "lg:col-span-2"
                       : index === 3
@@ -94,7 +94,7 @@ export default function Pricing() {
                         <p className="pricing-title text-start text-customDarkBlue">
                           {item.title}
                         </p>
-                        <p className="text-customDarkBlue text-start text-6xl md:text-6xl sm:text-5xl mt-6 group-hover:text-green-500 transition-colors duration-300">
+                        <p className="text-customDarkBlue text-start text-6xl md:text-6xl sm:text-5xl mt-6 group-hover:text-customGreen transition-colors duration-300">
                           $ {item.amount}
                         </p>
                         <p className="text-customDarkBlue text-start pricing-title">
@@ -120,72 +120,14 @@ export default function Pricing() {
                         </ul>
                         <Link
                           href="#"
-                          className="mb-4 btn border border-customDarkBlue text-customDarkBlue group-hover:text-white group-hover:bg-green-600 group-hover:border-green-500 hover:border-green-700 rounded-md mt-auto transition duration-300"
+                          className="mb-4 btn border border-customDarkBlue text-customDarkBlue group-hover:text-white group-hover:bg-customGreen group-hover:border-customGreen hover:border-customGreen rounded-md mt-auto transition duration-300"
                         >
                           {item.btnName}
                         </Link>
                       </div>
                     </>
                   ) : (
-                    <Grid container className="px-5 mt-4" columnSpacing={3}>
-                      <Grid item lg={2} md={12}>
-                        <p className="pricing-title text-start text-customDarkBlue">
-                          {item.title}
-                        </p>
-                      </Grid>
-                      <Grid item lg={1} md={0}></Grid>
-                      <Grid item lg={8} md={12}>
-                        <div className="mb-5 flex justify-center">
-                          <ul className="list-none">
-                            {item.fearures.map((subitem, subindex) => (
-                              <li
-                                className="flex items-center my-1 text-slate-400 dark:text-slate-300"
-                                key={subindex}
-                              >
-                                <p className={`text-customDarkBlue `}>
-                                  {subitem}
-                                </p>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        <Grid container>
-                          {item.brokerPackages.map((elem, ind) => {
-                            return (
-                              <Grid
-                                item
-                                lg={ind == 0 ? 8 : 4}
-                                md={ind == 0 ? 7 : 5}
-                                sm={12}
-                              >
-                                <p className="text-customDarkBlue text-start pricing-title">
-                                  {elem.title}
-                                </p>
-                                <p className="text-customDarkBlue text-start text-6xl md:text-6xl sm:text-5xl mt-6 group-hover:text-green-500 transition-colors duration-300">
-                                  $ {elem.amount}
-                                </p>
-                                <p className="text-customDarkBlue text-start pricing-title">
-                                  {elem.time}
-                                </p>
-                                {ind == 0 ? (
-                                  <div className="mt-4 mb-8 sm:hidden block">
-                                    <Link
-                                      href="#"
-                                      className="mb-4 btn border border-customDarkBlue text-customDarkBlue group-hover:text-white group-hover:bg-green-600 group-hover:border-green-500 hover:border-green-700 rounded-md mt-auto transition duration-300"
-                                    >
-                                      {item.btnName}
-                                    </Link>
-                                  </div>
-                                ) : (
-                                  ""
-                                )}
-                              </Grid>
-                            );
-                          })}
-                        </Grid>
-                      </Grid>
-                      <Grid item lg={1} md={0}></Grid>
-                    </Grid>
+                    ""
                   )}
                 </div>
               );
