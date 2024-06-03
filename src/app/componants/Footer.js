@@ -259,7 +259,7 @@ export default function Footer() {
                   <Link
                     href="https://www.facebook.com/shreethemes"
                     target="_blank"
-                    className="btn btn-icon btn-md text-gray-400 hover:text-green-600 border border-gray-800 dark:border-gray-700 rounded-full me-1 hover:border-green-600 dark:hover:border-green-600 hover:bg-white dark:hover:bg-green-600"
+                    className="btn btn-icon btn-md text-customGrayColor hover:text-green-600 border border-gray-800 dark:border-gray-700 rounded-full me-1 hover:border-green-600 dark:hover:border-green-600 hover:bg-white dark:hover:bg-green-600"
                   >
                     <Facebook className="h-4 w-4 fill-current" />
                   </Link>
@@ -277,7 +277,7 @@ export default function Footer() {
                   <Link
                     href="https://twitter.com/shreethemes"
                     target="_blank"
-                    className="btn btn-icon btn-md text-gray-400 hover:text-green-600 border border-gray-800 dark:border-gray-700 rounded-full me-1 hover:border-green-600 dark:hover:border-green-600 hover:bg-white dark:hover:bg-green-600"
+                    className="btn btn-icon btn-md text-customGrayColor hover:text-green-600 border border-gray-800 dark:border-gray-700 rounded-full me-1 hover:border-green-600 dark:hover:border-green-600 hover:bg-white dark:hover:bg-green-600"
                   >
                     <Twitter className="h-4 w-4 fill-current"></Twitter>
                   </Link>

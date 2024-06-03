@@ -207,32 +207,25 @@ export default function Navbar(props) {
             <li className="inline mb-0 me-2">
               <Link
                 href="/auth-login"
-                className="btn btn-icon bg-green-600 hover:bg-green-700 border-green-600 dark:border-green-600 text-white rounded-full"
+                className="btn btn-icon bg-customGreen border-customGreen dark:border-green-600 text-white rounded-full"
               >
                 <MessageSquare className="h-4 w-4 stroke-[3]"></MessageSquare>
               </Link>
             </li>
 
-            {/* <li className="inline mb-0 me-2">
-              <Link
-                href="/auth-login"
-                className="btn btn-icon bg-green-600 hover:bg-green-700 border-green-600 dark:border-green-600 text-white rounded-full"
-              >
-                <User className="h-4 w-4 stroke-[3]"></User>
-              </Link>
-            </li> */}
             <li className="inline mb-0 me-2">
               <Link
                 href="/auth-login"
-                className="btn btn-icon rounded-full border border-green-600 bg-transparent text-green-600"
+                className="btn btn-icon rounded-full border border-customGreen bg-transparent text-customGreen"
               >
-                <Bell className="h-4 w-4 stroke-[3] fill-current" />
+                <Bell className="h-4 w-4 stroke-[3] fill-current " />
               </Link>
             </li>
             <li className="sm:inline ps-1 mb-0 hidden">
               <Link
                 href="/auth-signup"
-                className="btn bg-green-600 hover:bg-green-700 border-green-600 dark:border-green-600 text-white rounded-full"
+                // className="btn bg-customGreen hover:bg-green-700 border-green-600 dark:border-green-600 text-white rounded-full"
+                className="btn bg-customGreen border-green-600 dark:border-green-600 text-white rounded-full"
               >
                 Signup
               </Link>

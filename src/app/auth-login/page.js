@@ -160,79 +160,87 @@ export default function Login() {
                 </CustomTabPanel>
                 ))}
               </Box> */}
-              <form
-                className="ltr:text-left rtl:text-right grid grid-cols-1"
-                onSubmit={handleSubmit}
-              >
-                <div className="mb-4">
-                  <label
-                    className="font-medium text-customDarkBlue"
-                    htmlFor="LoginEmail"
-                  >
-                    Email Address:
-                  </label>
-                  <input
-                    id="LoginEmail"
-                    name="email"
-                    type="email"
-                    className="form-input mt-3"
-                    placeholder="name@example.com"
-                    value={data.email}
-                    onChange={handleDataChange}
-                  />
-                </div>
-                <div className="mb-4">
-                  <label
-                    className="font-medium text-customDarkBlue"
-                    htmlFor="LoginPassword"
-                  >
-                    Password:
-                  </label>
-                  <input
-                    id="LoginPassword"
-                    name="password"
-                    type="password"
-                    className="form-input mt-3"
-                    placeholder="Password:"
-                    value={data.password}
-                    onChange={handleDataChange}
-                  />
-                </div>
-                <div className="flex justify-between mb-4">
-                  <div className="inline-flex items-center">
-                    <input
-                      className="form-checkbox text-green-600 rounded w-4 h-4 me-2 border border-inherit"
-                      type="checkbox"
-                      id="RememberMe"
-                    />
+              <Box className="p-6">
+                <form
+                  className="ltr:text-left rtl:text-right grid grid-cols-1"
+                  onSubmit={handleSubmit}
+                >
+                  <div className="mb-4">
                     <label
-                      className="form-check-label text-customGrayColor"
-                      htmlFor="RememberMe"
+                      className="font-medium text-customDarkBlue"
+                      htmlFor="LoginEmail"
                     >
-                      Remember me
+                      Email Address:
                     </label>
+                    <input
+                      id="LoginEmail"
+                      name="email"
+                      type="email"
+                      className="form-input mt-3"
+                      placeholder="name@example.com"
+                      value={data.email}
+                      onChange={handleDataChange}
+                    />
                   </div>
-                </div>
-                <div className="mb-4 flex justify-center">
-                  <Link
+                  <div className="mb-4">
+                    <label
+                      className="font-medium text-customDarkBlue"
+                      htmlFor="LoginPassword"
+                    >
+                      Password:
+                    </label>
+                    <input
+                      id="LoginPassword"
+                      name="password"
+                      type="password"
+                      className="form-input mt-3"
+                      placeholder="Password:"
+                      value={data.password}
+                      onChange={handleDataChange}
+                    />
+                  </div>
+                  <div className="flex justify-between mb-4">
+                    <div className="inline-flex items-center">
+                      <input
+                        className="form-checkbox text-green-600 rounded w-4 h-4 me-2 border border-inherit"
+                        type="checkbox"
+                        id="RememberMe"
+                      />
+                      <label
+                        className="form-check-label text-customGrayColor"
+                        htmlFor="RememberMe"
+                      >
+                        Remember me
+                      </label>
+                    </div>
+                  </div>
+                  <div className="mb-4 flex justify-center">
+                    <button
+                      type="submit"
+                      className="text-2xl btn bg-customGreen hover:bg-customGreen text-white rounded-md py-6 w-40 text-[32px]"
+                    >
+                      Login
+                    </button>
+                    {/* <Link
                     href="#"
                     className="text-2xl btn bg-customGreen hover:bg-customGreen text-white rounded-md py-6 w-40 text-[32px]"
                   >
                     Login
-                  </Link>
-                </div>
-                <div className="text-center">
-                  <span className="text-customGrayColor me-2">
-                    Don't have an account?
-                  </span>
-                  <Link
-                    href="/auth-signup"
-                    className="text-customGreen font-bold"
-                  >
-                    Sign Up
-                  </Link>
-                </div>
-              </form>
+                  </Link> */}
+                  </div>
+                  <div className="text-center">
+                    <span className="text-customGrayColor me-2">
+                      Don't have an account?
+                    </span>
+                    <Link
+                      href="/auth-signup"
+                      className="text-customGreen font-bold"
+                    >
+                      Sign Up
+                    </Link>
+                  </div>
+                </form>
+              </Box>
             </div>
           </div>
         </div>

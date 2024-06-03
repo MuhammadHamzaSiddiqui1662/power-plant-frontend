@@ -179,8 +179,7 @@ select {
 */
 button,
 [type="button"],
-[type="reset"],
-[type="submit"] {
+[type="reset"] {
   -webkit-appearance: button; /* 1 */
   background-color: transparent; /* 2 */
   background-image: none; /* 2 */
@@ -2017,6 +2016,7 @@ h6,
   font-size: 17px;
   line-height: 24px;
   font-weight: 500;
+  /* background-color: #6BB955; */
 }
 .btn:focus {
   outline: 2px solid transparent;
@@ -2025,6 +2025,9 @@ h6,
 .btn {
   /*  Button icons */
   /* Button Link */
+}
+button {
+  background-color: #6bb955;
 }
 .btn.btn-lg {
   height: 3.5rem;
@@ -2433,7 +2436,8 @@ h6,
 #topnav .navigation-menu > li:hover > a,
 #topnav .navigation-menu > li.active > a {
   --tw-text-opacity: 1 !important;
-  color: rgb(22 163 74 / var(--tw-text-opacity)) !important;
+  /* color: rgb(22 163 74 / var(--tw-text-opacity)) !important; */
+  color: #6bb955;
 }
 :is(.dark #topnav .navigation-menu > li:hover > a),
 :is(.dark #topnav .navigation-menu > li.active > a) {
@@ -3622,6 +3626,7 @@ h6,
   border: 1px solid #ccc;
   border-radius: 4px;
   background-color: #fff;
+  color: #161c2d;
 }
 .selected {
   background-color: blue;
