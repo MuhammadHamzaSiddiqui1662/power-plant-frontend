@@ -8,6 +8,11 @@ export const properties = [
     baths: 4,
     price: 5000,
     rating: 5.0,
+    patentNo: 5000,
+    year: 2000,
+    category: "engineering",
+    description:
+      "Strategically cultivate your garden,is harvest plants, and sabotage others Strategically cultivate",
     detail: [
       "/images/property/single/1.jpg",
       "/images/property/single/2",
@@ -25,6 +30,12 @@ export const properties = [
     baths: 4,
     price: 5000,
     rating: 5.0,
+    year: 2000,
+    patentNo: 5000,
+    category: "engineering",
+    description:
+      "Strategically cultivate your garden,is harvest plants, and sabotage others Strategically cultivate",
+
     detail: [
       "/images/property/single/1.jpg",
       "/images/property/single/2",
@@ -41,7 +52,13 @@ export const properties = [
     beds: 4,
     baths: 4,
     price: 5000,
+    year: 2000,
+    category: "engineering",
+    description:
+      "Strategically cultivate your garden,is harvest plants, and sabotage others Strategically cultivate",
+
     rating: 5.0,
+    patentNo: 5000,
     detail: [
       "/images/property/single/1.jpg",
       "/images/property/single/2",
@@ -59,6 +76,12 @@ export const properties = [
     baths: 4,
     price: 5000,
     rating: 5.0,
+    patentNo: 5000,
+    description:
+      "Strategically cultivate your garden,is harvest plants, and sabotage others Strategically cultivate",
+
+    year: 2000,
+    category: "engineering",
     detail: [
       "/images/property/single/1.jpg",
       "/images/property/single/2",
@@ -75,7 +98,13 @@ export const properties = [
     beds: 4,
     baths: 4,
     price: 5000,
+    description:
+      "Strategically cultivate your garden,is harvest plants, and sabotage others Strategically cultivate",
+
     rating: 5.0,
+    patentNo: 5000,
+    year: 2000,
+    category: "engineering",
     detail: [
       "/images/property/single/1.jpg",
       "/images/property/single/2",
@@ -92,7 +121,13 @@ export const properties = [
     beds: 4,
     baths: 4,
     price: 5000,
+    description:
+      "Strategically cultivate your garden,is harvest plants, and sabotage others Strategically cultivate",
+
     rating: 5.0,
+    year: 2000,
+    category: "engineering",
+    patentNo: 5000,
     detail: [
       "/images/property/single/1.jpg",
       "/images/property/single/2",
