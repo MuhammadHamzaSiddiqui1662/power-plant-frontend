@@ -296,7 +296,7 @@ export default function Navbar(props) {
               </li>
 
               <li>
-                <Link href="/sell" className="sub-menu-item">
+                <Link href="/list" className="sub-menu-item">
                   IP Listing
                 </Link>
               </li>
