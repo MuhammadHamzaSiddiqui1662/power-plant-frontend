@@ -232,8 +232,8 @@ export default function Login() {
                             type="text"
                             className="form-input mt-2"
                             placeholder="Type here"
-                            name="email"
-                            value={data.email}
+                            name="paypal"
+                            value={data.paypal}
                             onChange={handleDataChange}
                           />
                         </div>
