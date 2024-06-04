@@ -1,8 +1,9 @@
 import { api } from "../config/axios";
+import { SignUpData } from "../types/auth";
 
-export const signUp = async (email: string, password: string) => {
+export const signUp = async (data: SignUpData) => {
   try {
-    const response = await api.post(`/auth/sign-up`, { email, password });
+    const response = await api.post(`/auth/sign-up`, data);
     return response.data;
   } catch (error) {
     throw error.response.data;
