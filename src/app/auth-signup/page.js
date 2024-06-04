@@ -5,7 +5,6 @@ import dynamic from "next/dynamic";
 import Navbar from "../componants/Navbar";
 import Footer from "../componants/Footer";
 import { Box, Grid, Tab, Tabs } from "@mui/material";
-import PropTypes from "prop-types";
 import "./style.css";
 import { signUp } from "../../services/auth";
 
@@ -49,7 +48,6 @@ export default function Login() {
       <section className="my-28">
         <div className="container-login z-3">
           <h5 className="my-6 text-4xl text-center">Signup</h5>
-          {/* <div className="flex justify-center"> */}
           <div className="">
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
               <Tabs
@@ -75,7 +73,6 @@ export default function Login() {
               </Tabs>
             </Box>
           </div>
-          {/* </div> */}
           <div className="flex justify-center">
             <div className=" w-full m-auto p-6 bg-white dark:bg-slate-900 dark:shadow-gray-700 rounded-md">
               <Box className="p-6">
