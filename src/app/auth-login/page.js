@@ -6,8 +6,11 @@ import Footer from "../componants/Footer";
 import { Box, Tab, Tabs } from "@mui/material";
 import "./style.css";
 import { signIn } from "../../services/auth";
+import { storeSessionToLocalStorage } from "../../utils";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const router = useRouter();
   const [tabValue, setTabValue] = useState(0);
   const [data, setData] = useState({
     email: "",
@@ -30,7 +33,9 @@ export default function Login() {
     e.preventDefault();
     try {
       const session = await signIn(data.email, data.password);
+      storeSessionToLocalStorage(session);
       console.log("Session:", session);
+      router.push("/");
     } catch (error) {
       console.log("error: ", error);
     }
