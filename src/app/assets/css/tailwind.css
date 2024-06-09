@@ -550,7 +550,8 @@ video {
   font-size: [object Object];
   line-height: 1.5;
 }
-.form-input::-webkit-input-placeholder {
+.form-input::-webkit-input-placeholder,
+.dropdown::-webkit-input-placeholder {
   color: #6b7280;
   opacity: 1;
 }
@@ -3628,6 +3629,10 @@ button {
   background-color: #fff;
   color: #161c2d;
 }
+.form-radio {
+  accent-color: #6bb955;
+  border-color: #6bb955;
+}
 .selected {
   background-color: blue;
   color: white;
@@ -3836,7 +3841,8 @@ p {
 /*********************************/
 /*             Contact           */
 /*===============================*/
-.form-input {
+.form-input,
+.dropdown {
   height: 2.5rem;
   width: 100%;
   /* border-radius: 0.25rem; */
@@ -3859,7 +3865,8 @@ p {
   --tw-text-opacity: 1;
   color: rgb(226 232 240 / var(--tw-text-opacity));
 }
-.form-input:focus {
+.form-input:focus,
+.dropdown:focus {
   --tw-border-opacity: 1;
   border-color: rgb(22 163 74 / var(--tw-border-opacity));
   --tw-shadow: 0 0 #0000;
