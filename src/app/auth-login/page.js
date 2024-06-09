@@ -6,8 +6,11 @@ import Footer from "../componants/Footer";
 import { Box, Tab, Tabs } from "@mui/material";
 import "./style.css";
 import { signIn } from "../../services/auth";
+import { storeSessionToLocalStorage } from "../../utils";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const router = useRouter();
   const [tabValue, setTabValue] = useState(0);
   const [data, setData] = useState({
     email: "",
@@ -30,7 +33,9 @@ export default function Login() {
     e.preventDefault();
     try {
       const session = await signIn(data.email, data.password);
+      storeSessionToLocalStorage(session);
       console.log("Session:", session);
+      router.push("/");
     } catch (error) {
       console.log("error: ", error);
     }
@@ -69,13 +74,6 @@ export default function Login() {
           </div>
           <div className="flex justify-center">
             <div className="max-w-[400px] w-full m-auto p-6 bg-white dark:bg-slate-900 dark:shadow-gray-700 rounded-md">
-              {/* <Box>
-                {[0, 1, 2].map((index) => (
-                  <CustomTabPanel key={index} value={tabValue} index={index}>
-                <TabContent />
-                </CustomTabPanel>
-                ))}
-              </Box> */}
               <Box className="p-6">
                 <form
                   className="ltr:text-left rtl:text-right grid grid-cols-1"
@@ -137,12 +135,6 @@ export default function Login() {
                     >
                       Login
                     </button>
-                    {/* <Link
-                    href="#"
-                    className="text-2xl btn bg-customGreen hover:bg-customGreen text-white rounded-md py-6 w-40 text-[32px]"
-                  >
-                    Login
-                  </Link> */}
                   </div>
                   <div className="text-center">
                     <span className="text-customGrayColor me-2">
