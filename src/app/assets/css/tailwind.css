@@ -4735,3 +4735,9 @@ p {
   --tw-text-opacity: 1 !important;
   color: rgb(255 255 255 / var(--tw-text-opacity)) !important;
 }
+.MuiTableCell-root {
+  font-family: "__League_Spartan_1a1bcf", "__League_Spartan_Fallback_1a1bcf" !important;
+}
+.chips-blue{
+  background-color: #D5F2E4;
+}

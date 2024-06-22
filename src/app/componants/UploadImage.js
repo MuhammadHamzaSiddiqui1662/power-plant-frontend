@@ -2,19 +2,23 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
-const ImageUploader = () => {
+const ImageUploader = ({ onFileUpload, index, isImageUploader = true }) => {
   const [image, setImage] = useState(null);
 
-  const onDrop = useCallback((acceptedFiles) => {
-    const file = acceptedFiles[0];
-    const reader = new FileReader();
+  const onDrop = useCallback(
+    (acceptedFiles) => {
+      const file = acceptedFiles[0];
+      const reader = new FileReader();
 
-    reader.onload = () => {
-      setImage(reader.result);
-    };
+      reader.onload = () => {
+        setImage(reader.result);
+        onFileUpload(file, index);
+      };
 
-    reader.readAsDataURL(file);
-  }, []);
+      reader.readAsDataURL(file);
+    },
+    [onFileUpload, index]
+  );
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
@@ -24,7 +28,11 @@ const ImageUploader = () => {
   return (
     <div
       {...getRootProps()}
-      className="w-28 h-28 border-2 border-gray-300 rounded cursor-pointer flex items-center justify-center me-2"
+      className={`  ${
+        !isImageUploader
+          ? "w-16 h-16"
+          : "w-28 h-28 border-2 border-gray-300 rounded me-2"
+      } cursor-pointer flex items-center justify-center`}
       style={{
         background: image ? `url(${image}) center/cover` : "none",
       }}
@@ -32,8 +40,19 @@ const ImageUploader = () => {
       <input {...getInputProps()} />
       {!image && (
         <div className="flex flex-col justify-center items-center">
-          <img src="/images/upload.png" width="30%" height="30%" />
-          <p className="text-sm text-customGrayColor mt-2">Upload image</p>
+          {isImageUploader ? (
+            <img src="/images/upload.png" width="30%" height="30%" />
+          ) : (
+            ""
+          )}
+
+          <p
+            className={`${
+              isImageUploader ? "text-sm" : "text-xl"
+            } text-customGrayColor mt-2`}
+          >
+            {isImageUploader ? "Upload image" : "+"}
+          </p>
         </div>
       )}
     </div>

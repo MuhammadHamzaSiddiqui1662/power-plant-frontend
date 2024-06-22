@@ -67,7 +67,7 @@ export default function Card({
             </p>
           </div>
 
-          <ul className="pt-5 flex justify-between items-center list-none">
+          <ul className="pt-5 flex justify-between items-center list-none flex-wrap">
             <li>
               <span className="text-slate-400">Price</span>
               <p className="text-lg font-medium">${price}</p>
@@ -77,7 +77,7 @@ export default function Card({
               <p className="text-lg font-medium">{year}</p>
             </li>
           </ul>
-          <ul className="pt-6 flex justify-between items-center list-none">
+          <ul className="pt-6 flex justify-between items-center list-none flex-wrap">
             <li>
               <span className="text-slate-400">Patent#</span>
               <p className="text-lg font-medium">{patentNo}</p>

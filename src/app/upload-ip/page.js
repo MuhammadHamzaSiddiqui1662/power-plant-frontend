@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import { Grid } from "@mui/material";
 import "./style.css";
-import { useDropzone } from "react-dropzone";
 const Navbar = dynamic(() => import("../componants/Navbar"));
 const Footer = dynamic(() => import("../componants/Footer"));
 const Uploader = dynamic(() => import("../componants/UploadImage"));
@@ -13,18 +12,40 @@ const BackgroundSection = dynamic(() =>
 
 export default function UploadIP() {
   const [sections, setSections] = useState([{ name: "", description: "" }]);
-  const handleAddUploader = () => {
-    setUploaders((prevUploaders) => [
-      ...prevUploaders,
-      <Uploader
-        key={prevUploaders.length}
-        onAddNewUploader={handleAddUploader}
-      />,
-    ]);
+  const [files, setFiles] = useState([]);
+
+  const handleFileUpload = (file, index) => {
+    setFiles((prevFiles) => {
+      const newFiles = [...prevFiles];
+      newFiles[index] = file;
+      return newFiles;
+    });
   };
   const [uploaders, setUploaders] = useState([
-    <Uploader key={0} onAddNewUploader={handleAddUploader} />,
+    {
+      key: 0,
+      component: <Uploader key={0} index={0} onFileUpload={handleFileUpload} />,
+    },
   ]);
+
+  const handleAddUploader = () => {
+    setUploaders((prevUploaders) => {
+      const newIndex = prevUploaders.length;
+      return [
+        ...prevUploaders,
+        {
+          key: newIndex,
+          component: (
+            <Uploader
+              key={newIndex}
+              index={newIndex}
+              onFileUpload={handleFileUpload}
+            />
+          ),
+        },
+      ];
+    });
+  };
 
   // Handle input changes
   const handleInputChange = (index, event) => {
@@ -42,7 +63,6 @@ export default function UploadIP() {
     <>
       <Navbar navClass="navbar-white" />
       <BackgroundSection />
-
       <section>
         <Grid className="container" container>
           <Grid item xs={12}>
@@ -214,7 +234,9 @@ export default function UploadIP() {
                 Upload images:
               </label>
               <div className="flex items-center my-4">
-                <div className="flex flex-wrap">{uploaders}</div>{" "}
+                <div className="flex flex-wrap">
+                  {uploaders?.map((uploader) => uploader.component)}
+                </div>{" "}
                 <div
                   onClick={handleAddUploader}
                   className="w-28 h-28 border-2 border-solid border-gray-300 rounded cursor-pointer flex items-center justify-center mr-2.5"

@@ -48,7 +48,7 @@ export default function Login() {
       <section className="my-28">
         <div className="container-login z-3">
           <h5 className="my-6 text-4xl text-center">Signup</h5>
-          <div className="">
+          <div>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
               <Tabs
                 TabIndicatorProps={{ style: { backgroundColor: "green" } }}
