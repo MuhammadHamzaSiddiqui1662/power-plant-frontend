@@ -15,9 +15,8 @@ export default function Login() {
     phone: "",
     email: "",
     password: "",
+    confirmPassword: "",
     address: "",
-    accountNumber: "",
-    paypal: "",
   });
   const [error, setError] = useState("");
 
@@ -104,25 +103,6 @@ export default function Login() {
                       <div className="mb-4">
                         <label
                           className="text-customDarkBlue font-medium"
-                          htmlFor="Account"
-                        >
-                          Account No:
-                        </label>
-                        <input
-                          id="Account"
-                          type="text"
-                          className="form-input mt-2"
-                          placeholder="Type your account number here"
-                          name="accountNumber"
-                          value={data.accountNumber}
-                          onChange={handleDataChange}
-                        />
-                      </div>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <div className="mb-4">
-                        <label
-                          className="text-customDarkBlue font-medium"
                           htmlFor="LoginEmail"
                         >
                           Email Address:
@@ -161,25 +141,6 @@ export default function Login() {
                       <div className="mb-4">
                         <label
                           className="text-customDarkBlue font-medium"
-                          htmlFor="phone"
-                        >
-                          Password:
-                        </label>
-                        <input
-                          id="phone"
-                          type="password"
-                          className="form-input mt-2"
-                          placeholder="Password:"
-                          name="password"
-                          value={data.password}
-                          onChange={handleDataChange}
-                        />
-                      </div>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <div className="mb-4">
-                        <label
-                          className="text-customDarkBlue font-medium"
                           htmlFor="address"
                         >
                           Address:
@@ -199,43 +160,40 @@ export default function Login() {
                       <div className="mb-4">
                         <label
                           className="text-customDarkBlue font-medium"
-                          htmlFor="paypal"
+                          htmlFor="phone"
                         >
-                          Pyapal:
+                          Password:
                         </label>
                         <input
-                          id="paypal"
-                          type="text"
+                          id="phone"
+                          type="password"
                           className="form-input mt-2"
-                          placeholder="Type here"
-                          name="paypal"
-                          value={data.paypal}
+                          placeholder="Password:"
+                          name="password"
+                          value={data.password}
                           onChange={handleDataChange}
                         />
                       </div>
                     </Grid>
-
-                    {(tabValue == 0 || tabValue == 2) && (
-                      <Grid item xs={12} sm={6}>
-                        <div className="mb-4">
-                          <label
-                            className="text-customDarkBlue font-medium"
-                            htmlFor="stripe"
-                          >
-                            Stripe:
-                          </label>
-                          <input
-                            id="stripe"
-                            type="text"
-                            className="form-input mt-2"
-                            placeholder="Type here"
-                            name="paypal"
-                            value={data.paypal}
-                            onChange={handleDataChange}
-                          />
-                        </div>
-                      </Grid>
-                    )}
+                    <Grid item xs={12} sm={6}>
+                      <div className="mb-4">
+                        <label
+                          className="text-customDarkBlue font-medium"
+                          htmlFor="Account"
+                        >
+                          Confirm Password:
+                        </label>
+                        <input
+                          id="Account"
+                          type="text"
+                          className="form-input mt-2"
+                          placeholder="Type your account number here"
+                          name="confirmPassword"
+                          value={data.accountNumber}
+                          onChange={handleDataChange}
+                        />
+                      </div>
+                    </Grid>
                     {tabValue == 1 && (
                       <Grid item xs={12} sm={6}>
                         <div className="mb-4">
