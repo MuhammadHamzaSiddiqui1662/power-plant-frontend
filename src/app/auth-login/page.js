@@ -138,7 +138,7 @@ export default function Login() {
                   </div>
                   <div className="text-center">
                     <span className="text-customGrayColor me-2">
-                      Don't have an account?
+                      {`Don't have an account?`}
                     </span>
                     <Link
                       href="/auth-signup"

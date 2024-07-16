@@ -58,7 +58,7 @@ export default function Welcome() {
           {isBroker ? (
             <Grid container className="container">
               {brokersCard.map((element) => (
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid key={element._id} item xs={12} sm={6} md={3}>
                   <BrokerCard name={element.name} imgSrc={element.imgSrc} />
                 </Grid>
               ))}
@@ -132,8 +132,10 @@ export default function Welcome() {
                           "Journalism",
                           "Civil Engineering",
                           "Mechanical Engineering",
-                        ].map((elem) => (
-                          <p className="mx-2">{elem}</p>
+                        ].map((elem, i) => (
+                          <p key={i} className="mx-2">
+                            {elem}
+                          </p>
                         ))}
                       </div>
                     </div>
@@ -154,8 +156,11 @@ export default function Welcome() {
                           "Journalism",
                           "Civil Engineering",
                           "Mechanical Engineering",
-                        ].map((elem) => (
-                          <div className="flex items-center avatar-text mt-4">
+                        ].map((elem, i) => (
+                          <div
+                            key={i}
+                            className="flex items-center avatar-text mt-4"
+                          >
                             <div className="mx-2">
                               <Avatar
                                 sx={{ width: 20, height: 20 }}
@@ -184,34 +189,42 @@ export default function Welcome() {
 }
 const brokersCard = [
   {
+    _id: "1",
     name: "Swanz",
     imgSrc: "/images/client/01.jpg",
   },
   {
+    _id: "2",
     name: "Cover",
     imgSrc: "/images/client/01.jpg",
   },
   {
+    _id: "3",
     name: "Passtravel",
     imgSrc: "/images/client/01.jpg",
   },
   {
+    _id: "4",
     name: "Camy",
     imgSrc: "/images/client/01.jpg",
   },
   {
+    _id: "5",
     name: "Swanz",
     imgSrc: "/images/client/01.jpg",
   },
   {
+    _id: "6",
     name: "Cover",
     imgSrc: "/images/client/01.jpg",
   },
   {
+    _id: "7",
     name: "Passtravel",
     imgSrc: "/images/client/01.jpg",
   },
   {
+    _id: "8",
     name: "Camy",
     imgSrc: "/images/client/01.jpg",
   },

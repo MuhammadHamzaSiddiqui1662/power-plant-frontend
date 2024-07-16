@@ -71,8 +71,9 @@ export default function ViewProfile(props) {
               "Chemical Engineering",
               "Mechanical Engineering",
               "Garden",
-            ].map((element) => (
+            ].map((element, i) => (
               <Chip
+                key={i}
                 className="text-customDarkBlue me-3 mt-3 chips-blue font-normal"
                 label={element}
               />

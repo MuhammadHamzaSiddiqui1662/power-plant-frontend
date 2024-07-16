@@ -235,6 +235,7 @@ export default function PropertiesDetail(props) {
                     property.tabName.map((elem, index) => {
                       return (
                         <Tab
+                          key={index}
                           sx={{
                             "&.Mui-selected": { color: "#6BB955" },
                             color: "gray",
