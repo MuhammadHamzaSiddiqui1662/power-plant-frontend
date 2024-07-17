@@ -1,7 +1,6 @@
-"use client"; // This is a client component 👈🏽
-import React, { useEffect } from "react";
+import React from "react";
 import dynamic from "next/dynamic";
-import CountUp from "react-countup";
+import CountUp from "../../components/CountUp/CountUp";
 
 const Navbar = dynamic(() => import("../componants/Navbar"));
 const Switcher = dynamic(() => import("../componants/Switcher"));
