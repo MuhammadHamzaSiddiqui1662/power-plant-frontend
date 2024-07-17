@@ -2,6 +2,7 @@ import "./globals.css";
 import "./assets/css/tailwind.css";
 import "./assets/css/materialdesignicons.min.css";
 import { League_Spartan } from "next/font/google";
+import StoreProvider from "./StoreProvider";
 
 const league_Spartan = League_Spartan({
   subsets: ["latin"],
@@ -18,7 +19,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" dir="LTR">
-      <body className={`${league_Spartan.className}`}>{children}</body>
+      <body className={`${league_Spartan.className}`}>
+        <StoreProvider>{children}</StoreProvider>
+      </body>
     </html>
   );
 }
