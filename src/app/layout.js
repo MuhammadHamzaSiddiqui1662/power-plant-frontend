@@ -2,7 +2,9 @@ import "./globals.css";
 import "./assets/css/tailwind.css";
 import "./assets/css/materialdesignicons.min.css";
 import { League_Spartan } from "next/font/google";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import StoreProvider from "./StoreProvider";
+import ThemeProvider from "./ThemeProvider";
 
 const league_Spartan = League_Spartan({
   subsets: ["latin"],
@@ -20,7 +22,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" dir="LTR">
       <body className={`${league_Spartan.className}`}>
-        <StoreProvider>{children}</StoreProvider>
+        <AppRouterCacheProvider>
+          <ThemeProvider>
+            <StoreProvider>{children}</StoreProvider>
+          </ThemeProvider>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );

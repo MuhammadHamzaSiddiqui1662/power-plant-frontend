@@ -10,11 +10,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@iconscout/react-unicons": "^2.0.2",
     "@iconscout/unicons": "^4.0.8",
     "@mui/material": "^5.15.18",
+    "@mui/material-nextjs": "^5.16.4",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
     "@reduxjs/toolkit": "^2.2.6",
     "autoprefixer": "10.4.14",
