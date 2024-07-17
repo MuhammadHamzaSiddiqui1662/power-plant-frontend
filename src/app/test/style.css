@@ -1,0 +1,56 @@
+.pricing-title {
+  font-size: 2rem;
+}
+.description-height {
+  height: 250px;
+}
+.description-width {
+  width: 65%;
+}
+@media (min-width: 640px) {
+  .pricing-title {
+    font-size: 2.3rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .pricing-title {
+    font-size: 1.2rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .pricing-title {
+    font-size: 1.4rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .pricing-title {
+    font-size: 1.85rem;
+  }
+}
+@media (min-width: 1536px) {
+  .pricing-title {
+    font-size: 1.7rem;
+  }
+}
+
+@media (max-width: 1280px) {
+  .description-height {
+    height: 310px;
+  }
+  .description-width {
+    width: 100%;
+  }
+}
+@media (max-width: 1020px) {
+  .description-height {
+    height: 200px;
+  }
+}
+@media (max-width: 768px) {
+  .description-height {
+    height: auto;
+  }
+}
