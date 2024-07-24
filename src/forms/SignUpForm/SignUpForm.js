@@ -40,6 +40,7 @@ export default function SignUpForm() {
       const { data: responseData, error } = await register(requestBody);
       if (error) throw error;
       console.log("Session:", responseData);
+      localStorage.setItem("emailToVerify", data.email);
       router.push("/verify-otp");
     } catch (error) {
       console.error(error);
