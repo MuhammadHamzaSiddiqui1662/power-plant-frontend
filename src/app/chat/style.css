@@ -1,0 +1,306 @@
+.container-login {
+  max-width: 1280px;
+  padding-right: 15rem;
+  padding-left: 15rem;
+  margin: 0 auto;
+
+  @media (max-width: 1020px) {
+    padding-right: 5rem;
+    padding-left: 5rem;
+  }
+
+  @media (max-width: 958px) {
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+}
+
+.h-6xx {
+  height: 600px !important;
+}
+
+.h-65x {
+  height: 650px !important;
+}
+
+.f-32 {
+  font-size: 32px;
+}
+
+.f-14 {
+  font-size: 14px;
+}
+
+.f-16 {
+  font-size: 16px;
+}
+
+.b-6xx {
+  font-weight: 600;
+}
+
+.b-7xx {
+  font-weight: 700;
+}
+
+.b-5xx {
+  font-weight: 500;
+}
+
+.fl-r {
+  float: right;
+}
+
+.pd-12 {
+  padding: 12px;
+}
+
+.pd-5 {
+  padding: 5px;
+}
+
+.m-0-80 {
+  margin: 0 80px !important;
+}
+
+.m-40 {
+  margin: 40px 0 !important;
+}
+
+.c-grey {
+  color: gray;
+}
+
+.send-btn {
+  padding: 8px 8px !important;
+  margin: 10px 10px 10px 15px !important;
+  background-color: #6BB955 !important;
+  border-radius: 10px !important;
+}
+
+.send-btn-image {
+  height: 16px !important;
+  width: 16px !important;
+}
+
+.send-btn-image:hover,
+.send-btn-image:active,
+.send-btn-image:focus {
+  border-color: #6BB955 !important;
+  outline: none !important;
+}
+
+.message-container {
+  margin-top: 20px;
+  padding: 48px 0 !important;
+  height: 420px;
+  /* Set height as per your design */
+  overflow-y: scroll;
+  /* Enable vertical scrolling */
+  padding: 10px;
+}
+
+.chat-container {
+  margin-top: 10px;
+  height: 520px;
+  width: 320px;
+  overflow-y: scroll;
+}
+
+
+.message {
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  max-width: 80%;
+  /* Adjust as needed */
+}
+
+.sender {
+  background-color: #6BB955 !important;
+  /* Light color for sender */
+
+  align-self: flex-end;
+  text-align: left;
+}
+
+.deal-close {
+  background-color: #6BB955 !important;
+  border-radius: 8px 8px 0 0;
+  border-color: #6BB955 !important;
+  text-align: center !important;
+  padding: 15px 0 !important;
+}
+
+.deal-close-btn {
+  border-radius: 0 !important;
+  padding: 24px 48px !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.input-message {
+  border-color: white !important;
+  padding: 15px 10px !important;
+  max-width: 85% !important
+}
+
+.deal-close-btn:hover,
+.deal-close-cancel-btn:hover {
+  /* Styles for hover state */
+  color: black !important;
+  /* Example hover border color */
+}
+
+.deal-close-cancel-btn {
+  border-radius: 0 !important;
+  padding: 24px 88px !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.chat-card:hover{
+  border-color: #6BB955 !important;
+}
+
+.active{ border-color: #6BB955 !important;
+}
+
+.pin-button {
+  padding: 8px 10px !important;
+  margin: 10px 0px !important;
+  background-color: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.pin-button:hover,
+.pin-button:active,
+.pin-button:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.file-pin-image {
+  color: white !important;
+  height: 20px !important;
+  width: 15px !important
+}
+
+.br-right {
+  border-right: 1px solid #d9d9d9 !important;
+}
+
+.message-box {
+  width: 100% !important;
+  border: 1px solid #6BB955 !important;
+  border-radius: 8px !important;
+}
+
+.h-5x {
+  height: 50px !important;
+}
+
+.w-5x {
+  width: 50px !important;
+}
+
+.h-4x {
+  height: 40px !important;
+}
+
+.pd-0-15 {
+  padding: 0 15px !important
+}
+
+.m-0-20 {
+  margin: 0 20px !important;
+}
+
+.w-4x {
+  width: 40px !important;
+}
+
+.receiver {
+  background-color: #FFFFFF;
+  border-color: #6BB955 !important;
+  /* White for receiver */
+  align-self: flex-end;
+  text-align: left;
+}
+
+
+.ant-card .ant-card-body {
+  padding: 0px 0px !important;
+}
+
+.pd-24 {
+  padding: 24px !important;
+}
+
+
+.pd-18 {
+  padding: 18px !important;
+}
+
+.pd-lr-24 {
+  padding: 24px !important;
+}
+
+.mt-1x {
+  margin-top: 10px;
+}
+
+.customGreen {
+  background-color: #6BB955;
+}
+
+.close-deal-btn {
+  padding: 22px 45px !important;
+  border-radius: 10px !important
+}
+
+.deal-close {
+  background-color: #6BB955 !important;
+  text-align: center !important;
+  padding: 15px 0 !important;
+}
+
+.i-btn {
+  background-color: #6BB955 !important;
+  margin: 8px 60px !important
+}
+
+.divider {
+  background-color: #f0f0f0 !important;
+  height: 1px !important
+}
+
+.c-white {
+  color: white;
+}
+
+.f-42 {
+  font-size: 42px;
+}
+
+.f-18 {
+  font-size: 18px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.example {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}

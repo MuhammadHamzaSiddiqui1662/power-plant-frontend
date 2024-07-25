@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import ButtonContained from "../../components/ButtonContained/ButtonContained";
 
 export default function SignUpForm() {
+  const router = useRouter();
   const [tabValue, setTabValue] = useState(0);
   const [data, setData] = useState({
     name: "",
@@ -34,13 +35,14 @@ export default function SignUpForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const { email } = data;
     console.log("submit");
     try {
       const { confirmPassword, ...requestBody } = data;
       const { data: responseData, error } = await register(requestBody);
       if (error) throw error;
       console.log("Session:", responseData);
-      router.push("/verify-otp");
+      router.replace(`/otp-verify?email=${email}`);
     } catch (error) {
       console.error(error);
     }
