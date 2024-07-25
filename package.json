@@ -10,12 +10,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@iconscout/react-unicons": "^2.0.2",
     "@iconscout/unicons": "^4.0.8",
     "@mui/material": "^5.15.18",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
+    "@mui/material-nextjs": "^5.16.4",
+    "@reduxjs/toolkit": "^2.2.6",
     "antd": "^5.19.3",
     "autoprefixer": "10.4.14",
     "eslint": "8.44.0",
@@ -28,6 +31,7 @@
     "react-dropzone": "^14.2.3",
     "react-feather": "^2.0.10",
     "react-modal-video": "^2.0.1",
+    "react-redux": "^9.1.2",
     "react-scroll": "^1.8.9",
     "react-select": "^5.7.3",
     "sass": "^1.63.6",

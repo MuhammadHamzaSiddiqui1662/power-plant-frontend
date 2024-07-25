@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
       <body className={`${league_Spartan.className}`}>
         <AppRouterCacheProvider>
           <ThemeProvider>
-            <StoreProvider>AntdStyledComponentsRegistry>{children}</AntdStyledComponentsRegistry></StoreProvider>
+            <StoreProvider><AntdStyledComponentsRegistry>{children}</AntdStyledComponentsRegistry></StoreProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>
