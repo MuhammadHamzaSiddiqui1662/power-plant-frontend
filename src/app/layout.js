@@ -3,6 +3,7 @@ import "./assets/css/tailwind.css";
 import "./assets/css/materialdesignicons.min.css";
 import { League_Spartan } from "next/font/google";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
+import AntdStyledComponentsRegistry from "./componants/AntdStyledComponentsRegistry";
 import StoreProvider from "./StoreProvider";
 import ThemeProvider from "./ThemeProvider";
 
@@ -24,7 +25,7 @@ export default function RootLayout({ children }) {
       <body className={`${league_Spartan.className}`}>
         <AppRouterCacheProvider>
           <ThemeProvider>
-            <StoreProvider>{children}</StoreProvider>
+            <StoreProvider><AntdStyledComponentsRegistry>{children}</AntdStyledComponentsRegistry></StoreProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

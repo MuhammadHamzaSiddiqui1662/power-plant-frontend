@@ -1,0 +1,60 @@
+.container-otp {
+  height: 480px;
+  padding-right: 15rem;
+  padding-left: 15rem;
+  margin: 0 auto;
+
+  @media (max-width: 1020px) {
+    padding-right: 5rem;
+    padding-left: 5rem;
+  }
+
+  @media (max-width: 958px) {
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+}
+
+.text-center {
+  text-align: center;
+}
+
+.pd-10 {
+  padding: 10px !important;
+}
+
+.pd-12 {
+  padding: 12px !important;
+}
+
+.pd-15 {
+  padding: 15px !important
+}
+
+.resend-anchor {
+  color: #6BB955 !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+}
+
+.f-16 {
+  font-size: 16px !important;
+}
+
+.b-5xx {
+  font-weight: 500px !important;
+}
+
+.ant-input {
+  padding: 15px 25px !important;
+}
+.disabled {
+  color: #ccc; /* Gray text color */
+  cursor: not-allowed; /* Change cursor to not-allowed */
+  pointer-events: none; /* Disable pointer events */
+  text-decoration: none;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  color: #6BB955 !important; /* Remove underline */
+  opacity: 0.6; /* Reduce opacity for disabled look */
+}

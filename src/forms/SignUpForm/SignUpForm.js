@@ -34,6 +34,7 @@ export default function SignUpForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const { email } = data;
     console.log("submit");
     try {
       const { confirmPassword, ...requestBody } = data;
@@ -41,7 +42,7 @@ export default function SignUpForm() {
       if (error) throw error;
       console.log("Session:", responseData);
       localStorage.setItem("emailToVerify", data.email);
-      router.push("/verify-otp");
+      router.replace(`/otp-verify?email=${email}`);
     } catch (error) {
       console.error(error);
     }

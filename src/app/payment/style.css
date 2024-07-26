@@ -1,0 +1,80 @@
+.container-login {
+  max-width: 1280px;
+  padding-right: 15rem;
+  padding-left: 15rem;
+  margin: 0 auto;
+
+  @media (max-width: 1020px) {
+    padding-right: 5rem;
+    padding-left: 5rem;
+  }
+
+  @media (max-width: 958px) {
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+}
+
+.visa-card {
+  width: 100 !important;
+  height: 65 !important;
+  background-color: #F6F9FF !important
+}
+
+.paypal-card{
+  width: 110 !important;
+  height: 65 !important
+}
+
+.stripe-card{
+  width: 100 !important;
+  height: 65 !important;
+  background-color: #6772E5 !important
+}
+.active{
+  border-color: #6BB955 !important;
+}
+
+.f-18{
+  font-size: 18px !important;
+}
+.f-16{
+  font-size: 16px !important;
+}
+.f-14{
+  font-size: 14px !important;
+}
+.f-12{
+  font-size: 12px !important;
+}
+
+.f-24{
+  font-size: 24px !important;
+}
+.b-5xx{
+  font-weight: 500;
+}
+.b-6xx{
+  font-weight: 600;
+}
+.subscriber-fee-card{
+  width: 500 !important;
+  height: 620 !important;
+  background-color: #F6F9FF !important;
+}
+
+.c-grey{
+  color: #c2c2c2f8 !important;
+}
+.flex{
+  display: flex !important;
+}
+.payment-card{
+  width: 500 !important;
+  height: 350 !important;
+  background-color: #F6F9FF !important;
+}
+.pay-now-btn{
+  background-color:#6BB955 !important;
+  padding: 25px 50px !important;
+}
