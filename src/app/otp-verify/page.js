@@ -8,10 +8,13 @@ import Navbar from "../componants/Navbar";
 import Footer from "../componants/Footer";
 import { otpVerify, resendOTP } from "../../services/auth";
 import "./style.css";
+import {
+  useResendOtpMutation,
+  useVerifyOtpMutation,
+} from "../../services/auth/auth";
 
 export default function OTPVerify() {
   const router = useRouter();
-  const [tabValue, setTabValue] = useState(0);
   const [seconds, setSeconds] = useState(120);
   const [isActive, setIsActive] = useState(false);
   const  email  = useSearchParams();
@@ -25,6 +28,8 @@ export default function OTPVerify() {
   const [resendOTPData, setResendOTPData] = useState({
     email: email,
   });
+  const [verifyOtp, { isLoading: isVerifying }] = useVerifyOtpMutation();
+  const [resendOtp, { isLoading: isResending }] = useResendOtpMutation();
 
   const handleMessageChange = (e) => {
     setOTP(e.target.value);
@@ -114,8 +119,14 @@ export default function OTPVerify() {
           </Row>
           <Row justify={"center"}>
             <Col span={10} className="pd-12 text-center">
-              <h4 className="f-16 b-5xx">Didn't receive the Verification code,
-                <a className={`' ${isActive === false ? 'disabled' : 'resend-anchor'}`} onClick={handleResend}> Click to Resend</a>
+              <h4 className="f-16 b-5xx">
+                {`Didn't receive the Verification code, `}
+                <a
+                  className={isActive === false ? "disabled" : "resend-anchor"}
+                  onClick={handleResend}
+                >
+                  Click to Resend
+                </a>
               </h4>
             </Col>
           </Row>

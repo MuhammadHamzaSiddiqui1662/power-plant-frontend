@@ -18,7 +18,7 @@ export default function SignUpForm() {
     address: "",
   });
   const [error, setError] = useState("");
-  const [register, { isLoading, status }] = useRegisterMutation();
+  const [register, { isLoading }] = useRegisterMutation();
   const router = useRouter();
 
   const handleTabChange = (event, newValue) => {

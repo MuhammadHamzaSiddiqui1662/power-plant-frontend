@@ -63,4 +63,10 @@ export const authApi = createApi({
   }),
 });
 
-export const { endpoints, useLoginMutation, useRegisterMutation } = authApi;
+export const {
+  endpoints,
+  useLoginMutation,
+  useRegisterMutation,
+  useVerifyOtpMutation,
+  useResendOtpMutation,
+} = authApi;
