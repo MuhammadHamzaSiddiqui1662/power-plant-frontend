@@ -14,6 +14,8 @@ const GeneralTable = dynamic(() => import("../componants/Table"));
 const ManageCertificates = dynamic(() =>
   import("../componants/ManageCertificates")
 );
+import { Plus } from "react-feather";
+import Link from "next/link";
 
 export default function Profile() {
   const [tabValue, setTabValue] = useState(0);
@@ -71,8 +73,6 @@ export default function Profile() {
                     type="text"
                     className="form-input mt-1"
                     placeholder="Enter First Name"
-                    // value={data.email}
-                    // onChange={handleDataChange}
                   />
                 </div>
               </Grid>
@@ -90,8 +90,6 @@ export default function Profile() {
                     type="text"
                     className="form-input mt-1"
                     placeholder="Enter Last Name"
-                    // value={data.email}
-                    // onChange={handleDataChange}
                   />
                 </div>
               </Grid>
@@ -109,8 +107,6 @@ export default function Profile() {
                     type="email"
                     className="form-input mt-1"
                     placeholder="Enter Email"
-                    // value={data.email}
-                    // onChange={handleDataChange}
                   />
                 </div>
               </Grid>
@@ -128,8 +124,6 @@ export default function Profile() {
                     type="text"
                     className="form-input mt-1"
                     placeholder="Enter Phone no"
-                    // value={data.email}
-                    // onChange={handleDataChange}
                   />
                 </div>
               </Grid>
@@ -181,52 +175,69 @@ export default function Profile() {
           </Grid>
         </Grid>
 
-        <Grid container>
+        <Grid container className="mt-10">
           {role == 0 ? (
-            <Grid item xs={12}>
-              <div className="mt-10">
-                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                  <Tabs
-                    TabIndicatorProps={{ style: { backgroundColor: "green" } }}
-                    value={tabValue}
-                    onChange={handleTabChange}
-                    aria-label="login tabs"
-                    variant="fullWidth"
-                    scrollButtons="auto"
-                  >
-                    {["Active", "Saved", "Inactive", "Drafts"].map(
-                      (label, index) => (
-                        <Tab
-                          key={label}
-                          sx={{
-                            "&.Mui-selected": { color: "#6BB955" },
-                            color: "gray",
-                          }}
-                          label={label}
-                          id={`tab-${index}`}
-                          aria-controls={`tabpanel-${index}`}
-                        />
-                      )
-                    )}
-                  </Tabs>
-                </Box>
-              </div>
-              <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 mt-8 gap-[50px] text-start">
-                {properties.slice(0, 3).map((item, index) => (
-                  <Card
-                    key={index}
-                    name={item.name}
-                    id={item.id}
-                    description={item.description}
-                    year={item.year}
-                    category={item.category}
-                    price={item.price}
-                    patentNo={item.patentNo}
-                    image={item.image}
-                  />
-                ))}
-              </div>
-            </Grid>
+            <>
+              <Grid item xs={6}>
+                <p className={`text-3xl font-semibold leading-none`}>
+                  Manage IPs
+                </p>
+              </Grid>
+              <Grid xs={6} style={{ textAlign: "end" }}>
+                <Link
+                  href="/upload-ip"
+                  className="btn btn-icon rounded-full border border-customGreen bg-transparent text-customGreen ml-auto"
+                >
+                  <Plus className="h-4 w-4 stroke-[3] fill-current " />
+                </Link>
+              </Grid>
+              <Grid item xs={12}>
+                <div className="mt-1">
+                  <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                    <Tabs
+                      TabIndicatorProps={{
+                        style: { backgroundColor: "green" },
+                      }}
+                      value={tabValue}
+                      onChange={handleTabChange}
+                      aria-label="login tabs"
+                      variant="fullWidth"
+                      scrollButtons="auto"
+                    >
+                      {["Active", "Saved", "Inactive", "Drafts"].map(
+                        (label, index) => (
+                          <Tab
+                            key={label}
+                            sx={{
+                              "&.Mui-selected": { color: "#6BB955" },
+                              color: "gray",
+                            }}
+                            label={label}
+                            id={`tab-${index}`}
+                            aria-controls={`tabpanel-${index}`}
+                          />
+                        )
+                      )}
+                    </Tabs>
+                  </Box>
+                </div>
+                <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 mt-8 gap-[50px] text-start">
+                  {properties.slice(0, 3).map((item, index) => (
+                    <Card
+                      key={index}
+                      name={item.name}
+                      id={item.id}
+                      description={item.description}
+                      year={item.year}
+                      category={item.category}
+                      price={item.price}
+                      patentNo={item.patentNo}
+                      image={item.image}
+                    />
+                  ))}
+                </div>
+              </Grid>
+            </>
           ) : role === 1 ? (
             <Grid item xs={12} md={10}>
               <div className="mt-10">
@@ -249,7 +260,7 @@ export default function Profile() {
           <Grid xs={12} sm={6}>
             <div className="flex mt-10 mb-16">
               <button
-                type="submit"
+                type="reset"
                 className="my-3 text-xl btn btn-outlined text-customDarkBlue rounded-md py-6 w-40 text-[32px] px-0 me-5"
               >
                 Cancel
