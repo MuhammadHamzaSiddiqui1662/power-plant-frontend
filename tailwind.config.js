@@ -15,6 +15,7 @@ module.exports = {
       fontSize: {
         "64px": "64px",
         "40px": "40px",
+        "70px": "70px",
       },
       colors: {
         customDarkBlue: "#161C2D",
