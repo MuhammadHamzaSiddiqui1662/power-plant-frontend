@@ -3,20 +3,24 @@ import { useState } from "react";
 import Link from "next/link";
 import Navbar from "../componants/Navbar";
 import Footer from "../componants/Footer";
-import { Box, Tab, Tabs } from "@mui/material";
+import { Alert, Box, Tab, Tabs } from "@mui/material";
 import "./style.css";
-import { signIn } from "../../services/auth";
-import { storeSessionToLocalStorage } from "../../utils";
 import { useRouter } from "next/navigation";
+import { useLoginMutation } from "../../services/auth/auth";
+import { useDispatch } from "react-redux";
+import { setUserType } from "../../lib/features/authSlice";
+import ButtonContained from "../../components/ButtonContained/ButtonContained";
 
 export default function Login() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [tabValue, setTabValue] = useState(0);
   const [data, setData] = useState({
     email: "",
     password: "",
   });
   const [error, setError] = useState("");
+  const [login, { isLoading }] = useLoginMutation();
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -32,9 +36,10 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const session = await signIn(data.email, data.password);
-      storeSessionToLocalStorage(session);
-      console.log("Session:", session);
+      const { error } = await login(data);
+      console.log("error --->", error);
+      if (error) return setError(error.data.message);
+      dispatch(setUserType(tabValue));
       router.push("/");
     } catch (error) {
       console.log("error: ", error);
@@ -79,6 +84,11 @@ export default function Login() {
                   className="ltr:text-left rtl:text-right grid grid-cols-1"
                   onSubmit={handleSubmit}
                 >
+                  {error && (
+                    <Alert variant="outlined" severity="error" className="mb-4">
+                      {error}
+                    </Alert>
+                  )}
                   <div className="mb-4">
                     <label
                       className="font-medium text-customDarkBlue"
@@ -129,12 +139,13 @@ export default function Login() {
                     </div>
                   </div>
                   <div className="mb-4 flex justify-center">
-                    <button
+                    <ButtonContained
                       type="submit"
-                      className="text-2xl btn bg-customGreen hover:bg-customGreen text-white rounded-md py-6 w-40 text-[32px]"
+                      isLoading={isLoading}
+                      disabled={isLoading}
                     >
                       Login
-                    </button>
+                    </ButtonContained>
                   </div>
                   <div className="text-center">
                     <span className="text-customGrayColor me-2">
