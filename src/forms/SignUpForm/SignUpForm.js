@@ -42,7 +42,7 @@ export default function SignUpForm() {
       if (error) throw error;
       console.log("Session:", responseData);
       localStorage.setItem("emailToVerify", data.email);
-      router.replace(`/otp-verify?email=${email}`);
+      router.replace(`/otp-verify?email=${email}&userType=${tabValue}`);
     } catch (error) {
       console.error(error);
     }
