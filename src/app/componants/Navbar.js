@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import NotificationMenu from "./notification/Notification";
 
 import { User, Bell, MessageSquare } from "react-feather";
 
@@ -9,7 +10,11 @@ export default function Navbar(props) {
   const { navClass, topnavClass } = props;
   const [isOpen, setMenu] = useState(true);
   const [topNavbar, setTopNavBar] = useState(false);
+  const [open, setOpen] = useState(false);
 
+  const toggleMenuNotification = () => {
+    setOpen((prev) => !prev);
+  };
   useEffect(() => {
     if (typeof window !== "undefined") {
       window.addEventListener("scroll", windowScroll);
@@ -206,7 +211,8 @@ export default function Navbar(props) {
           <ul className="buy-button list-none mb-0">
             <li className="inline mb-0 me-2">
               <Link
-                href="/auth-login"
+                onClick={toggleMenuNotification}
+                href="#"
                 className="btn btn-icon bg-customGreen border-customGreen dark:border-green-600 text-white rounded-full"
               >
                 <MessageSquare className="h-4 w-4 stroke-[3]"></MessageSquare>
@@ -231,6 +237,7 @@ export default function Navbar(props) {
               </Link>
             </li>
           </ul>
+
           {/* <!--Login button End--> */}
 
           <div
@@ -482,6 +489,9 @@ export default function Navbar(props) {
                 </Link>
               </li>
             </ul>
+          </div>
+          <div className="flex justify-end">
+            <NotificationMenu open={open} setOpen={setOpen} />
           </div>
         </div>
       </nav>
