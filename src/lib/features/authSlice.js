@@ -8,6 +8,7 @@ const initialState = {
     email: "",
     phone: "",
   },
+  userType: "",
   accessToken: "",
   refreshToken: "",
   accessTokenExpiry: 0,
@@ -20,6 +21,9 @@ const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       state = initialState;
+    },
+    setUserType: (state, action) => {
+      state.userType = action.payload;
     },
   },
   extraReducers: (builder) => {
