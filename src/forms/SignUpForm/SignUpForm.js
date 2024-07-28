@@ -2,7 +2,7 @@
 import React from "react";
 import { useState } from "react";
 import Link from "next/link";
-import { Box, Grid, Tab, Tabs } from "@mui/material";
+import { Alert, Box, Grid, Tab, Tabs } from "@mui/material";
 import { useRegisterMutation } from "../../services/auth/auth";
 import { useRouter } from "next/navigation";
 import ButtonContained from "../../components/ButtonContained/ButtonContained";
@@ -39,12 +39,13 @@ export default function SignUpForm() {
     try {
       const { confirmPassword, ...requestBody } = data;
       const { data: responseData, error } = await register(requestBody);
-      if (error) throw error;
+      if (error) return setError(error.data.message);
       console.log("Session:", responseData);
       localStorage.setItem("emailToVerify", data.email);
       router.replace(`/otp-verify?email=${email}&userType=${tabValue}`);
     } catch (error) {
       console.error(error);
+      setError(error.shortMessage || error.message);
     }
   };
 
@@ -83,6 +84,18 @@ export default function SignUpForm() {
               onSubmit={handleSubmit}
             >
               <Grid container columnSpacing={5}>
+                <Grid item xs={12}>
+                  {error && (
+                    <Alert
+                      variant="outlined"
+                      severity="error"
+                      className="mb-4 mx-auto"
+                      style={{ maxWidth: 300 }}
+                    >
+                      {error}
+                    </Alert>
+                  )}
+                </Grid>
                 <Grid item xs={12} sm={6}>
                   <div className="mb-4">
                     <label
