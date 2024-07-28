@@ -82,7 +82,16 @@ const theme = createTheme({
     MuiSvgIcon: {
       styleOverrides: {
         root: {
-          color: primaryContrastText,
+          color: "inherit",
+        },
+      },
+    },
+    MuiAlert: {
+      styleOverrides: {
+        root: {
+          padding: "0px 16px",
+          borderRadius: 8,
+          backgroundColor: "#ff9a9a29",
         },
       },
     },
@@ -120,14 +129,14 @@ const theme = createTheme({
     MuiIconButton: {
       styleOverrides: {
         root: {
-          color: primaryContrastText,
+          color: "inherit",
         },
       },
     },
     MuiIcon: {
       styleOverrides: {
         root: {
-          color: primaryContrastText,
+          color: "inherit",
         },
       },
     },
