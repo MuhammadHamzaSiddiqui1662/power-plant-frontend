@@ -269,7 +269,13 @@ export default function SignUpForm() {
                 </label>
               </div>
               <div className="mb-5 flex justify-center">
-                <ButtonContained isLoading={isLoading} disabled={isLoading} />
+                <ButtonContained
+                  type="submit"
+                  isLoading={isLoading}
+                  disabled={isLoading}
+                >
+                  Sign Up
+                </ButtonContained>
               </div>
               <div className="text-center">
                 <span className="text-slate-400 me-2">

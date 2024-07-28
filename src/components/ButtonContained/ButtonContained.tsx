@@ -10,14 +10,17 @@ interface Props
   isLoading: boolean;
 }
 
-export default function ButtonContained({ isLoading, ...props }: Props) {
+export default function ButtonContained({
+  isLoading,
+  children,
+  ...props
+}: Props) {
   return (
     <button
-      type="submit"
       className="text-2xl btn bg-customGreen hover:bg-customGreen text-white rounded-md py-6 w-40 text-[32px]"
       {...props}
     >
-      {isLoading ? <CircularProgress color="inherit" size={24} /> : "Sign up"}
+      {isLoading ? <CircularProgress color="inherit" size={24} /> : children}
     </button>
   );
 }
