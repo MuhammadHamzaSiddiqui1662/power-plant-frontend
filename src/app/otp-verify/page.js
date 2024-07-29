@@ -1,70 +1,61 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from 'next/navigation'
-import { Row, Col, Input, Button } from 'antd';
-import Link from "next/link";
-import dynamic from "next/dynamic";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Row, Col, Input } from "antd";
 import Navbar from "../componants/Navbar";
 import Footer from "../componants/Footer";
-import { otpVerify, resendOTP } from "../../services/auth";
 import "./style.css";
 import {
   useResendOtpMutation,
   useVerifyOtpMutation,
 } from "../../services/auth/auth";
+import { Alert } from "@mui/material";
+import ButtonContained from "../../components/ButtonContained/ButtonContained";
 
 export default function OTPVerify() {
   const router = useRouter();
   const [seconds, setSeconds] = useState(120);
   const [isActive, setIsActive] = useState(false);
-  const  email  = useSearchParams();
+  const email = useSearchParams().get("email");
   const [otp, setOTP] = useState("");
   const [error, setError] = useState("");
-  console.log(email.get("email"))
-  const [sendOTPData, setSendOTPData] = useState({
-    email: email,
-    otp: otp,
-  });
-  const [resendOTPData, setResendOTPData] = useState({
-    email: email,
-  });
   const [verifyOtp, { isLoading: isVerifying }] = useVerifyOtpMutation();
   const [resendOtp, { isLoading: isResending }] = useResendOtpMutation();
 
   const handleMessageChange = (e) => {
     setOTP(e.target.value);
-    console.log(otp)
+    console.log(otp);
   };
 
   const handleResend = async () => {
     try {
-      const resendOTPResponse = await resendOTP(resendOTPData);
-      if (resendOTPResponse.status === 200) {
-        setSeconds(120);
-        setIsActive(false);
-      }
-      else {
-        setIsActive(false);
-      }
+      const { data: resendOTPResponse, error } = await resendOtp({ email });
+      if (error) return setError(error.message);
+      setSeconds(120);
+      setIsActive(false);
+      console.log(resendOTPResponse);
     } catch (error) {
-      console.log(`errror --> ${error}`)
+      console.log(`errror --> ${error}`);
     }
   };
 
   const handleSend = async () => {
     try {
-      const otpVerifyResponse = await otpVerify(sendOTPData);
-      if (otpVerifyResponse.status === 200) {
-      }
-      else {
-      }
+      const { data: verifyOtpResponse, error } = await verifyOtp({
+        email,
+        otp,
+      });
+      if (error) return setError(error.message);
+      console.log(verifyOtpResponse);
+      router.push("/");
     } catch (error) {
-      console.log(`error --> ${error}`)
+      console.log(`error --> ${error}`);
     }
   };
 
   const onChange = (text) => {
-    console.log('onChange:', text);
+    console.log("onChange:", text);
+    setOTP(text);
   };
 
   const sharedProps = {
@@ -72,7 +63,6 @@ export default function OTPVerify() {
   };
 
   useEffect(() => {
-
     let interval = null;
 
     if (!isActive && seconds > 0) {
@@ -89,7 +79,7 @@ export default function OTPVerify() {
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
-    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
   return (
@@ -97,7 +87,7 @@ export default function OTPVerify() {
       <Navbar />
       <section className="my-28">
         <div className="container-otp">
-          <Row justify={"center"} >
+          <Row justify={"center"}>
             <Col className="text-center">
               <h5 className="my-6 text-4xl">OTP Verification</h5>
             </Col>
@@ -107,14 +97,35 @@ export default function OTPVerify() {
               <h4>Please enter the One-time-password to verify your account</h4>
             </Col>
           </Row>
+          {error && (
+            <Row justify={"center"}>
+              <Col className="text-center pd-12">
+                <Alert
+                  variant="outlined"
+                  severity="error"
+                  className="mb-4 w-80"
+                >
+                  {error}
+                </Alert>
+              </Col>
+            </Row>
+          )}
           <Row justify={"center"}>
-            <Col span={7} className="text-center pd-12" >
-              <Input.OTP value={otp} onChange={handleMessageChange} formatter={(str) => str.toUpperCase()} {...sharedProps} />
+            <Col span={7} className="text-center pd-12">
+              <Input.OTP
+                value={otp}
+                onChange={handleMessageChange}
+                formatter={(str) => str.toUpperCase()}
+                {...sharedProps}
+              />
             </Col>
           </Row>
           <Row justify={"center"}>
             <Col span={6} className="text-center pd-12">
-              <h4 className="f-16 b-5xx">OTP expires in <span className="f-16 b-5xx">{formatTime(seconds)}</span></h4>
+              <h4 className="f-16 b-5xx">
+                OTP expires in{" "}
+                <span className="f-16 b-5xx">{formatTime(seconds)}</span>
+              </h4>
             </Col>
           </Row>
           <Row justify={"center"}>
@@ -132,7 +143,15 @@ export default function OTPVerify() {
           </Row>
           <Row justify={"center"}>
             <Col span={6} className="pd-12 text-center">
-              <Button style={{ backgroundColor: "#6BB955" }} type="primary" onClick={handleSend}>Continue</Button>
+              <ButtonContained
+                style={{ backgroundColor: "#6BB955" }}
+                type="primary"
+                onClick={handleSend}
+                isLoading={isVerifying || isResending}
+                disabled={isVerifying || isResending}
+              >
+                Continue
+              </ButtonContained>
             </Col>
           </Row>
         </div>
