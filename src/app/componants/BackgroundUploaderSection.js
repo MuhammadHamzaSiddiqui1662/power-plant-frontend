@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 
-export default function BackgroundSection() {
+export default function BackgroundSection({ onBackgroundUpload }) {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
   const [backgroundImage, setBackgroundImage] = useState("");
 
@@ -14,6 +14,7 @@ export default function BackgroundSection() {
         setBackgroundImage(reader.result);
       };
       reader.readAsDataURL(file);
+      onBackgroundUpload(file); // Pass the file to the parent component
     }
   }, [acceptedFiles]);
 

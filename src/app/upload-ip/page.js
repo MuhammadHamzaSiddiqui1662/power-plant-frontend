@@ -19,6 +19,7 @@ export default function UploadIP() {
     price: "",
     status: "",
     category: "",
+    hasPatent: true,
     publishedDate: "",
     patentNumber: "",
     trademark: "",
@@ -27,16 +28,24 @@ export default function UploadIP() {
     images: [],
     sections: [{ title: "", content: "" }],
   });
-  console.log("data", data);
-  const [files, setFiles] = useState([]);
+  console.log("data", JSON.parse(data.hasPatent), data);
+
+  const [files, setFiles] = useState({});
 
   const handleFileUpload = (file, index) => {
-    setFiles((prevFiles) => {
-      const newFiles = [...prevFiles];
-      newFiles[index] = file;
-      return newFiles;
-    });
+    setFiles((prevFiles) => ({
+      ...prevFiles,
+      [`file${index}`]: file,
+    }));
   };
+
+  const handleBackgroundUpload = (file) => {
+    setFiles((prevFiles) => ({
+      ...prevFiles,
+      backgroundImage: file,
+    }));
+  };
+  console.log("files", files);
 
   const [uploaders, setUploaders] = useState([
     {
@@ -89,10 +98,30 @@ export default function UploadIP() {
     }));
   };
 
+  const handleSubmit = async () => {
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(data));
+
+    Object.keys(files).forEach((key) => {
+      formData.append(key, files[key]);
+    });
+
+    try {
+      // const response = await axios.post("/api/ips", formData, {
+      //   headers: {
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // });
+      // console.log("Response:", response.data);
+    } catch (error) {
+      console.error("Error uploading data:", error);
+    }
+  };
+
   return (
     <>
       <Navbar navClass="navbar-white" />
-      <BackgroundSection />
+      <BackgroundSection onBackgroundUpload={handleBackgroundUpload} />
       <section>
         <Grid className="container" container>
           <Grid item xs={12}>
@@ -196,7 +225,7 @@ export default function UploadIP() {
                           id="option1"
                           name="hasPatent"
                           className="form-radio text-customGreen"
-                          value="yes"
+                          value={true}
                           onChange={handleInputChange}
                         />
                         <label
@@ -215,7 +244,7 @@ export default function UploadIP() {
                           id="option2"
                           name="hasPatent"
                           className="form-radio text-customGreen"
-                          value="no"
+                          value={false}
                           onChange={handleInputChange}
                         />
                         <label
