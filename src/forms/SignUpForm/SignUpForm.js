@@ -37,7 +37,10 @@ export default function SignUpForm() {
     const { email } = data;
     console.log("submit");
     try {
-      const { confirmPassword, ...requestBody } = data;
+      const { confirmPassword, ...requestBody } = {
+        ...data,
+        userType: tabValue,
+      };
       const { data: responseData, error } = await register(requestBody);
       if (error) return setError(error.data.message);
       console.log("Session:", responseData);
