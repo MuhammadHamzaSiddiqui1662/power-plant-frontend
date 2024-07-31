@@ -1,8 +1,9 @@
 "use client"; // This is a client component 👈🏽
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
-import { Grid } from "@mui/material";
+import { Alert, Grid } from "@mui/material";
 import "./style.css";
+import { useCreateIpMutation } from "../../services/ip/ip";
 
 const Navbar = dynamic(() => import("../componants/Navbar"));
 const Footer = dynamic(() => import("../componants/Footer"));
@@ -12,6 +13,7 @@ const BackgroundSection = dynamic(() =>
 );
 
 export default function UploadIP() {
+  const [uploadIp, { error }] = useCreateIpMutation();
   const [data, setData] = useState({
     name: "",
     description: "",
@@ -28,11 +30,13 @@ export default function UploadIP() {
     images: [],
     sections: [{ title: "", content: "" }],
   });
+  const [errorMessage, setErrorMessage] = useState("");
   console.log("data", JSON.parse(data.hasPatent), data);
 
   const [files, setFiles] = useState({});
 
   const handleFileUpload = (file, index) => {
+    setErrorMessage("");
     setFiles((prevFiles) => ({
       ...prevFiles,
       [`file${index}`]: file,
@@ -40,6 +44,7 @@ export default function UploadIP() {
   };
 
   const handleBackgroundUpload = (file) => {
+    setErrorMessage("");
     setFiles((prevFiles) => ({
       ...prevFiles,
       backgroundImage: file,
@@ -55,6 +60,7 @@ export default function UploadIP() {
   ]);
 
   const handleAddUploader = () => {
+    setErrorMessage("");
     setUploaders((prevUploaders) => {
       const newIndex = prevUploaders.length;
       return [
@@ -74,6 +80,7 @@ export default function UploadIP() {
   };
 
   const handleInputChange = (event) => {
+    setErrorMessage("");
     const { name, value } = event.target;
     setData((prevData) => ({
       ...prevData,
@@ -82,6 +89,7 @@ export default function UploadIP() {
   };
 
   const handleSectionChange = (index, event) => {
+    setErrorMessage("");
     const { name, value } = event.target;
     const newSections = data.sections.slice();
     newSections[index][name] = value;
@@ -92,6 +100,7 @@ export default function UploadIP() {
   };
 
   const addSection = () => {
+    setErrorMessage("");
     setData((prevData) => ({
       ...prevData,
       sections: [...prevData.sections, { title: "", content: "" }],
@@ -107,14 +116,15 @@ export default function UploadIP() {
     });
 
     try {
-      // const response = await axios.post("/api/ips", formData, {
-      //   headers: {
-      //     "Content-Type": "multipart/form-data",
-      //   },
-      // });
-      // console.log("Response:", response.data);
+      const { error } = await uploadIp(formData);
+      if (error) {
+        console.log("error", error);
+        return setErrorMessage("In Complete Data");
+      }
+      console.log("Response:", response);
     } catch (error) {
-      console.error("Error uploading data:", error);
+      console.error("Error uploading data:", error.shortMessage);
+      setErrorMessage("In Complete Data");
     }
   };
 
@@ -130,6 +140,13 @@ export default function UploadIP() {
             </p>
           </Grid>
           <Grid container columnSpacing={5}>
+            <Grid item xs={12}>
+              {errorMessage && (
+                <Alert variant="outlined" severity="error" className="mb-4">
+                  {errorMessage}
+                </Alert>
+              )}
+            </Grid>
             <Grid item xs={12} sm={6}>
               <Grid container>
                 <Grid item xs={12}>
@@ -378,7 +395,8 @@ export default function UploadIP() {
                 Cancel
               </button>
               <button
-                type="submit"
+                // type="submit"
+                onClick={handleSubmit}
                 className="my-3 text-2xl btn btn-outlined text-customDarkBlue rounded-md py-6 w-40 text-[32px] "
               >
                 Save
