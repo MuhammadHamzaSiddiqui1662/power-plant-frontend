@@ -159,11 +159,18 @@
   box-shadow: none !important;
 }
 
+/* .chat-card {
+  height:100px !important;
+  width: 560px !important;
+  border-color: #6BB955 !important;
+} */
+
 .chat-card:hover{
   border-color: #6BB955 !important;
 }
 
-.active{ border-color: #6BB955 !important;
+.active{ 
+  border-color: #6BB955 !important;
 }
 
 .pin-button {

@@ -1,0 +1,92 @@
+.container-login {
+  max-width: 1280px;
+  padding-right: 15rem;
+  padding-left: 15rem;
+  margin: 0 auto;
+
+  @media (max-width: 1020px) {
+    padding-right: 5rem;
+    padding-left: 5rem;
+  }
+
+  @media (max-width: 958px) {
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+}
+
+.chat-dialogue {
+  height: 250px !important;
+  width: 650px !important;
+  border: none !important;
+}
+
+.f-24 {
+  font-size: 24px;
+}
+
+.f-18 {
+  font-size: 18px
+}
+
+.f-16 {
+  font-size: 16px
+}
+
+.b-7xx {
+  font-weight: 700
+}
+
+.b-5xx {
+  font-weight: 500
+}
+
+.pd-10 {
+  padding: 0 0 0 10px !important;
+}
+
+.pd-18 {
+  padding: 18px 0 !important;
+}
+
+.pd-18-24 {
+  padding: 18px 24px !important;
+}
+
+.c-green {
+  background-color: #6BB955 !important
+}
+
+.input-area {
+  resize: none !important;
+  height: 100px !important;
+  font-size: 14px !important;
+}
+
+.checkbox-deal {
+  padding: 20px 0px !important;
+}
+
+.checkbox-deal .ant-checkbox-inner {
+  width: 24px;
+  height: 24px;
+  background-color: #f0f0f0;
+  border: 1px solid #d9d9d9;
+}
+
+.checkbox-deal .ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #6BB955 !important;
+  border-color: #6BB955 !important;
+}
+
+.checkbox-deal:hover .ant-checkbox:hover .ant-checkbox-inner:hover,
+.checkbox-deal:focus .ant-checkbox:focus .ant-checkbox-inner:focus {
+  background-color: #6BB955 !important;
+  border-color: #6BB955 !important;
+}
+
+.checkbox-deal .ant-checkbox-inner::after {
+  width: 8px;
+  height: 15px;
+  border-width: 2px;
+}

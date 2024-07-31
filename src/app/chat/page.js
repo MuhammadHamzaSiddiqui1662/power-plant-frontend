@@ -7,31 +7,46 @@ import dynamic from "next/dynamic";
 import Navbar from "../componants/Navbar";
 import Footer from "../componants/Footer";
 import ReviewModal from "../componants/review/Modal"
+import ChatModal from "../componants/chat/Modal"
 import io from 'socket.io-client';
 
 import "./style.css";
-import { sendMessage } from "../../services/message";
 
-export default function Review() {
+import {
+  useChatsMutation,
+  useChatMutation,
+  useCreateChatMutation,
+  useUpdateChatMutation,
+  useDeleteChatMutation,
+} from "../../services/chat/chat";
+
+import {
+  useMessageMutation,
+  useSendMessageMutation,
+  useUpdateMessageMutation,
+  useDeleteMessageMutation
+} from "../../services/message/message";
+
+export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [chats, setChats] = useState([]);
   const [message, setMessage] = useState('')
-  const [chatClickedIndex, setChatClickedIndex] = useState(null);
+  const [chatClickedIndex, setChatClickedIndex] = useState(0);
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
-
-  const [messageData, setMessageData] = useState({
-    displayName: "",
-    phone: "",
-    email: "",
-    password: "",
-    address: "",
-    accountNumber: "",
-    paypal: "",
-  });
+  const [chatModalVisible, setChatModalVisible] = useState(false);
   const [error, setError] = useState("");
+  const [getAllChat, { isLoading: isGetting }] = useChatMutation();
+  const [getChatById, { isLoading: isGettingById }] = useChatMutation();
+  const [updateChat, { isLoading: isUpdating }] = useUpdateChatMutation();
+  const [deleteChat, { isLoading: isDeleting }] = useDeleteChatMutation();
+
 
   const handleOpenReviewModal = () => {
     setReviewModalVisible(true);
+  };
+
+  const handleOpenChatModal = () => {
+    setChatModalVisible(true);
   };
 
   const handleCloseReviewModal = () => {
@@ -56,6 +71,7 @@ export default function Review() {
 
   const chatClick = (index) => {
     setChatClickedIndex(index)
+    getChatByIdHandler();
   };
 
   const sendMessage = () => {
@@ -77,10 +93,60 @@ export default function Review() {
 
     }
   };
+  
+
+  const getAllChatsHandler = async (Id) => {
+    try {
+      const { data: getAllChatsResponse, error } = await getAllChat();
+      if (error) return setError(error.message);
+      console.log(getAllChatsResponse);
+    } catch (error) {
+      console.log(`error --> ${error}`);
+    }
+  };
+
+  const getChatByIdHandler = async (Id) => {
+    try {
+      const { data: getChatByIdResponse, error } = await getChatById({
+        Id,
+      });
+      if (error) return setError(error.message);
+      console.log(getChatByIdResponse);
+    } catch (error) {
+      console.log(`error --> ${error}`);
+    }
+  };
+  
+  const updateChatHandler = async (Id) => {
+    try {
+      const { data: updateChatResponse, error } = await updateChat({
+        Id,
+      });
+      if (error) return setError(error.message);
+      console.log(updateChatResponse);
+    } catch (error) {
+      console.log(`error --> ${error}`);
+    }
+  };
+
+  const deleteChatHandler = async (Id) => {
+    try {
+      const { data: deleteChatResponse, error } = await deleteChat({
+        Id,
+      });
+      if (error) return setError(error.message);
+      console.log(deleteChatResponse);
+    } catch (error) {
+      console.log(`error --> ${error}`);
+    }
+  };
+
 
   useEffect(() => {
 
     const socket = io('http://localhost:3001');
+
+    getAllChatsHandler();
 
     socket.on('newMessage', (message) => {
       setMessages([...messages, message]);
@@ -129,6 +195,8 @@ export default function Review() {
     <>
       <ReviewModal visible={reviewModalVisible} setVisible={setReviewModalVisible} />
 
+      <ChatModal visible={chatModalVisible} setVisible={setChatModalVisible} />
+
       <Navbar />
       <section className="my-28">
         <Row justify={"start"}>
@@ -137,14 +205,20 @@ export default function Review() {
               <div className="pd-24">
 
                 <h1 className="f-32 b-6xx">Messages</h1>
+                <Button onClick={handleOpenChatModal}>Create Chat</Button>
+{/* 
+               
+                <Button onClick={updateChatHandler}>Update Chat</Button>
+                <Button onClick={deleteChatHandler}>Delete Chat</Button> */}
 
                 <text className="fl-r f-14 b-5xx">CHAT +</text>
 
                 <div className="chat-container">
                   {chats.map((chat, index) => (
-                    <Card key={index} className={`m-40 chat-card ${chatClickedIndex === index ? 'active' : ''}`} onClick={() => chatClick(index)}>
+                    
+                    <Card key={index} className={`m-40 chat-card ${ chatClickedIndex  === index ? "active":""}`} onClick={() => chatClick(index)}>
                       <Row className="pd-12">
-                        <Col xs={{ span: 5 }}>
+                        <Col xs={{span:5}}>
                           {chat.is_online === true ?
                             <Badge status="success" dot offset={[0, 40]} className="pd-5">
                               <Avatar src={chat.image} shape="circle" className="h-5x w-5x"></Avatar>
@@ -153,7 +227,7 @@ export default function Review() {
                           }
                         </Col>
 
-                        <Col xs={{ span: 8, offset: 1 }}>
+                        <Col xs={{span:8, offset:1}}>
                           <text className="f-16 b-7xx">{chat.name}</text>
                           <br />
                           <text className="c-grey">{chat.last_message}</text>
@@ -183,20 +257,20 @@ export default function Review() {
                     <Avatar className="h-4x w-4x" src="images/payment/Avatar.png" shape="circle" />
                   </Col>
 
-                  <Col xs={{ span: 3 }} className="pd-0-15">
+                  <Col xs={{ span: 3 }} sm={{ span: 24 }}  md={{ span: 6 }} className="pd-0-15">
                     <text className="f-16 b-6xx" >Faraz Ayub</text>
                     <br />
                     <text>C#1249UoH</text>
                   </Col>
 
-                  <Col xs={{ span: 3, offset: 15 }}>
+                  <Col xs={{ span: 3, offset: 15 }} sm={{ span: 3, offset: 12 }} md={{ span: 3, offset: 12 }} xl={{ span: 3, offset: 14 }} xxl={{ span: 1, offset: 16 }} >
                     <Button className="close-deal-btn" onClick={closeDeal}>
                       <img src="images/payment/closeDeal.png" />
                       <text className="f-16 b-6xx"> Close Deal</text>
                     </Button>
                   </Col>
 
-                  <Col xs={{ span: 1 }}>
+                  <Col xs={{ span: 1 }} sm={{ span: 1 }}  md={{ span: 1, offset:1 }} xl={{ span: 1 , pull:1 }} xxl={{ span: 1, pull:1  }}>
                     <Button className="i-btn" type="success" shape="circle" size="small" >
                       <text className="c-white">i</text>
                     </Button>

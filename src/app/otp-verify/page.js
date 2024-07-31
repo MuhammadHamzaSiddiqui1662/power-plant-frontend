@@ -111,7 +111,7 @@ export default function OTPVerify() {
             </Row>
           )}
           <Row justify={"center"}>
-            <Col span={7} className="text-center pd-12">
+            <Col span={24} className="text-center pd-12">
               <Input.OTP
                 value={otp}
                 onChange={handleMessageChange}

@@ -46,7 +46,10 @@
 }
 
 .ant-input {
-  padding: 15px 25px !important;
+  /* padding: 15px 35px !important; */
+  height: 66px !important;
+  width: 66px !important;
+  font-size: larger !important;
 }
 .disabled {
   color: #ccc; /* Gray text color */
