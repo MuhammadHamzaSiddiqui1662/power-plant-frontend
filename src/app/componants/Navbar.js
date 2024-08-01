@@ -5,6 +5,7 @@ import Image from "next/image";
 import NotificationMenu from "./notification/Notification";
 
 import { User, Bell, MessageSquare } from "react-feather";
+import { Avatar } from "@mui/material";
 
 export default function Navbar(props) {
   const { navClass, topnavClass } = props;
@@ -227,13 +228,26 @@ export default function Navbar(props) {
                 <Bell className="h-4 w-4 stroke-[3] fill-current " />
               </Link>
             </li>
-            <li className="sm:inline ps-1 mb-0 hidden">
+            <li className="sm:inline ps-1 mb-0 me-2 hidden">
               <Link
                 href="/auth-signup"
                 // className="btn bg-customGreen hover:bg-green-700 border-green-600 dark:border-green-600 text-white rounded-full"
                 className="btn bg-customGreen border-green-600 dark:border-green-600 text-white rounded-full"
               >
                 Signup
+              </Link>
+            </li>
+            <li className="inline mb-0 me-2">
+              <Link
+                href="#"
+                className="btn btn-icon bg-customGreen border-customGreen dark:border-green-600 text-white rounded-full"
+              >
+                {/* <Avatar
+                  sx={{ width: 40, height: 40 }}
+                  alt="Remy Sharp"
+                  src="/images/client/01.jpg"
+                /> */}
+                <User className="h-4 w-4 stroke-[3]"></User>
               </Link>
             </li>
           </ul>
