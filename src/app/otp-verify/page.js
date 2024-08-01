@@ -88,12 +88,12 @@ export default function OTPVerify() {
       <section className="my-28">
         <div className="container-otp">
           <Row justify={"center"}>
-            <Col className="text-center">
+            <Col md={24} className="text-center">
               <h5 className="my-6 text-4xl">OTP Verification</h5>
             </Col>
           </Row>
           <Row justify={"center"}>
-            <Col className="pd-12 text-center f-16 b-5xx">
+            <Col md={24} className="pd-12 text-center f-16 b-5xx">
               <h4>Please enter the One-time-password to verify your account</h4>
             </Col>
           </Row>
@@ -111,7 +111,7 @@ export default function OTPVerify() {
             </Row>
           )}
           <Row justify={"center"}>
-            <Col span={24} className="text-center pd-12">
+            <Col span={24} md={24} className="text-center pd-12">
               <Input.OTP
                 value={otp}
                 onChange={handleMessageChange}
@@ -121,7 +121,7 @@ export default function OTPVerify() {
             </Col>
           </Row>
           <Row justify={"center"}>
-            <Col span={6} className="text-center pd-12">
+            <Col span={6} md={20} className="text-center pd-12">
               <h4 className="f-16 b-5xx">
                 OTP expires in{" "}
                 <span className="f-16 b-5xx">{formatTime(seconds)}</span>
@@ -129,7 +129,7 @@ export default function OTPVerify() {
             </Col>
           </Row>
           <Row justify={"center"}>
-            <Col span={10} className="pd-12 text-center">
+            <Col span={10} md={24} className="pd-12 text-center">
               <h4 className="f-16 b-5xx">
                 {`Didn't receive the Verification code, `}
                 <a
@@ -142,7 +142,7 @@ export default function OTPVerify() {
             </Col>
           </Row>
           <Row justify={"center"}>
-            <Col span={6} className="pd-12 text-center">
+            <Col span={6} md={12} className="pd-12 text-center">
               <ButtonContained
                 style={{ backgroundColor: "#6BB955" }}
                 type="primary"

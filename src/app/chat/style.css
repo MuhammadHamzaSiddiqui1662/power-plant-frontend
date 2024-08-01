@@ -1,21 +1,423 @@
-.container-login {
-  max-width: 1280px;
-  padding-right: 15rem;
-  padding-left: 15rem;
-  margin: 0 auto;
-
-  @media (max-width: 1020px) {
-    padding-right: 5rem;
-    padding-left: 5rem;
+/* Mobile Screen (Both Small Medium Size) */
+@media  (min-width:480px) and (max-width: 768px)  {
+  .f-32 {
+    font-size: 24px;
   }
 
-  @media (max-width: 958px) {
-    padding-right: 1rem;
-    padding-left: 1rem;
+  .chat-container {
+    margin-top: 10px;
+    height: 520px;
+    width: 320px;
+    overflow-y: scroll;
   }
+  .f-16 {
+    font-size: 12px;
+  }  
+  .f-12{
+    font-size: 10px;
+  }
+
+  .h-5x {
+    height: 40px !important;
+  }
+
+  .h-4x {
+    height: 35px !important;
+  }
+  
+  .w-5x {
+    width: 40px !important;
+  }
+
+  .w-4x {
+    width: 35px !important;
+  }
+
+  .pd-0-15 {
+    padding: 0 25px !important
+  }
+
+  .close-deal-btn {
+    padding: 16px 30px !important;
+    border-radius: 10px !important
+  }
+
+  .f-42 {
+    font-size: 24px;
+  }
+
+  .f-9{
+    font-size: 11px;
+  }
+  .f-18 {
+    font-size: 12px;
+  }
+
+  .deal-close-cancel-btn {
+    border-radius: 0 !important;
+    padding: 22px 48px !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .m-0-80 {
+    margin: 0 50px !important;
+  }
+
+  .deal-close-btn {
+    border-radius: 0 !important;
+    padding: 24px 24px !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+  
+.input-message {
+  border-color: white !important;
+  padding: 15px 10px !important;
+  max-width: 85% !important
+}
+.message-box {
+  width: 100% !important;
+  border: 1px solid #6BB955 !important;
+  border-radius: 8px !important;
+}
+ }
+
+ /* Tablets (Potrait Mode) */
+ @media  (min-width:769px) and (max-width: 1024px)  {
+  .f-32 {
+    font-size: 24px;
+  }
+
+  .chat-container {
+    margin-top: 10px;
+    height: 520px;
+    width: 250px;
+    overflow-y: scroll;
+  }
+  .f-16 {
+    font-size: 12px;
+  }  
+  .f-12{
+    font-size: 10px;
+  }
+
+  .h-5x {
+    height: 40px !important;
+  }
+
+  .h-4x {
+    height: 35px !important;
+  }
+  
+  .w-5x {
+    width: 40px !important;
+  }
+
+  .w-4x {
+    width: 35px !important;
+  }
+
+  .pd-0-15 {
+    padding: 0 25px !important
+  }
+
+  .close-deal-btn {
+    padding: 16px 30px !important;
+    border-radius: 10px !important
+  }
+
+  .f-42 {
+    font-size: 22px;
+  }
+
+  .f-9{
+    font-size: 9px;
+  }
+  .f-18 {
+    font-size: 12px;
+  }
+
+  .deal-close-cancel-btn {
+    border-radius: 0 !important;
+    padding: 22px 48px !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .m-0-80 {
+    margin: 0 50px !important;
+  }
+
+  .deal-close-btn {
+    border-radius: 0 !important;
+    padding: 24px 24px !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+  
+.input-message {
+  border-color: white !important;
+  padding: 15px 10px !important;
+  max-width: 85% !important
+}
+.message-box {
+  width: 100% !important;
+  border: 1px solid #6BB955 !important;
+  border-radius: 8px !important;
+}
+ }
+
+ /* Tablets (landscape Mode) */
+ @media  (min-width:1025px) and (max-width: 1366px)  {
+  .f-32 {
+    font-size: 24px;
+  }
+
+  .chat-container {
+    margin-top: 10px;
+    height: 520px;
+    width: 290px;
+    overflow-y: scroll;
+  }
+  .f-16 {
+    font-size: 12px;
+  }
+  .f-12{
+    font-size: 10px;
+  }
+
+  .h-5x {
+    height: 40px !important;
+  }
+
+  .h-4x {
+    height: 35px !important;
+  }
+  
+  .w-5x {
+    width: 40px !important;
+  }
+
+  .w-4x {
+    width: 35px !important;
+  }
+
+  .pd-0-15 {
+    padding: 0 25px !important
+  }
+
+  .close-deal-btn {
+    padding: 16px 30px !important;
+    border-radius: 10px !important
+  }
+
+  .f-42 {
+    font-size: 22px;
+  }
+
+  .f-9{
+    font-size: 9px;
+  }
+  .f-18 {
+    font-size: 12px;
+  }
+
+  .deal-close-cancel-btn {
+    border-radius: 0 !important;
+    padding: 22px 48px !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .m-0-80 {
+    margin: 0 50px !important;
+  }
+
+  .deal-close-btn {
+    border-radius: 0 !important;
+    padding: 24px 24px !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+  
+.input-message {
+  border-color: white !important;
+  padding: 15px 10px !important;
+  max-width: 85% !important
+}
+.message-box {
+  width: 100% !important;
+  border: 1px solid #6BB955 !important;
+  border-radius: 8px !important;
+}
+ }
+
+ /* Desktops (Standard) */
+ @media  (min-width:1367px) and (max-width: 1920px)  {
+  .f-32 {
+    font-size: 32px;
+  }
+
+  .chat-container {
+    margin-top: 10px;
+    height: 520px;
+    width: 310px;
+    overflow-y: scroll;
+  }
+
+  .f-16 {
+    font-size: 16px;
+  }
+
+  .h-5x {
+    height: 50px !important;
+  }
+
+  .h-4x {
+    height: 40px !important;
+  }
+  
+  .w-5x {
+    width: 50px !important;
+  }
+  
+  .w-4x {
+    width: 40px !important;
+  }
+
+  .pd-0-15 {
+    padding: 0 15px !important
+  }
+  .close-deal-btn {
+    padding: 22px 45px !important;
+    border-radius: 10px !important
+  }
+  .f-42 {
+    font-size: 32px;
+  }
+.f-9{
+  font-size: 10px;
 }
 
-.h-6xx {
+  .f-18 {
+    font-size: 18px;
+  }
+
+  .deal-close-cancel-btn {
+    border-radius: 0 !important;
+    padding: 24px 48px !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .m-0-80 {
+    margin: 0 80px !important;
+  }
+
+  .deal-close-btn {
+    border-radius: 0 !important;
+    padding: 24px 26px !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+  
+.input-message {
+  border-color: white !important;
+  padding: 15px 10px !important;
+  max-width: 85% !important
+}
+.message-box {
+  width: 100% !important;
+  border: 1px solid #6BB955 !important;
+  border-radius: 8px !important;
+}
+ }
+
+
+ /* Desktops (Extra Large) */
+ @media  (min-width:1921px)  {
+  .f-32 {
+    font-size: 32px;
+  }
+
+  .chat-container {
+    margin-top: 10px;
+    height: 520px;
+    width: 590px;
+    overflow-y: scroll;
+  }
+
+  .f-16 {
+    font-size: 16px;
+  }
+  
+  .h-5x {
+    height: 50px !important;
+  }
+
+  .h-4x {
+    height: 40px !important;
+  }
+  
+  .w-5x {
+    width: 50px !important;
+  }
+  
+  .w-4x {
+    width: 40px !important;
+  }
+
+  .pd-0-15 {
+    padding: 0 15px !important
+  }
+  .close-deal-btn {
+    padding: 22px 45px !important;
+    border-radius: 10px !important
+  }
+  .f-42 {
+    font-size: 42px;
+  }
+
+  .f-18 {
+    font-size: 18px;
+  }
+
+  .deal-close-cancel-btn {
+    border-radius: 0 !important;
+    padding: 24px 88px !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .m-0-80 {
+    margin: 0 80px !important;
+  }
+  .deal-close-btn {
+    border-radius: 0 !important;
+    padding: 24px 48px !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  
+.input-message {
+  border-color: white !important;
+  padding: 15px 10px !important;
+  max-width: 85% !important
+}
+.message-box {
+  width: 100% !important;
+  border: 1px solid #6BB955 !important;
+  border-radius: 8px !important;
+}
+ }
+
+ .chat-button{
+background-color:#6BB955 !important;
+ }
+
+ .h-6xx {
   height: 600px !important;
 }
 
@@ -23,17 +425,12 @@
   height: 650px !important;
 }
 
-.f-32 {
-  font-size: 32px;
-}
 
 .f-14 {
   font-size: 14px;
 }
 
-.f-16 {
-  font-size: 16px;
-}
+
 
 .b-6xx {
   font-weight: 600;
@@ -59,9 +456,7 @@
   padding: 5px;
 }
 
-.m-0-80 {
-  margin: 0 80px !important;
-}
+
 
 .m-40 {
   margin: 40px 0 !important;
@@ -100,14 +495,6 @@
   padding: 10px;
 }
 
-.chat-container {
-  margin-top: 10px;
-  height: 520px;
-  width: 320px;
-  overflow-y: scroll;
-}
-
-
 .message {
   margin-bottom: 10px;
   padding: 8px 12px;
@@ -132,18 +519,8 @@
   padding: 15px 0 !important;
 }
 
-.deal-close-btn {
-  border-radius: 0 !important;
-  padding: 24px 48px !important;
-  border: none !important;
-  box-shadow: none !important;
-}
 
-.input-message {
-  border-color: white !important;
-  padding: 15px 10px !important;
-  max-width: 85% !important
-}
+
 
 .deal-close-btn:hover,
 .deal-close-cancel-btn:hover {
@@ -152,12 +529,7 @@
   /* Example hover border color */
 }
 
-.deal-close-cancel-btn {
-  border-radius: 0 !important;
-  padding: 24px 88px !important;
-  border: none !important;
-  box-shadow: none !important;
-}
+
 
 /* .chat-card {
   height:100px !important;
@@ -199,35 +571,18 @@
   border-right: 1px solid #d9d9d9 !important;
 }
 
-.message-box {
-  width: 100% !important;
-  border: 1px solid #6BB955 !important;
-  border-radius: 8px !important;
-}
 
-.h-5x {
-  height: 50px !important;
-}
 
-.w-5x {
-  width: 50px !important;
-}
 
-.h-4x {
-  height: 40px !important;
-}
 
-.pd-0-15 {
-  padding: 0 15px !important
-}
+
+
 
 .m-0-20 {
   margin: 0 20px !important;
 }
 
-.w-4x {
-  width: 40px !important;
-}
+
 
 .receiver {
   background-color: #FFFFFF;
@@ -263,10 +618,7 @@
   background-color: #6BB955;
 }
 
-.close-deal-btn {
-  padding: 22px 45px !important;
-  border-radius: 10px !important
-}
+
 
 .deal-close {
   background-color: #6BB955 !important;
@@ -276,7 +628,7 @@
 
 .i-btn {
   background-color: #6BB955 !important;
-  margin: 8px 60px !important
+  margin: 8px 60px !important;
 }
 
 .divider {
@@ -288,13 +640,9 @@
   color: white;
 }
 
-.f-42 {
-  font-size: 42px;
-}
 
-.f-18 {
-  font-size: 18px;
-}
+
+
 
 .text-center {
   text-align: center;
