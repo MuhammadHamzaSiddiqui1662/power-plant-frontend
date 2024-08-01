@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { Alert, Grid } from "@mui/material";
 import "./style.css";
 import { useCreateIpMutation } from "../../services/ip/ip";
+import { IpStatus } from "../../types/ip";
 
 const Navbar = dynamic(() => import("../componants/Navbar"));
 const Footer = dynamic(() => import("../componants/Footer"));
@@ -19,7 +20,7 @@ export default function UploadIP() {
     description: "",
     abstract: "",
     price: "",
-    status: "",
+    status: IpStatus.InActive,
     category: "",
     hasPatent: true,
     publishedDate: "",
