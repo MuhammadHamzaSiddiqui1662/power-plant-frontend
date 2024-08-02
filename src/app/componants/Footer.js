@@ -101,7 +101,7 @@ export default function Footer() {
                           <span>About us</span>{" "}
                         </Link>
                       </li>
-                      <li class="mt-[10px]">
+                      {/* <li class="mt-[10px]">
                         <Link
                           href="/features"
                           className="text-slate-300 hover:text-slate-400 duration-500 ease-in-out flex items-center"
@@ -109,10 +109,10 @@ export default function Footer() {
                           <Unicons.UilAngleRight width={18} className="me-1" />{" "}
                           <span>Blog</span>{" "}
                         </Link>
-                      </li>
+                      </li> */}
                       <li class="mt-[10px]">
                         <Link
-                          href="/pricing"
+                          href="https://power-plant-frontend.vercel.app/list"
                           className="text-slate-300 hover:text-slate-400 duration-500 ease-in-out flex items-center"
                         >
                           <Unicons.UilAngleRight width={18} className="me-1" />{" "}
@@ -121,7 +121,7 @@ export default function Footer() {
                       </li>
                       <li class="mt-[10px]">
                         <Link
-                          href="/blogs"
+                          href="https://power-plant-frontend.vercel.app/auth-login"
                           className="text-slate-300 hover:text-slate-400 duration-500 ease-in-out flex items-center"
                         >
                           <Unicons.UilAngleRight width={18} className="me-1" />{" "}
@@ -130,7 +130,7 @@ export default function Footer() {
                       </li>
                       {/* <li class="mt-[10px]">
                         <Link
-                          href="/auth-login"
+                          href="https://power-plant-frontend.vercel.app/auth-login"
                           className="text-slate-300 hover:text-slate-400 duration-500 ease-in-out flex items-center"
                         >
                           <Unicons.UilAngleRight width={18} className="me-1" />{" "}

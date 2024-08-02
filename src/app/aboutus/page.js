@@ -31,7 +31,7 @@ export default function Aboutus() {
         <Feature />
       </section>
       <section
-        style={{ backgroundImage: "url('/images/bg/01.jpg')" }}
+        style={{ backgroundImage: "url('/images/bg/07.jpg')" }}
         className="relative py-24 bg-no-repeat bg-center bg-fixed bg-cover"
       >
         <div className="absolute inset-0 bg-black/60"></div>
@@ -50,7 +50,7 @@ export default function Aboutus() {
                     +
                   </h1>
                   <h5 className="counter-head text-white text-lg font-medium">
-                    Properties Sell
+                    IP's Listed
                   </h5>
                 </div>
 
@@ -65,7 +65,7 @@ export default function Aboutus() {
                     +
                   </h1>
                   <h5 className="counter-head text-white text-lg font-medium">
-                    Award Gained
+                    Deals Done
                   </h5>
                 </div>
 
@@ -80,7 +80,7 @@ export default function Aboutus() {
                     +
                   </h1>
                   <h5 className="counter-head text-white text-lg font-medium">
-                    Years Experience
+                    Brokers Available
                   </h5>
                 </div>
               </div>

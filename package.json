@@ -1,7 +1,7 @@
 {
   "name": "housely",
   "version": "1.0.0",
-  "description": "Hously - React Next Js Real Estate Template",
+  "description": "Power Plant",
   "private": true,
   "scripts": {
     "dev": "next dev",

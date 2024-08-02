@@ -9,19 +9,19 @@ export default function Feature() {
     {
       title: "Search for IPs",
       description:
-        "If the distribution of letters and words is random, the reader will not be distracted from making.",
+        "Browse a comprehensive library of intellectual property assets by industry, technology, and transaction type to find the perfect match for your needs.",
       Icon: Unicons.UilEstate,
     },
     {
-      title: "Meeting with Agent",
+      title: "Contact Innovator or Hire Broker",
       description:
-        "If the distribution of letters and words is random, the reader will not be distracted from making.",
+        "Reach out directly to the innovator for more details or hire a professional broker to manage the transaction on your behalf.",
       Icon: Unicons.UilBag,
     },
     {
       title: "Close the Deal",
       description:
-        "If the distribution of letters and words is random, the reader will not be distracted from making.",
+        "Finalize the transaction with clear and transparent processes, ensuring a smooth and efficient deal closure.",
       Icon: Unicons.UilKeySkeleton,
     },
   ];
@@ -62,14 +62,14 @@ export default function Feature() {
             );
           })}
         </div>
-        <div className="my-10 flex justify-center">
+        {/* <div className="my-10 flex justify-center">
           <Link
             href="#"
             className="btn bg-customGreen hover:bg-green-700 text-white text-center rounded-md mt-3"
           >
             Read More{" "}
           </Link>
-        </div>
+        </div> */}
       </div>
     </>
   );

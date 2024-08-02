@@ -59,7 +59,7 @@ export default function About() {
 
               <div className="mt-4">
                 <Link
-                  href="#"
+                  href="https://power-plant-frontend.vercel.app/aboutus"
                   className="btn bg-customGreen hover:bg-green-700 text-white rounded-md mt-3"
                 >
                   Learn More{" "}

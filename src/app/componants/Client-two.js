@@ -39,33 +39,33 @@ export default function ClientTwo() {
     {
       id: "1",
       profile: "/images/client/01.jpg",
-      name: "Calvin Carlo",
-      designation: "Manager",
+      name: "Dr. Sarah Thompson",
+      designation: "Biomedical Innovator",
       description:
-        "Hously made the processes so easy. Hously instantly increased the amount of interest and ultimately saved us over $10,000.",
+        "Power Plant has revolutionized the way I manage and monetize my intellectual property. The platform is user-friendly, and the ability to profile my IP and make it visible to potential buyers has significantly increased my opportunities. The transparency and ease of transaction have made this my go-to platform for all IP-related activities.",
     },
     {
       id: "2",
       profile: "/images/client/02.jpg",
-      name: "Christa Smith",
-      designation: "Manager",
+      name: "John Patel",
+      designation: "Renewable Energy Innovator",
       description:
-        'I highly recommend Hously as the new way to sell your home "by owner". My home sold in 24 hours for the asking price. Best $400 you could spend to sell your home.',
+        'As an innovator, finding a reliable and efficient platform to publish and patent my work was crucial. Power Plant exceeded my expectations by providing a seamless experience. The added feature of hiring a broker saved me time and ensured my IP was handled professionally. I highly recommend Power Plant to fellow innovators.',
     },
     {
       id: "3",
       profile: "/images/client/03.jpg",
-      name: "Christa Smith",
-      designation: "Manager",
+      name: "Emily Davis",
+      designation: "Venture Capitalist",
       description:
-        "My favorite part about selling my home myself was that we got to meet and get to know the people personally. This made it so much more enjoyable!",
+        "Power Plant has been a game-changer for me as an investor. The ability to search for IP assets by industry, technology, and transaction type has made my investment decisions more informed and strategic. The platform's transparency and comprehensive library of IP assets have made it an indispensable tool in my investment portfolio.",
     },
     {
       id: "4",
       profile: "/images/client/04.jpg",
-      name: "Christa Smith",
-      designation: "Manager",
-      description: "Great experience all around! Easy to use and efficient.",
+      name: "Michael Chen",
+      designation: "Angel Investor",
+      description: "The level of detail and organization on Power Plant is impressive. It has made the process of finding and investing in promising IP assets straightforward and efficient. The platform's dedication to transparency in the IP transactions market is commendable, and it has quickly become my preferred resource for IP investments.",
     },
   ];
 
