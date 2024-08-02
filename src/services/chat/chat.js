@@ -17,22 +17,20 @@ export const chatApi = createApi({
   }),
   endpoints: (build) => ({
     chats: build.mutation({
-      query(body) {
-        return {
-          url: `/`,
-          method: "GET",
-          body,
-        };
-      },
+      query(){
+return{
+url:`/`,
+method:"GET",
+};
+      }
     }),
     chat: build.mutation({
-      query(body) {
-        return {
-          url: `/${id}`,
-          method: "GET",
-          body,
+      query(id){
+        return{
+        url:`/${id}`,
+        method:"GET",
         };
-      },
+      }
     }),
     createChat: build.mutation({
       query(body) {
@@ -66,8 +64,8 @@ export const chatApi = createApi({
 
 export const {
   endpoints,
-  useChatMutation,
   useChatsMutation,
+  useChatMutation,
   useCreateChatMutation,
   useUpdateChatMutation,
   useDeleteChatMutation,

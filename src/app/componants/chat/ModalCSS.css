@@ -16,9 +16,16 @@
 }
 
 .chat-dialogue {
-  height: 250px !important;
+  height: 320px !important;
   width: 650px !important;
   border: none !important;
+}
+
+.ant-input {
+  /* padding: 15px 35px !important; */
+  height: 40px !important;
+  width: 660px !important;
+  max-width: 100% !important;
 }
 
 .f-24 {

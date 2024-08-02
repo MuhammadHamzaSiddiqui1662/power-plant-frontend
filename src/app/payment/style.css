@@ -15,6 +15,41 @@
   }
 }
 
+/* Mobile Screen (Both Small Medium Size) */
+@media  (min-width:480px) and (max-width: 768px)  {
+  .mt-40{
+    margin: 40px 0;
+  }
+ }
+
+ /* Tablets (Potrait Mode) */
+ @media  (min-width:769px) and (max-width: 1024px)  {
+  .mt-40{
+    margin: 0;
+  }
+ }
+
+ /* Tablets (landscape Mode) */
+ @media  (min-width:1025px) and (max-width: 1366px)  {
+  .mt-40{
+    margin: 0;
+  }
+ }
+
+ /* Desktops (Standard) */
+ @media  (min-width:1367px) and (max-width: 1920px)  {
+  .mt-40{
+    margin: 0;
+  }
+ }
+
+ /* Desktops (Extra Large) */
+ @media  (min-width:1921px)  {
+  .mt-40{
+    margin: 0;
+  }
+ }
+
 .visa-card {
   width: 100 !important;
   height: 65 !important;

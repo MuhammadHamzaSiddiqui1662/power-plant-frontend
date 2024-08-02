@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Row, Col, Space, Card, Button, Input, ConfigProvider, Typography, Badge, Avatar, message } from 'antd';
+import { Row, Col, Space, Card, Button, Input, ConfigProvider, Typography, Badge, Avatar, Drawer, FloatButton } from 'antd';
 const { Title, Paragraph, Text, } = Typography;
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -15,7 +15,6 @@ import "./style.css";
 import {
   useChatsMutation,
   useChatMutation,
-  useCreateChatMutation,
   useUpdateChatMutation,
   useDeleteChatMutation,
 } from "../../services/chat/chat";
@@ -29,17 +28,21 @@ import {
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
-  const [chats, setChats] = useState([]);
-  const [message, setMessage] = useState('')
+  const [chatsList, setChatsList] = useState([]);
+  const [message, setMessage] = useState('');
+  const [senderId, setSenderId] = useState('');
+  const [chatId, setChatId] = useState('')
   const [chatClickedIndex, setChatClickedIndex] = useState(0);
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
   const [chatModalVisible, setChatModalVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
-  const [getAllChat, { isLoading: isGetting }] = useChatMutation();
+  const [chats, { isLoading: isGetting }] = useChatsMutation();
   const [getChatById, { isLoading: isGettingById }] = useChatMutation();
   const [updateChat, { isLoading: isUpdating }] = useUpdateChatMutation();
   const [deleteChat, { isLoading: isDeleting }] = useDeleteChatMutation();
-
+  const socket = io('http://localhost:3001');
 
   const handleOpenReviewModal = () => {
     setReviewModalVisible(true);
@@ -70,8 +73,9 @@ export default function Chat() {
   };
 
   const chatClick = (index) => {
+    console.log("index==>" + index)
     setChatClickedIndex(index)
-    getChatByIdHandler();
+    getChatByIdHandler(index);
   };
 
   const sendMessage = () => {
@@ -83,22 +87,25 @@ export default function Chat() {
         sender: "me",
       }
       console.log(message);
-
-      socket.emit('sendMessage', { chatId: 'yourChatId', senderId: 'yourSenderId', content: inputMessage });
-      setMessages([...messages, msg]);
-      setMessage('');
-
+      if (chatId != '' && senderId != '') {
+        socket.emit('sendMessage', { chatId: chatId, senderId: senderId, content: message });
+        setMessages([...messages, msg]);
+        setMessage('');
+      }
     } catch (error) {
       console.log(`error --> ${error}`);
 
     }
   };
-  
 
-  const getAllChatsHandler = async (Id) => {
+
+  const getAllChatsHandler = async () => {
     try {
-      const { data: getAllChatsResponse, error } = await getAllChat();
+      console.log("called")
+      const { data: getAllChatsResponse, error } = await chats();
+
       if (error) return setError(error.message);
+      setChatsList(getAllChatsResponse)
       console.log(getAllChatsResponse);
     } catch (error) {
       console.log(`error --> ${error}`);
@@ -107,16 +114,21 @@ export default function Chat() {
 
   const getChatByIdHandler = async (Id) => {
     try {
-      const { data: getChatByIdResponse, error } = await getChatById({
-        Id,
-      });
+      console.log("Id clicked " + Id)
+      const { data: getChatByIdResponse, error } = await getChatById(Id);
       if (error) return setError(error.message);
+      if (getChatByIdResponse._id) {
+        console.log(getChatByIdResponse.participants[0]._id)
+        setChatId(getChatByIdResponse._id);
+        setSenderId(getChatByIdResponse.participants[0]._id);
+        socket.emit("joinChat", { chatId });
+      }
       console.log(getChatByIdResponse);
     } catch (error) {
       console.log(`error --> ${error}`);
     }
   };
-  
+
   const updateChatHandler = async (Id) => {
     try {
       const { data: updateChatResponse, error } = await updateChat({
@@ -144,9 +156,21 @@ export default function Chat() {
 
   useEffect(() => {
 
-    const socket = io('http://localhost:3001');
+
 
     getAllChatsHandler();
+
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setIsMobile(true);
+      }
+      else {
+        setIsMobile(false);
+      }
+    }
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
 
     socket.on('newMessage', (message) => {
       setMessages([...messages, message]);
@@ -172,24 +196,288 @@ export default function Chat() {
     ])
 
     //Dummy Data
-    setChats([
-      { image: "images/payment/Avatar.png", name: "Faraz Ayub", last_message: "Done Deal", is_online: false, last_message_count: 9 },
-      { image: "images/payment/Avatar.png", name: "Faraz Ayub", last_message: "Done Deal", is_online: true, last_message_count: 1 },
-      { image: "images/payment/Avatar.png", name: "Faraz Ayub", last_message: "Done Deal", is_online: false, last_message_count: 3 },
-      { image: "images/payment/Avatar.png", name: "Faraz Ayub", last_message: "Done Deal", is_online: true, last_message_count: 0 },
-      { image: "images/payment/Avatar.png", name: "Faraz Ayub", last_message: "Done Deal", is_online: true, last_message_count: 1 },
-      { image: "images/payment/Avatar.png", name: "Faraz Ayub", last_message: "Done Deal", is_online: false, last_message_count: 1 },
-      { image: "images/payment/Avatar.png", name: "Faraz Ayub", last_message: "Done Deal", is_online: true, last_message_count: 1 },
-      { image: "images/payment/Avatar.png", name: "Faraz Ayub", last_message: "Done Deal", is_online: true, last_message_count: 1 },
-      { image: "images/payment/Avatar.png", name: "Faraz Ayub", last_message: "Done Deal", is_online: true, last_message_count: 1 },
-    ])
+    // setChats([
+    //   { image: "images/payment/Avatar.png", name: "Faraz Ayub", last_message: "Done Deal", is_online: false, last_message_count: 9 },
+    //   { image: "images/payment/Avatar.png", name: "Faraz Ayub", last_message: "Done Deal", is_online: true, last_message_count: 1 },
+    //   { image: "images/payment/Avatar.png", name: "Faraz Ayub", last_message: "Done Deal", is_online: false, last_message_count: 3 },
+    //   { image: "images/payment/Avatar.png", name: "Faraz Ayub", last_message: "Done Deal", is_online: true, last_message_count: 0 },
+    //   { image: "images/payment/Avatar.png", name: "Faraz Ayub", last_message: "Done Deal", is_online: true, last_message_count: 1 },
+    //   { image: "images/payment/Avatar.png", name: "Faraz Ayub", last_message: "Done Deal", is_online: false, last_message_count: 1 },
+    //   { image: "images/payment/Avatar.png", name: "Faraz Ayub", last_message: "Done Deal", is_online: true, last_message_count: 1 },
+    //   { image: "images/payment/Avatar.png", name: "Faraz Ayub", last_message: "Done Deal", is_online: true, last_message_count: 1 },
+    //   { image: "images/payment/Avatar.png", name: "Faraz Ayub", last_message: "Done Deal", is_online: true, last_message_count: 1 },
+    // ])
 
     return () => {
       socket.disconnect();
+      window.removeEventListener('resize', handleResize)
     };
 
 
   }, []);
+
+  if (isMobile) {
+    return (
+      <>
+        <ReviewModal visible={reviewModalVisible} setVisible={setReviewModalVisible} />
+
+        <ChatModal visible={chatModalVisible} setVisible={setChatModalVisible} />
+
+        <Navbar />
+        <section className="my-28">
+
+          <Drawer
+            title="Chats"
+            placement="left"
+            visible={visible}
+            onClose={() => setVisible(false)}
+          >
+            <Col xs={23} sm={23} md={22} lg={7} xl={6} xll={6} >
+              <h1 className="f-32 b-6xx">Messages</h1>
+              <Button onClick={handleOpenChatModal}>Create Chat</Button>
+
+              <text className="fl-r f-14 b-5xx">CHAT +</text>
+
+              <div className="chat-container">
+                {chatsList.map((chat, index) => (
+
+                  <Card key={chat._id} className={`m-40 chat-card ${chatClickedIndex === chat._id ? "active" : ""}`} onClick={() => chatClick(chat._id)}>
+                    <Row className="pd-12">
+                      <Col xs={3} sm={3} md={3} lg={5} xl={2} xxl={1} >
+                        {chat.participants[1].online === true ?
+                          <Badge status="success" dot offset={[-5, 45]} className="pd-5">
+                            <Avatar src={chat.participants[1].imageUrl} shape="circle" className="h-5x w-5x"></Avatar>
+                          </Badge> :
+                          <Avatar src={chat.participants[1].imageUrl} shape="circle" className="h-5x w-5x"> </Avatar>
+                        }
+                      </Col>
+
+                      <Col xs={2} sm={2} md={3} lg={0} xl={3} xxl={2}></Col>
+
+                      <Col xs={13} sm={10} md={8} lg={8} xl={8} xxl={16}>
+                        <text className="f-16 b-7xx">{chat.participants[1].name}</text>
+                        <br />
+                        <text className="f-12 c-grey">{chat.last_message}</text>
+                      </Col>
+
+                      <Col xs={3} sm={3} md={3} lg={1} xl={3} xxl={3}>
+                        {chat.last_message_count > 0 ?
+                          <Badge color="green" count={chat.last_message_count} offset={[80, 20]} ></Badge> :
+                          <text></text>}
+                      </Col>
+
+                    </Row>
+                  </Card>
+                ))}
+              </div>
+            </Col>
+          </Drawer>
+
+          <Row justify={"center"}>
+            <Col xs={22} md={22} lg={15} xl={13} xll={12}>
+              <Card className="h-65x">
+
+                <div className="pd-24">
+                  <Row>
+                    <Col xs={{ span: 1 }}>
+                      <Avatar className="h-4x w-4x" src="images/payment/Avatar.png" shape="circle" />
+                    </Col>
+
+                    <Col xs={3} sm={3} md={6} lg={5} className="pd-0-15">
+                      <text className="f-16 b-7xx" >Faraz Ayub</text>
+                      <br />
+                      <text className="f-12">C#1249UoH</text>
+                    </Col>
+
+                    <Col xs={10} sm={10} lg={12} xl={11}></Col>
+
+                    <Col xs={3} sm={3} md={3} lg={2} xl={3} xxl={3} >
+                      <Button className="close-deal-btn" onClick={closeDeal}>
+                        <img src="images/payment/closeDeal.png" />
+                        <text className="f-16 b-6xx"> Close Deal</text>
+                      </Button>
+                    </Col>
+
+                    <Col lg={1} xl={1}></Col>
+
+                    <Col xs={3} sm={3} md={3} lg={2} xl={1} xxl={1}>
+                      <Button className="i-btn" type="success" shape="circle" size="small" >
+                        <text className="c-white">i</text>
+                      </Button>
+                    </Col>
+                  </Row>
+                </div>
+
+                <div className="divider">
+                </div>
+
+                <div className="message-container">
+                  {messages.map((message, index) => (
+                    <div key={index} >
+                      {
+                        message.sender === 'me' ?
+                          <div className="pd-24">
+                            {message.deal_close === true ?
+                              <Row justify={'end'}>
+                                <Col xs={{ span: 9, push: 1 }}>
+                                  <Card className={'message'}>
+                                    <div className="deal-close">
+                                      <Typography>
+                                        <Text className="c-white f-9">{`${message.sender} has sent you Deal Close offer:`}</Text>
+                                        <br />
+                                        <Text className="c-white f-42 b-7xx">DEAL CLOSE</Text>
+                                      </Typography>
+                                    </div>
+
+                                    {message.is_accepted === true ?
+                                      <div className="text-center">
+                                        <ConfigProvider wave={{ disabled: true }}>
+                                          <Button className="deal-close-cancel-btn">
+                                            <text className="f-18 b-5xx">Cancel</text>
+                                          </Button>
+                                        </ConfigProvider>
+                                      </div> :
+                                      <div className="text-center">
+                                        <ConfigProvider wave={{ disabled: true }}>
+                                          <Button className="deal-close-btn br-right">
+                                            <text className="f-18 b-5xx">Reject</text>
+                                          </Button>
+                                        </ConfigProvider>
+
+                                        <ConfigProvider wave={{ disabled: true }}>
+                                          <Button className="deal-close-btn" onClick={handleOpenReviewModal}>
+                                            <text className="f-18 b-5xx">Accept</text>
+                                          </Button>
+                                        </ConfigProvider>
+                                      </div>
+                                    }
+                                  </Card>
+                                  <text className="fl-r f-9 m-0-80">8:00 PM</text>
+                                </Col>
+
+                                <Col xs={{ span: 1, }}>
+                                  <Avatar src={message.image} shape="circle" />
+                                </Col>
+
+                              </Row> :
+                              <Row justify={'end'}>
+                                <Col xs={{ span: 9, push: 1 }}>
+                                  <Card className={'pd-18 message sender'}>
+                                    <Typography>
+                                      <Text className="c-white f-12">{message.text}</Text>
+                                    </Typography>
+                                  </Card>
+                                  <text className="fl-r f-9 m-0-80">8:00 PM</text>
+                                </Col>
+
+                                <Col xs={{ span: 1, }}>
+                                  <Avatar src={message.image} shape="circle" />
+                                </Col>
+                              </Row>
+                            }
+                          </div> :
+                          <div className="pd-24">
+                            {message.deal_close === true ?
+                              <Row justify={'start'}>
+
+                                <Col xs={{ span: 1, }} className="m-0-20">
+                                  <Avatar src={message.image} shape="circle" />
+                                </Col>
+
+                                <Col xs={{ span: 9 }}>
+                                  <Card className={'message'}>
+                                    <div className="deal-close">
+                                      <Typography>
+                                        <Text className="c-white f-9">{`${message.sender} has sent you Deal Close offer:`}</Text>
+                                        <br />
+                                        <Text className="f-42 b-7xx c-white">DEAL CLOSE</Text>
+                                      </Typography>
+                                    </div>
+
+                                    {message.is_accepted === true ?
+                                      <div className="text-center">
+                                        <ConfigProvider wave={{ disabled: true }}>
+                                          <Button className="deal-close-cancel-btn">
+                                            <text className="f-18 b-5xx">Cancel</text>
+                                          </Button>
+                                        </ConfigProvider>
+                                      </div> :
+                                      <div className="text-center">
+                                        <ConfigProvider wave={{ disabled: true }}>
+                                          <Button className="deal-close-btn br-right">
+                                            <text className="f-18 b-5xx">Reject</text>
+                                          </Button>
+                                        </ConfigProvider>
+
+                                        <ConfigProvider wave={{ disabled: true }}>
+                                          <Button className="deal-close-btn" onClick={handleOpenReviewModal}>
+                                            <text className="f-18 b-5xx">Accept</text>
+                                          </Button>
+                                        </ConfigProvider>
+                                      </div>
+                                    }
+                                  </Card>
+
+                                  <text className="f-9">8:00 PM</text>
+
+                                </Col>
+
+                              </Row> :
+                              <Row justify={'start'}>
+                                <Col xs={{ span: 1, }} className="m-0-20">
+                                  <Avatar src={message.image} shape="circle" />
+                                </Col>
+
+                                <Col xs={{ span: 9 }}>
+                                  <Card className={'pd-18 message receiver'}>
+                                    <Typography>
+                                      <Text className="f-12">{message.text}</Text>
+                                    </Typography>
+                                  </Card>
+                                  <text className='f-9'>8:00 PM</text>
+                                </Col>
+                              </Row>
+                            }
+                          </div>
+                      }
+                    </div>
+                  ))}
+                </div>
+
+                <div className="pd-24 mt-1x">
+                  <Space.Compact className="message-box">
+                    <Input value={message} onChange={handleMessageChange} className="input-message" placeholder="Type your messages here"></Input>
+
+                    <ConfigProvider wave={{ disabled: true }}>
+                      <Button className="pin-button">
+                        <img className="file-pin-image" src="images/payment/filePin.png" />
+                      </Button>
+                    </ConfigProvider>
+
+                    <ConfigProvider wave={{ disabled: true }}>
+                      <Button className="send-btn" onClick={sendMessage} >
+                        <img className="send-btn-image" src="images/payment/sendbtn.png" />
+                      </Button>
+                    </ConfigProvider>
+                  </Space.Compact>
+                </div>
+
+              </Card>
+            </Col>
+          </Row>
+
+          <FloatButton
+            icon={'+'}
+            type={'success'}
+            className="chat-button"
+            onClick={() => setVisible(true)}>
+          </FloatButton>
+
+        </section>
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>
@@ -199,14 +487,15 @@ export default function Chat() {
 
       <Navbar />
       <section className="my-28">
-        <Row justify={"start"}>
-          <Col xs={{ span: 5, offset: 1 }} >
+        <Row justify={"center"}>
+
+          <Col xs={22} md={22} lg={7} xl={6} xll={6} >
             <Card className="h-6xx">
               <div className="pd-24">
 
                 <h1 className="f-32 b-6xx">Messages</h1>
                 <Button onClick={handleOpenChatModal}>Create Chat</Button>
-{/* 
+                {/* 
                
                 <Button onClick={updateChatHandler}>Update Chat</Button>
                 <Button onClick={deleteChatHandler}>Delete Chat</Button> */}
@@ -214,28 +503,30 @@ export default function Chat() {
                 <text className="fl-r f-14 b-5xx">CHAT +</text>
 
                 <div className="chat-container">
-                  {chats.map((chat, index) => (
-                    
-                    <Card key={index} className={`m-40 chat-card ${ chatClickedIndex  === index ? "active":""}`} onClick={() => chatClick(index)}>
+                  {chatsList.map((chat, index) => (
+
+                    <Card key={chat._id} className={`m-40 chat-card ${chatClickedIndex === chat._id ? "active" : ""}`} onClick={() => chatClick(chat._id)}>
                       <Row className="pd-12">
-                        <Col xs={{span:5}}>
-                          {chat.is_online === true ?
-                            <Badge status="success" dot offset={[0, 40]} className="pd-5">
-                              <Avatar src={chat.image} shape="circle" className="h-5x w-5x"></Avatar>
+                        <Col xs={3} sm={3} md={3} lg={5} xl={2} xxl={1} >
+                          {chat.participants[1].online === true ?
+                            <Badge status="success" dot offset={[-5, 45]} className="pd-5">
+                              <Avatar src={chat.participants[1].imageUrl} shape="circle" className="h-5x w-5x"></Avatar>
                             </Badge> :
-                            <Avatar src={chat.image} shape="circle" className="h-5x w-5x"> </Avatar>
+                            <Avatar src={chat.participants[1].imageUrl} shape="circle" className="h-5x w-5x"> </Avatar>
                           }
                         </Col>
 
-                        <Col xs={{span:8, offset:1}}>
-                          <text className="f-16 b-7xx">{chat.name}</text>
+                        <Col xs={3} sm={3} md={3} lg={0} xl={3} xxl={2}></Col>
+
+                        <Col xs={3} sm={3} md={3} lg={8} xl={8} xxl={16}>
+                          <text className="f-16 b-7xx">{chat.participants[1].name}</text>
                           <br />
-                          <text className="c-grey">{chat.last_message}</text>
+                          <text className="f-12 c-grey">{chat.participants[1].last_message}</text>
                         </Col>
 
-                        <Col>
+                        <Col xs={3} sm={3} md={3} lg={1} xl={3} xxl={3}>
                           {chat.last_message_count > 0 ?
-                            <Badge color="green" count={chat.last_message_count} offset={[80, 20]} ></Badge> :
+                            <Badge color="green" count={chat.participants[1].last_message_count} offset={[80, 20]} ></Badge> :
                             <text></text>}
                         </Col>
 
@@ -248,7 +539,9 @@ export default function Chat() {
             </Card>
           </Col>
 
-          <Col xs={{ span: 16, offset: 1 }}>
+          <Col xs={22} md={22} lg={1} xl={1} xll={1}></Col>
+
+          <Col xs={22} md={22} lg={15} xl={13} xll={12}>
             <Card className="h-65x">
 
               <div className="pd-24">
@@ -257,20 +550,24 @@ export default function Chat() {
                     <Avatar className="h-4x w-4x" src="images/payment/Avatar.png" shape="circle" />
                   </Col>
 
-                  <Col xs={{ span: 3 }} sm={{ span: 24 }}  md={{ span: 6 }} className="pd-0-15">
-                    <text className="f-16 b-6xx" >Faraz Ayub</text>
+                  <Col xs={3} sm={3} md={6} lg={5} className="pd-0-15">
+                    <text className="f-16 b-7xx" >Faraz Ayub</text>
                     <br />
-                    <text>C#1249UoH</text>
+                    <text className="f-12">C#1249UoH</text>
                   </Col>
 
-                  <Col xs={{ span: 3, offset: 15 }} sm={{ span: 3, offset: 12 }} md={{ span: 3, offset: 12 }} xl={{ span: 3, offset: 14 }} xxl={{ span: 1, offset: 16 }} >
+                  <Col lg={12} xl={11}></Col>
+
+                  <Col xs={3} sm={3} md={3} lg={2} xl={3} xxl={3} >
                     <Button className="close-deal-btn" onClick={closeDeal}>
                       <img src="images/payment/closeDeal.png" />
                       <text className="f-16 b-6xx"> Close Deal</text>
                     </Button>
                   </Col>
 
-                  <Col xs={{ span: 1 }} sm={{ span: 1 }}  md={{ span: 1, offset:1 }} xl={{ span: 1 , pull:1 }} xxl={{ span: 1, pull:1  }}>
+                  <Col lg={1} xl={1}></Col>
+
+                  <Col xs={3} sm={3} md={3} lg={2} xl={1} xxl={1}>
                     <Button className="i-btn" type="success" shape="circle" size="small" >
                       <text className="c-white">i</text>
                     </Button>
@@ -293,7 +590,7 @@ export default function Chat() {
                                 <Card className={'message'}>
                                   <div className="deal-close">
                                     <Typography>
-                                      <Text className="c-white">{`${message.sender} has sent you Deal Close offer:`}</Text>
+                                      <Text className="c-white f-9">{`${message.sender} has sent you Deal Close offer:`}</Text>
                                       <br />
                                       <Text className="c-white f-42 b-7xx">DEAL CLOSE</Text>
                                     </Typography>
@@ -322,7 +619,7 @@ export default function Chat() {
                                     </div>
                                   }
                                 </Card>
-                                <text className="fl-r m-0-80">8:00 PM</text>
+                                <text className="fl-r f-9 m-0-80">8:00 PM</text>
                               </Col>
 
                               <Col xs={{ span: 1, }}>
@@ -334,10 +631,10 @@ export default function Chat() {
                               <Col xs={{ span: 9, push: 1 }}>
                                 <Card className={'pd-18 message sender'}>
                                   <Typography>
-                                    <Text className="c-white">{message.text}</Text>
+                                    <Text className="c-white f-12">{message.text}</Text>
                                   </Typography>
                                 </Card>
-                                <text className="fl-r m-0-80">8:00 PM</text>
+                                <text className="fl-r f-9 m-0-80">8:00 PM</text>
                               </Col>
 
                               <Col xs={{ span: 1, }}>
@@ -358,7 +655,7 @@ export default function Chat() {
                                 <Card className={'message'}>
                                   <div className="deal-close">
                                     <Typography>
-                                      <Text className="c-white">{`${message.sender} has sent you Deal Close offer:`}</Text>
+                                      <Text className="c-white f-9">{`${message.sender} has sent you Deal Close offer:`}</Text>
                                       <br />
                                       <Text className="f-42 b-7xx c-white">DEAL CLOSE</Text>
                                     </Typography>
@@ -388,7 +685,7 @@ export default function Chat() {
                                   }
                                 </Card>
 
-                                <text>8:00 PM</text>
+                                <text className="f-9">8:00 PM</text>
 
                               </Col>
 
@@ -401,10 +698,10 @@ export default function Chat() {
                               <Col xs={{ span: 9 }}>
                                 <Card className={'pd-18 message receiver'}>
                                   <Typography>
-                                    <Text>{message.text}</Text>
+                                    <Text className="f-12">{message.text}</Text>
                                   </Typography>
                                 </Card>
-                                <text>8:00 PM</text>
+                                <text className='f-9'>8:00 PM</text>
                               </Col>
                             </Row>
                           }
@@ -434,6 +731,7 @@ export default function Chat() {
 
             </Card>
           </Col>
+
         </Row>
       </section>
       <Footer />

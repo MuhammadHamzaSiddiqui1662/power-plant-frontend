@@ -61,18 +61,27 @@ export default function ChatModal({ visible, setVisible }) {
               <h1 className="f-24 b-7xx">Create Chat </h1>
               <br />
               <br />
-              <Input
+              <Row>
+                <Col md={22}>
+                <Input 
                 value={participants[0]}
                 onChange={InputIDHandler}
                 placeholder="Enter your Id"
               ></Input>
+                </Col>
+              </Row>
+             
               <br />
               <br />
-              <Input
+              <Row>
+                <Col md={22}>
+                <Input
                 value={participants[1]}
                 onChange={InputBrokerIDHandler}
                 placeholder="Enter broker Id"
               ></Input>
+                </Col>
+              </Row>
               <br />
               <br />
               <Col span={4} offset={10}>

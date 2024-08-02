@@ -52,7 +52,8 @@ export default function Payment() {
         <h5 className="my-6 text-4xl text-center">Payment Information</h5>
 
         <Row justify={"center"}>
-          <Col span={6}>
+         
+          <Col xs={22} md={20} lg={10} xl={8} xxl={8}>
             <Card className="subscriber-fee-card">
 
               <Typography>
@@ -129,8 +130,10 @@ export default function Payment() {
 
             </Card>
           </Col >
-          <Col span={2}></Col>
-          <Col span={6}>
+
+          <Col xs={0} md={0} lg={2} xl={1} xxl={1}></Col>
+         
+          <Col xs={22} md={20} lg={10} xl={7} xxl={6} className="mt-40">
             <Card className="payment-card" bordered={false}>
               <Typography>
                 <Title className="f-24 b-5xx">Order Summary</Title>
@@ -154,7 +157,9 @@ export default function Payment() {
                 <Button className="pay-now-btn" onClick={handlePayment} type="primary"><text className="f-16">Pay Now</text></Button>
               </Col>
             </Card>
+        
           </Col>
+        
         </Row >
       </section >
       <Footer />
