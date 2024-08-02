@@ -144,7 +144,7 @@ export default function Navbar(props) {
         >
           {/* <!-- Logo container--> */}
           {navClass === "" || navClass === undefined ? (
-            <Link className="logo" href="../page.js">
+            <Link className="logo" href="/">
               <Image
                 src="/images/pp-logo.png"
                 className="inline-block dark:hidden"
@@ -161,7 +161,7 @@ export default function Navbar(props) {
               />
             </Link>
           ) : (
-            <Link className="logo" href="../page.js">
+            <Link className="logo" href="/">
               <span className="inline-block dark:hidden">
                 <Image
                   src="/images/pp-logo.png"
