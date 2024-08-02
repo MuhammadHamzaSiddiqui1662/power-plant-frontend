@@ -125,7 +125,16 @@ export default function Footer() {
                           className="text-slate-300 hover:text-slate-400 duration-500 ease-in-out flex items-center"
                         >
                           <Unicons.UilAngleRight width={18} className="me-1" />{" "}
-                          <span>Login/Signup</span>{" "}
+                          <span>Login</span>{" "}
+                        </Link>
+                      </li>
+                      <li class="mt-[10px]">
+                        <Link
+                          href="https://power-plant-frontend.vercel.app/auth-signup"
+                          className="text-slate-300 hover:text-slate-400 duration-500 ease-in-out flex items-center"
+                        >
+                          <Unicons.UilAngleRight width={18} className="me-1" />{" "}
+                          <span>Signup</span>{" "}
                         </Link>
                       </li>
                       {/* <li class="mt-[10px]">
@@ -163,7 +172,7 @@ export default function Footer() {
                           <span>Privacy Policy</span>{" "}
                         </Link>
                       </li>
-                      <li class="mt-[10px]">
+                      {/* <li class="mt-[10px]">
                         <Link
                           href="/grid"
                           className="text-slate-300 hover:text-slate-400 duration-500 ease-in-out flex items-center"
@@ -171,7 +180,7 @@ export default function Footer() {
                           <Unicons.UilAngleRight width={18} className="me-1" />{" "}
                           <span>Listing</span>{" "}
                         </Link>
-                      </li>
+                      </li> */}
                       <li class="mt-[10px]">
                         <Link
                           href="/contact"
@@ -195,13 +204,13 @@ export default function Footer() {
                           Plot-4, Northwest Freeway, <br /> Suite 420,
                           <br /> Berlin, Germany
                         </h6>
-                        <Link
+                        {/* <Link
                           href="https://www.google.com/maps/search/Plot-4,+Northwest+Freeway,+Suite+420,+Berlin,+Germany/@52.5068022,13.0944055,10z?entry=ttu"
                           data-type="iframe"
                           className="text-green-600 hover:text-green-700 duration-500 ease-in-out lightbox"
                         >
                           View on Google map
-                        </Link>
+                        </Link> */}
                       </div>
                     </div>
 
