@@ -22,7 +22,7 @@ export default function UploadIP() {
     abstract: "",
     price: "",
     status: IpStatus.InActive,
-    category: [],
+    categories: [],
     publishedDate: "",
     patentNumber: "",
     trademark: "",
@@ -42,7 +42,7 @@ export default function UploadIP() {
     } = event;
     setData((prev) => ({
       ...prev,
-      category: typeof value === "string" ? value.split(",") : value,
+      categories: typeof value === "string" ? value.split(",") : value,
     }));
   };
 
@@ -314,7 +314,7 @@ export default function UploadIP() {
                       Category:
                     </label>
                     <CategorySelect
-                      categories={data.category}
+                      categories={data.categories}
                       onChange={handleCategoryChange}
                     />
                   </div>
