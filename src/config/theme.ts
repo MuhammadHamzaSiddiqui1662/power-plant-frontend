@@ -44,14 +44,18 @@ const theme = createTheme({
     MuiOutlinedInput: {
       styleOverrides: {
         notchedOutline: {
-          borderColor: grey100,
+          borderColor: "#ccc",
+          borderWidth: 1,
         },
         root: {
-          color: primaryContrastText,
-          borderRadius: 16,
+          color: "#161c2d",
+          borderRadius: "0.526rem",
+          minHeight: 40,
+          fontSize: 14,
           ":hover": {
             "& .MuiOutlinedInput-notchedOutline": {
-              borderColor: primaryMain,
+              borderColor: "#ccc",
+              borderWidth: 1,
             },
           },
         },
@@ -76,6 +80,10 @@ const theme = createTheme({
       styleOverrides: {
         icon: {
           color: primaryContrastText,
+        },
+        select: {
+          paddingTop: 4,
+          paddingBottom: 4,
         },
       },
     },
@@ -151,6 +159,17 @@ const theme = createTheme({
       styleOverrides: {
         track: {
           backgroundColor: "#777",
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          height: 28,
+        },
+        filled: {
+          background: primaryMain,
+          color: primaryContrastText,
         },
       },
     },

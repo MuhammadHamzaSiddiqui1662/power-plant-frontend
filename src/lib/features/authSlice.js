@@ -17,10 +17,14 @@ const initialState = {
 
 const authSlice = createSlice({
   name: "auth",
-  initialState: initialState,
+  initialState: { ...initialState },
   reducers: {
     logout: (state) => {
-      state = initialState;
+      state.user = initialState.user;
+      state.accessToken = initialState.accessToken;
+      state.refreshToken = initialState.refreshToken;
+      state.accessTokenExpiry = initialState.accessTokenExpiry;
+      state.refreshTokenExpiry = initialState.refreshTokenExpiry;
     },
     setUserType: (state, action) => {
       state.userType = action.payload;

@@ -21,8 +21,8 @@ export default function PaginationTwo({
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentItems = items.slice(startIndex, endIndex);
-  const numPages = Math.ceil(items.length / itemsPerPage);
+  const currentItems = items?.slice(startIndex, endIndex);
+  const numPages = Math.ceil(items?.length / itemsPerPage);
 
   const pageButtons = Array.from({ length: numPages }, (_, i) => i + 1).map(
     (pageNum) => (
@@ -40,7 +40,9 @@ export default function PaginationTwo({
     )
   );
 
-  return (
+  return !items || !currentItems ? (
+    <></>
+  ) : (
     <>
       <div className={gridClass}>
         {currentItems.map((item, index) => (
@@ -48,12 +50,12 @@ export default function PaginationTwo({
             isEdit={false}
             key={index}
             name={item.name}
-            id={item.id}
+            id={item._id}
             description={item.description}
-            year={item.year}
-            category={item.category}
+            year={item.publishedDate}
+            categories={item.categories}
             price={item.price}
-            patentNo={item.patentNo}
+            patentNumber={item.patentNumber}
             image={item.image}
           />
           // <div key={index} className="group rounded-xl bg-white dark:bg-slate-900 shadow hover:shadow-xl dark:hover:shadow-xl dark:shadow-gray-700 dark:hover:shadow-gray-700 overflow-hidden ease-in-out duration-500 w-full mx-auto xl:max-w-4xl">
