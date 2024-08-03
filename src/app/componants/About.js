@@ -45,16 +45,7 @@ export default function About() {
                 About Power Plant
               </h4>
               <p className="text-slate-400 max-w-xl">
-                Power Plant aims to make the IP transactions market more
-                transparent. It allows IP owners to profile their licensing,
-                sales operations and technology transfer programmes, as well as
-                provide details of specific rights that they are interested in
-                transacting. It then allows IP buyers to search the resulting
-                library of IP assets based on industry, technology and
-                transaction type. Enquire below to find out more. It then allows
-                IP buyers to search the resulting library of IP assets based on
-                industry, technology and transaction type. Enquire below to find
-                out more.
+              At Power Plant, we are committed to revolutionizing the intellectual property (IP) transactions market. Our platform is designed to bring transparency, efficiency, and innovation to the world of IP licensing, sales operations, and technology transfer programs. By bridging the gap between IP owners and buyers, we aim to create a thriving ecosystem where ideas can flourish and reach their full potential.
               </p>
 
               <div className="mt-4">

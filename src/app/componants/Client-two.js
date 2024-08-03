@@ -77,10 +77,6 @@ export default function ClientTwo() {
             What Our Client Say ?
           </h3>
 
-          <p className="text-slate-400 max-w-xl mx-auto">
-            A great plateform to buy, sell and rent your properties without any
-            agent or commisions.
-          </p>
         </div>
 
         <div className="flex justify-center relative mt-8">
