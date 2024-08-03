@@ -14,20 +14,36 @@ export default function Terms(){
 
     const sections = [
         {
-            title: 'How does it work ?',
-            content: 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.'
+            title: 'What is Power Plant?',
+            content: 'Power Plant is a platform designed to facilitate the transparent and efficient transaction of intellectual property (IP) assets. It allows IP owners to profile their assets and connect with potential buyers or investors.'
         },
         {
-            title: 'Do I need a designer to use Hously ?',
-            content: 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.'
+            title: 'How do I create an account?',
+            content: 'To create an account, click on the "Sign Up" button on our homepage, fill in the required information, and follow the instructions to verify your email address.'
         },
         {
-            title: 'What do I need to do to start selling ?',
-            content: 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.'
+            title: 'Are there any fees for using Power Plant?',
+            content: 'While browsing and searching for IP assets is free, certain services such as publishing IP assets or hiring a broker may require a fee. Please refer to our pricing page for detailed information.'
         },
         {
-            title: 'What happens when I receive an order ?',
-            content: 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.'
+            title: 'How do I contact an innovator or hire a broker?',
+            content: 'Once you find an IP asset you are interested in, you can contact the innovator directly through their profile page or use our platform to hire a broker to assist you with the transaction.'
+        },
+        {
+            title: 'How is my personal information protected?',
+            content: 'We take your privacy seriously and have implemented measures to protect your personal information. Please review our Privacy Policy to learn more about how we collect, use, and protect your data.'
+        },
+        {
+            title: 'What happens if I forget my password?',
+            content: 'If you forget your password, click on the "Forgot Password" link on the login page and follow the instructions to reset your password.'
+        },
+        {
+            title: 'Can I delete my account?',
+            content: 'Yes, you can delete your account at any time by contacting our customer support. Please note that once your account is deleted, all your data will be permanently removed.'
+        },
+        {
+            title: 'How do I report a problem or provide feedback?',
+            content: 'If you encounter any issues or have suggestions for improvement, please contact our customer support team through the "Contact Us" page. We value your feedback and strive to improve our services.'
         }
     ]
     const toggleAccordion = (index) => {
@@ -63,14 +79,25 @@ export default function Terms(){
                         <div className="md:w-3/4">
                             <div className="p-6 bg-white dark:bg-slate-900 shadow dark:shadow-gray-700 rounded-md">
                                 <h5 className="text-xl font-medium mb-4">Introduction :</h5>
-                                <p className="text-slate-400">It seems that only fragments of the original text remain in the Lorem Ipsum texts used today. One may speculate that over the course of time certain letters were added or deleted at various positions within the text.</p>
+                                <p className="text-slate-400">Welcome to Power Plant. These Terms and Services govern your use of our website and services. By accessing or using our platform, you agree to comply with these terms. If you do not agree with any part of these terms, please do not use our services.</p>
 
-                                <h5 className="text-xl font-medium mb-4 mt-8">User Agreements :</h5>
-                                <p className="text-slate-400">The most well-known dummy text is the Lorem Ipsum, which is said to have <b className="text-danger-600">originated</b> in the 16th century. Lorem Ipsum is <b className="text-danger-600">composed</b> in a pseudo-Latin language which more or less <b className="text-danger-600">corresponds</b> to  proper Latin. It contains a series of real Latin words. This ancient dummy text is also <b className="text-danger-600">incomprehensible</b>, but it imitates the rhythm of most European languages in Latin script. The <b className="text-danger-600">advantage</b> of its Latin origin and the relative <b className="text-danger-600">meaninglessness</b> of Lorum Ipsum is that the text does not attract attention to itself or distract the viewer s <b className="text-danger-600">attention</b> from the layout.</p>
-                                <p className="text-slate-400 mt-3">There is now an <b className="text-danger-600">abundance</b> of readable dummy texts. These are usually used when a text is <b className="text-danger-600">required purely</b> to fill a space. These alternatives to the classic Lorem Ipsum texts are often amusing and tell short, funny or <b className="text-danger-600">nonsensical</b> stories.</p>
-                                <p className="text-slate-400 mt-3">It seems that only <b className="text-danger-600">fragments</b> of the original text remain in the Lorem Ipsum texts used today. One may speculate that over the course of time certain letters were added or deleted at various positions within the text.</p>
+                                <h5 className="text-xl font-medium mb-4 mt-8">Use of Services :</h5>
+                                <p className="text-slate-400"><b>Eligibility:</b> You must be at least 18 years old to use our services. By using our platform, you represent and warrant that you meet this age requirement.</p>
+                                <p className="text-slate-400"><b>Account Registration:</b> To access certain features, you may need to create an account. You are responsible for maintaining the confidentiality of your account information and for all activities that occur under your account.</p>
+                                <p className="text-slate-400"><b>Prohibited Activities:</b> You agree not to engage in any unlawful or harmful activities on our platform, including but not limited to, distributing malware, spamming, or infringing on the intellectual property rights of others.</p>
+                                <p className="text-slate-400"><b>Intellectual Property:</b> All content on Power Plant, including text, graphics, logos, and software, is the property of Power Plant or its content suppliers and is protected by intellectual property laws. You may not use any content without our prior written consent.</p>
+                                <p className="text-slate-400"><b>Payments and Fees:</b> Certain services may require payment. All fees are non-refundable unless otherwise stated. By providing payment information, you represent and warrant that you are authorized to use the payment method.</p>
+                                <p className="text-slate-400"><b>Privacy:</b> Your use of our services is also governed by our Privacy Policy, which outlines how we collect, use, and protect your personal information. Please review our Privacy Policy for more details.</p>
+                                <p className="text-slate-400"><b>Limitation of Liability:</b> Power Plant shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or related to your use of our services. Our total liability to you for any claim arising from your use of the services shall not exceed the amount paid by you to Power Plant for the services in question.</p>
+                                <p className="text-slate-400"><b>Termination:</b> We reserve the right to terminate or suspend your account and access to our services at our sole discretion, without notice, for conduct that we believe violates these Terms and Services or is harmful to other users or our business interests.</p>
+                                <p className="text-slate-400"><b>Changes to Terms:</b> We may update these Terms and Services from time to time. We will notify you of any changes by posting the new terms on our website. Your continued use of our services after any such changes constitutes your acceptance of the new Terms and Services.</p>
+                                <p className="text-slate-400"><b>Governing Law:</b> These Terms and Services shall be governed by and construed in accordance with the laws, without regard to its conflict of law principles.</p>
+                                <p className="text-slate-400"><b>Contact Us:</b> If you have any questions about these Terms and Services, please contact us at:
+                                                                                                            ●	Email: contact@powerplant.com
+                                                                                                            ●	Address: Power Plant, [Plot-4, Northwest Freeway,Suite 420,Berlin, Germany]
+                                                                                                            </p>
 
-                                <h5 className="text-xl font-medium mb-4 mt-8">Restrictions :</h5>
+                                {/* <h5 className="text-xl font-medium mb-4 mt-8">Restrictions :</h5>
                                 <p className="text-slate-400">You are specifically restricted from all of the following :</p>
                                 <ul className="list-none text-slate-400 mt-3">
                                     <li className="flex mt-2"><Unicons.UilArrowRight width={16}  className=" text-green-600 align-middle me-2"/> <span>Digital Marketing Solutions for Tomorrow</span></li>
@@ -79,7 +106,7 @@ export default function Terms(){
                                     <li className="flex mt-2"><Unicons.UilArrowRight width={16}  className=" text-green-600 align-middle me-2"/> <span>Digital Marketing Solutions for Tomorrow</span></li>
                                     <li className="flex mt-2"><Unicons.UilArrowRight width={16}  className=" text-green-600 align-middle me-2"/> <span>Our Talented & Experienced Marketing Agency</span></li>
                                     <li className="flex mt-2"><Unicons.UilArrowRight width={16}  className=" text-green-600 align-middle me-2"/> <span>Create your own skin to match your brand</span></li>
-                                </ul>
+                                </ul> */}
 
                                 <h5 className="text-xl font-medium mt-8">Users Question & Answer :</h5>
 
