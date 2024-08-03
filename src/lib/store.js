@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { authApi } from "../services/auth/auth";
 import { ipApi } from "../services/ip/ip";
+import { userApi } from "../services/user/user";
 import { chatApi } from "../services/chat/chat";
 import { messageApi } from "../services/message/message";
 import authReducer from "./features/authSlice";
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authReducer),
   [ipApi.reducerPath]: ipApi.reducer,
   ip: persistReducer(ipPersistConfig, ipReducer),
+  [userApi.reducerPath]: userApi.reducer,
   [chatApi.reducerPath]: chatApi.reducer,
   [messageApi.reducerPath]: messageApi.reducer,
 });
@@ -41,6 +43,7 @@ export const makeStore = () => {
       })
         .concat(authApi.middleware)
         .concat(ipApi.middleware)
+        .concat(userApi.middleware)
         .concat(chatApi.middleware)
         .concat(messageApi.middleware),
   });
