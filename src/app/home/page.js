@@ -117,7 +117,8 @@ export default function Welcome() {
                         </p>
                       ))}
                       {user &&
-                        user.interests.map((elem, i) => (
+                        user.interests &&
+                        user.interests?.map((elem, i) => (
                           <p key={i} className="mx-2">
                             {elem}
                           </p>
