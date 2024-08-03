@@ -9,7 +9,9 @@ import { useRegisterMutation } from "../../services/auth/auth";
 import { useRouter } from "next/navigation";
 import ButtonContained from "../../components/ButtonContained/ButtonContained";
 
-const CategorySelect = dynamic(() => import("../componants/CategorySelect"));
+const CategorySelect = dynamic(() =>
+  import("../../app/componants/CategorySelect")
+);
 
 export default function SignUpForm() {
   const [tabValue, setTabValue] = useState(0);
