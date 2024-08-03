@@ -48,9 +48,10 @@ const theme = createTheme({
           borderWidth: 1,
         },
         root: {
-          color: primaryContrastText,
+          color: "#161c2d",
           borderRadius: "0.526rem",
           minHeight: 40,
+          fontSize: 14,
           ":hover": {
             "& .MuiOutlinedInput-notchedOutline": {
               borderColor: "#ccc",
