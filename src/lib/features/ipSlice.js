@@ -3,6 +3,7 @@ import { ipApi } from "../../services/ip/ip";
 
 const initialState = {
   ip: [],
+  currentIp: {},
 };
 
 const ipSlice = createSlice({
@@ -18,6 +19,12 @@ const ipSlice = createSlice({
       ipApi.endpoints.getAll.matchFulfilled,
       (state, { payload }) => {
         state.ip = payload;
+      }
+    );
+    builder.addMatcher(
+      ipApi.endpoints.getIp.matchFulfilled,
+      (state, { payload }) => {
+        state.currentIp = payload;
       }
     );
   },

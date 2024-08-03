@@ -275,7 +275,7 @@ export default function PropertiesDetail(props) {
               </h3>
               <div className="mt-4 mb-8 flex justify-center">
                 <Link
-                  href={`/brokers?ip=${ipDetails._id}`}
+                  href={`/brokers`}
                   className="mb-4 btn border bg-customGreen text-white rounded-md mt-auto transition duration-300 w-60"
                 >
                   Hire a Broker
