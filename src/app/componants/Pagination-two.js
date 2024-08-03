@@ -22,7 +22,7 @@ export default function PaginationTwo({
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = items?.slice(startIndex, endIndex);
-  const numPages = Math.ceil(items.length / itemsPerPage);
+  const numPages = Math.ceil(items?.length / itemsPerPage);
 
   const pageButtons = Array.from({ length: numPages }, (_, i) => i + 1).map(
     (pageNum) => (
