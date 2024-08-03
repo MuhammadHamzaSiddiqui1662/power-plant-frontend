@@ -185,7 +185,7 @@ export default function UploadIP() {
                       className="font-medium text-customDarkBlue"
                       htmlFor="price"
                     >
-                      Price:
+                      Price ($):
                     </label>
                     <input
                       id="price"
