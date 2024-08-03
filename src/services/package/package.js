@@ -18,10 +18,10 @@ export const packageApi = createApi({
     getAllPackages: build.query({
       query: () => `/`,
     }),
-    getPackage: build.query({
-      query: (id) => `/${id}`,
+    getPackageByType: build.query({
+      query: (type) => `/type/${type}`,
     }),
   }),
 });
 
-export const { useGetAllPackagesQuery, useGetPackageQuery } = packageApi;
+export const { useGetAllPackagesQuery, useGetPackageByTypeQuery } = packageApi;

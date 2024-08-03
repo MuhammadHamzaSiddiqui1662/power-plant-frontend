@@ -69,7 +69,7 @@ export default function Pricing() {
                           <Link
                             href={
                               item.redirectLink?.includes("payment")
-                                ? `${item.redirectLink}?package=subscribe`
+                                ? `${item.redirectLink}?type=subscribe`
                                 : item.redirectLink
                             }
                             className="mb-4 btn border border-customDarkBlue text-customDarkBlue group-hover:text-white group-hover:bg-customGreen group-hover:border-customGreen hover:border-customGreen rounded-md mt-auto transition duration-300"
