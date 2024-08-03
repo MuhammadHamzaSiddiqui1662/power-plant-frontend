@@ -78,10 +78,11 @@ export default function PropertiesDetail(props) {
                 src="/images/ip/mainImg.webp"
                 alt=""
                 width={0}
-                height={0}
+                height={500}
                 sizes="100vw"
-                style={{ width: "100%", height: "auto" }}
+                style={{ width: "100%", height: 500 }}
                 priority
+                className="object-cover overflow-hidden"
               />
             </div>
           </div>
