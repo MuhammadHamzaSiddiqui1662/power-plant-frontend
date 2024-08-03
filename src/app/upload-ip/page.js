@@ -316,6 +316,7 @@ export default function UploadIP() {
                     <CategorySelect
                       categories={data.categories}
                       onChange={handleCategoryChange}
+                      fullWidth={true}
                     />
                   </div>
                 </Grid>
