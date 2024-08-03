@@ -16,7 +16,7 @@ export const ipApi = createApi({
   }),
   endpoints: (build) => ({
     getAll: build.query({
-      query: () => `/`,
+      query: (filter = "") => `/${filter}`,
     }),
     getIp: build.query({
       query: (id) => `/${id}`,

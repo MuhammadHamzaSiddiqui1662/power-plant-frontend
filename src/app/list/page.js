@@ -1,5 +1,5 @@
 "use client"; // This is a client component 👈🏽
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 
 const Navbar = dynamic(() => import("../componants/Navbar"));
@@ -10,6 +10,30 @@ const CategorySelect = dynamic(() => import("../componants/CategorySelect"));
 import { FormControl, OutlinedInput } from "@mui/material";
 import { useGetAllQuery, useGetIpQuery } from "../../services/ip/ip";
 
+const generateFilterQuery = (filterQuery) => {
+  const matchStage = [];
+
+  if (filterQuery.categories.length > 0) {
+    matchStage.push(
+      filterQuery.categories.reduce(
+        (prev, curr) => prev + `categories=${curr}`,
+        ""
+      )
+    );
+  }
+
+  if (filterQuery.min !== "") matchStage.push(`min=${filterQuery.min}`);
+
+  if (filterQuery.max !== "") matchStage.push(`max=${filterQuery.max}`);
+
+  const result =
+    matchStage.length > 0
+      ? matchStage.reduce((prev, curr) => `${prev}${curr}&`, "?")
+      : "";
+
+  return result;
+};
+
 export default function List() {
   const [filters, setFilters] = useState({
     search: "",
@@ -17,7 +41,8 @@ export default function List() {
     min: "",
     max: "",
   });
-  const { data } = useGetAllQuery();
+  const filterQuery = useMemo(() => generateFilterQuery(filters), [filters]);
+  const { data } = useGetAllQuery(filterQuery);
 
   const handleInputChange = (event) => {
     console.log("input change", event);
