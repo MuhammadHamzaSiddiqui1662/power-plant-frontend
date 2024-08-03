@@ -2,10 +2,16 @@
 import React from "react";
 import { useState } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
 import { Alert, Box, Grid, Tab, Tabs } from "@mui/material";
 import { useRegisterMutation } from "../../services/auth/auth";
 import { useRouter } from "next/navigation";
 import ButtonContained from "../../components/ButtonContained/ButtonContained";
+
+const CategorySelect = dynamic(() =>
+  import("../../app/componants/CategorySelect")
+);
 
 export default function SignUpForm() {
   const [tabValue, setTabValue] = useState(0);
@@ -17,6 +23,15 @@ export default function SignUpForm() {
     confirmPassword: "",
     address: "",
   });
+  const handleCategoryChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setData((prev) => ({
+      ...prev,
+      categories: typeof value === "string" ? value.split(",") : value,
+    }));
+  };
   const [error, setError] = useState("");
   const [register, { isLoading }] = useRegisterMutation();
   const router = useRouter();
@@ -222,13 +237,11 @@ export default function SignUpForm() {
                       >
                         Interest:
                       </label>
-
-                      <select className="form-input mt-2" name="cars" id="cars">
-                        <option value="volvo">Volvo</option>
-                        <option value="saab">Saab</option>
-                        <option value="opel">Opel</option>
-                        <option value="audi">Audi</option>
-                      </select>
+                      <CategorySelect
+                        categories={data.categories}
+                        onChange={handleCategoryChange}
+                        fullWidth={true}
+                      />
                     </div>
                   </Grid>
                 )}

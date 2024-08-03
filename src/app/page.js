@@ -158,19 +158,23 @@ export default function Home() {
               Featured IP
             </h3>
             <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 mt-8 gap-[30px] text-start">
-              {data.slice(0, 6).map((item, index) => (
-                <Card
-                  key={item._id}
-                  name={item.name}
-                  id={item._id}
-                  description={item.description}
-                  year={item.publishedDate}
-                  categories={item.categories}
-                  price={item.price}
-                  patentNumber={item.patentNumber}
-                  image={item.image}
-                />
-              ))}
+              {data &&
+                data.length > 0 &&
+                data
+                  .slice(0, 6)
+                  .map((item, index) => (
+                    <Card
+                      key={item._id}
+                      name={item.name}
+                      id={item._id}
+                      description={item.description}
+                      year={item.publishedDate}
+                      categories={item.categories}
+                      price={item.price}
+                      patentNumber={item.patentNumber}
+                      image={item.image}
+                    />
+                  ))}
             </div>
           </div>
         </div>
