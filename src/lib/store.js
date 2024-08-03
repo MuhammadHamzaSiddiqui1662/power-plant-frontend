@@ -17,6 +17,10 @@ export const makeStore = () => {
   return configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(authApi.middleware).concat(chatApi.middleware).concat(messageApi.middleware),
+      getDefaultMiddleware()
+        .concat(authApi.middleware)
+        .concat(ipApi.middleware)
+        .concat(chatApi.middleware)
+        .concat(messageApi.middleware),
   });
 };
