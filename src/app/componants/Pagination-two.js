@@ -48,7 +48,7 @@ export default function PaginationTwo({
         {currentItems.map((item, index) => (
           <Card
             isEdit={false}
-            key={index}
+            key={item._id}
             name={item.name}
             id={item._id}
             description={item.description}
