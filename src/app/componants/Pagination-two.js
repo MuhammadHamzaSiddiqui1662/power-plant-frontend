@@ -40,7 +40,7 @@ export default function PaginationTwo({
     )
   );
 
-  return !items ? (
+  return !items || !currentItems ? (
     <></>
   ) : (
     <>

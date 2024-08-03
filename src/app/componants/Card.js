@@ -94,7 +94,7 @@ export default function Card({
             <li className="pt-3">
               <span className="text-slate-400 text-sm">Category</span>
               <p className="text-md font-medium" style={{ lineHeight: 1 }}>
-                {categories.join(", ")}
+                {categories?.join(", ")}
               </p>
             </li>
           </ul>
