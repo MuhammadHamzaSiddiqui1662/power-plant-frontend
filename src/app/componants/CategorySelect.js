@@ -30,24 +30,32 @@ function getStyles(name, categories, theme) {
   };
 }
 
-export default function MultipleSelectChip({ categories, onChange }) {
+export default function MultipleSelectChip({
+  categories,
+  onChange,
+  fullWidth = undefined,
+}) {
   const theme = useTheme();
 
   return (
-    <FormControl fullWidth>
+    <FormControl fullWidth={fullWidth}>
       <Select
         multiple
         value={categories}
         onChange={onChange}
         placeholder="Select Categories"
         input={<OutlinedInput placeholder="Select Categories" />}
-        renderValue={(selected) => (
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-            {selected.map((value) => (
-              <Chip key={value} label={value} />
-            ))}
-          </Box>
-        )}
+        renderValue={(selected) =>
+          selected.length === 0 ? (
+            <em>Placeholder</em>
+          ) : (
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+              {selected.map((value) => (
+                <Chip key={value} label={value} />
+              ))}
+            </Box>
+          )
+        }
         MenuProps={MenuProps}
       >
         {Object.keys(CATEGORIES).map((category) => [

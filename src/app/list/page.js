@@ -1,40 +1,42 @@
 "use client"; // This is a client component 👈🏽
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import dynamic from "next/dynamic";
-import Select from "react-select";
-import * as Unicons from "@iconscout/react-unicons";
 
 const Navbar = dynamic(() => import("../componants/Navbar"));
 const Switcher = dynamic(() => import("../componants/Switcher"));
 const Footer = dynamic(() => import("../componants/Footer"));
 const PaginationTwo = dynamic(() => import("../componants/Pagination-two"));
-import { properties, propertiesDetails } from "../componants/Data";
-
-const Houses = [
-  { value: "AF", label: "Apartment" },
-  { value: "AZ", label: " Offices" },
-  { value: "BS", label: "Townhome" },
-];
-const minPrice = [
-  { value: "1", label: "500" },
-  { value: "2", label: "1000" },
-  { value: "3", label: "2000" },
-  { value: "4", label: "3000" },
-  { value: "5", label: "4000" },
-  { value: "5", label: "5000" },
-  { value: "5", label: "6000" },
-];
-const maxPrice = [
-  { value: "1", label: "500" },
-  { value: "2", label: "1000" },
-  { value: "3", label: "2000" },
-  { value: "4", label: "3000" },
-  { value: "5", label: "4000" },
-  { value: "5", label: "5000" },
-  { value: "5", label: "6000" },
-];
+const CategorySelect = dynamic(() => import("../componants/CategorySelect"));
+import { FormControl, OutlinedInput } from "@mui/material";
+import { useGetAllQuery, useGetIpQuery } from "../../services/ip/ip";
 
 export default function List() {
+  const [filters, setFilters] = useState({
+    search: "",
+    categories: [],
+    min: "",
+    max: "",
+  });
+  const { data } = useGetAllQuery();
+
+  const handleInputChange = (event) => {
+    console.log("input change", event);
+    setFilters((prev) => ({
+      ...prev,
+      [event.target.name]: event.target.value,
+    }));
+  };
+
+  const handleCategoryChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setFilters((prev) => ({
+      ...prev,
+      categories: typeof value === "string" ? value.split(",") : value,
+    }));
+  };
+
   return (
     <>
       <Navbar navClass="navbar-white" />
@@ -57,15 +59,23 @@ export default function List() {
                   <label className="form-label text-slate-900 dark:text-white font-medium">
                     Search : <span className="text-red-600">*</span>
                   </label>
-                  <div className="filter-search-form relative filter-border mt-2">
-                    <Unicons.UilSearch className="icons" width={18} />
+                  <div className="filter-search-form relative filter-border mt-2 px-2 py-3">
+                    {/* <Unicons.UilSearch className="icons" width={18} />
                     <input
                       name="name"
                       type="text"
                       id="job-keyword"
                       className="form-input filter-input-box bg-gray-50 dark:bg-slate-800 border-0"
                       placeholder="Search your Keywords"
-                    />
+                    /> */}
+                    <FormControl size="small" fullWidth={true}>
+                      <OutlinedInput
+                        placeholder="Search your Keywords"
+                        name="search"
+                        value={filters.search}
+                        onChange={handleInputChange}
+                      />
+                    </FormControl>
                   </div>
                 </div>
 
@@ -76,11 +86,11 @@ export default function List() {
                   >
                     Select Categories:
                   </label>
-                  <div className="filter-search-form relative filter-border mt-2">
-                    <Unicons.UilEstate className="icons" width={18} />
-                    <Select
-                      className="form-input filter-input-box bg-gray-50 dark:bg-slate-800 border-0"
-                      options={Houses}
+                  <div className="filter-search-form relative filter-border mt-2 px-2 py-3">
+                    <CategorySelect
+                      categories={filters.categories}
+                      onChange={handleCategoryChange}
+                      fullWidth={true}
                     />
                   </div>
                 </div>
@@ -92,12 +102,21 @@ export default function List() {
                   >
                     Min Price :
                   </label>
-                  <div className="filter-search-form relative filter-border mt-2">
-                    <Unicons.UilUsdCircle className="icons" width={18} />
+                  <div className="filter-search-form relative filter-border mt-2 px-2 py-3">
+                    {/* <Unicons.UilUsdCircle className="icons" width={18} />
                     <Select
                       className="form-input filter-input-box bg-gray-50 dark:bg-slate-800 border-0"
                       options={minPrice}
-                    />
+                    /> */}
+                    <FormControl size="small">
+                      <OutlinedInput
+                        type="number"
+                        placeholder="Min Price"
+                        name="min"
+                        value={filters.min}
+                        onChange={handleInputChange}
+                      />
+                    </FormControl>
                   </div>
                 </div>
 
@@ -108,12 +127,21 @@ export default function List() {
                   >
                     Max Price :
                   </label>
-                  <div className="filter-search-form relative mt-2">
-                    <Unicons.UilUsdCircle className="icons" width={18} />
+                  <div className="filter-search-form relative mt-2 px-2 py-3">
+                    {/* <Unicons.UilUsdCircle className="icons" width={18} />
                     <Select
                       className="form-input filter-input-box bg-gray-50 dark:bg-slate-800 border-0"
                       options={maxPrice}
-                    />
+                    /> */}
+                    <FormControl size="small">
+                      <OutlinedInput
+                        type="number"
+                        placeholder="Max Price"
+                        name="max"
+                        value={filters.max}
+                        onChange={handleInputChange}
+                      />
+                    </FormControl>
                   </div>
                 </div>
 
@@ -136,8 +164,8 @@ export default function List() {
       <section className="relative lg:py-10 py-10">
         <div className="container">
           <PaginationTwo
-            itemsPerPage={6}
-            items={properties}
+            itemsPerPage={9}
+            items={data}
             gridClass={`grid lg:grid-cols-3 grid-cols-1 gap-[30px]`}
             className="h-full w-full object-cover md:w-48"
           />
