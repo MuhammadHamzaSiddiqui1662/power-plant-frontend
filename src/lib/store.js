@@ -4,6 +4,7 @@ import { ipApi } from "../services/ip/ip";
 import { userApi } from "../services/user/user";
 import { chatApi } from "../services/chat/chat";
 import { messageApi } from "../services/message/message";
+import { packageApi } from "../services/package/package";
 import authReducer from "./features/authSlice";
 import ipReducer from "./features/ipSlice";
 import storage from "redux-persist/lib/storage";
@@ -30,6 +31,7 @@ const rootReducer = combineReducers({
   [userApi.reducerPath]: userApi.reducer,
   [chatApi.reducerPath]: chatApi.reducer,
   [messageApi.reducerPath]: messageApi.reducer,
+  [packageApi.reducerPath]: packageApi.reducer,
 });
 
 export const makeStore = () => {
@@ -45,7 +47,8 @@ export const makeStore = () => {
         .concat(ipApi.middleware)
         .concat(userApi.middleware)
         .concat(chatApi.middleware)
-        .concat(messageApi.middleware),
+        .concat(messageApi.middleware)
+        .concat(packageApi.middleware),
   });
 
   const persistor = persistStore(store);
