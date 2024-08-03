@@ -3,15 +3,28 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import NotificationMenu from "./notification/Notification";
+import MainMenu from "./MainMenu";
 
 import { User, Bell, MessageSquare } from "react-feather";
 import { Avatar } from "@mui/material";
+import { useSelector } from "react-redux";
 
 export default function Navbar(props) {
   const { navClass, topnavClass } = props;
   const [isOpen, setMenu] = useState(true);
   const [topNavbar, setTopNavBar] = useState(false);
   const [open, setOpen] = useState(false);
+  const { accessToken } = useSelector((state) => state.auth);
+
+  const [mainMenuAnchorEl, setMainMenuAnchorEl] = useState(null);
+  const openMainMenu = Boolean(mainMenuAnchorEl);
+
+  const handleMainMenuClick = (event) => {
+    setMainMenuAnchorEl(event.currentTarget);
+  };
+  const handleMainMenuClose = () => {
+    setMainMenuAnchorEl(null);
+  };
 
   const toggleMenuNotification = () => {
     setOpen((prev) => !prev);
@@ -228,28 +241,40 @@ export default function Navbar(props) {
                 <Bell className="h-4 w-4 stroke-[3] fill-current " />
               </Link>
             </li>
-            <li className="sm:inline ps-1 mb-0 me-2 hidden">
-              <Link
-                href="/auth-signup"
-                // className="btn bg-customGreen hover:bg-green-700 border-green-600 dark:border-green-600 text-white rounded-full"
-                className="btn bg-customGreen border-green-600 dark:border-green-600 text-white rounded-full"
-              >
-                Signup
-              </Link>
-            </li>
-            <li className="inline mb-0 me-2">
-              <Link
-                href="#"
-                className="btn btn-icon bg-customGreen border-customGreen dark:border-green-600 text-white rounded-full"
-              >
-                {/* <Avatar
+            <MainMenu
+              id="main-menu"
+              anchorEl={mainMenuAnchorEl}
+              open={openMainMenu}
+              onClose={handleMainMenuClose}
+              MenuListProps={{
+                "aria-labelledby": "menu-button",
+              }}
+            />
+            {!accessToken ? (
+              <li className="sm:inline ps-1 mb-0 me-2 hidden">
+                <Link
+                  href="/auth-signup"
+                  // className="btn bg-customGreen hover:bg-green-700 border-green-600 dark:border-green-600 text-white rounded-full"
+                  className="btn bg-customGreen border-green-600 dark:border-green-600 text-white rounded-full"
+                >
+                  Signup
+                </Link>
+              </li>
+            ) : (
+              <li className="inline mb-0 me-2">
+                <button
+                  className="btn btn-icon bg-customGreen border-customGreen dark:border-green-600 text-white rounded-full"
+                  onClick={handleMainMenuClick}
+                >
+                  {/* <Avatar
                   sx={{ width: 40, height: 40 }}
                   alt="Remy Sharp"
                   src="/images/client/01.jpg"
                 /> */}
-                <User className="h-4 w-4 stroke-[3]"></User>
-              </Link>
-            </li>
+                  <User className="h-4 w-4 stroke-[3]"></User>
+                </button>
+              </li>
+            )}
           </ul>
 
           {/* <!--Login button End--> */}
