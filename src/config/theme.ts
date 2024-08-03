@@ -165,9 +165,11 @@ const theme = createTheme({
     MuiChip: {
       styleOverrides: {
         root: {
+          height: 28,
+        },
+        filled: {
           background: primaryMain,
           color: primaryContrastText,
-          height: 28,
         },
       },
     },
