@@ -24,6 +24,9 @@ export const userApi = createApi({
     getBrokers: build.query({
       query: (filter = "") => `/brokers/${filter}`,
     }),
+    getInvestors: build.query({
+      query: (filter = "") => `/investors/${filter}`,
+    }),
     updateUser: build.mutation({
       query(body) {
         return {
@@ -39,6 +42,7 @@ export const userApi = createApi({
 export const {
   useGetAllUsersQuery,
   useGetBrokersQuery,
+  useGetInvestorsQuery,
   useGetUserQuery,
   useUpdateUserMutation,
 } = userApi;
