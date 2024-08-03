@@ -4,11 +4,13 @@ import { ipApi } from "../services/ip/ip";
 import { chatApi } from "../services/chat/chat";
 import { messageApi } from "../services/message/message";
 import authReducer from "./features/authSlice";
+import ipReducer from "./features/ipSlice";
 
 const rootReducer = combineReducers({
   [authApi.reducerPath]: authApi.reducer,
   auth: authReducer,
   [ipApi.reducerPath]: ipApi.reducer,
+  ip: ipReducer,
   [chatApi.reducerPath]: chatApi.reducer,
   [messageApi.reducerPath]: messageApi.reducer,
 });
