@@ -3,14 +3,14 @@ import React from "react";
 import dynamic from "next/dynamic";
 const Navbar = dynamic(() => import("../componants/Navbar"));
 const Footer = dynamic(() => import("../componants/Footer"));
-const BrokerCard = dynamic(() => import("../componants/BrokerCard"));
+const InvestorCard = dynamic(() => import("../componants/InvestorCard"));
 
 import "./style.css";
 import { Grid } from "@mui/material";
-import { useGetBrokersQuery } from "../../services/user/user";
+import { useGetInvestorsQuery } from "../../services/user/user";
 
 export default function Welcome() {
-  const { data: brokers } = useGetBrokersQuery();
+  const { data: investor } = useGetInvestorsQuery();
 
   return (
     <>
@@ -21,7 +21,7 @@ export default function Welcome() {
             <section className={`relative mt-40`}>
               <div className="container">
                 <p className={`heading font-bold leading-none text-center`}>
-                  Welcome back, Broker!
+                  Welcome back, Investor!
                 </p>
                 <div className="flex justify-center">
                   <p className="px-2 desc-width text-customDarkBlue mt-8 mb-4 text-xl sub-heading text-center">
@@ -42,16 +42,16 @@ export default function Welcome() {
 
         <section>
           <Grid container className="container">
-            {brokersCard.map((element) => (
+            {investorCard.map((element) => (
               <Grid key={element._id} item xs={12} sm={6} md={3}>
-                <BrokerCard name={element.name} imgSrc={element.imgSrc} />
+                <InvestorCard name={element.name} imgSrc={element.imgSrc} />
               </Grid>
             ))}
-            {brokers &&
-              brokers.length > 0 &&
-              brokers?.map((element) => (
+            {investor &&
+              investor.length > 0 &&
+              investor?.map((element) => (
                 <Grid key={element._id} item xs={12} sm={6} md={3}>
-                  <BrokerCard name={element.name} imgSrc={element.imageUrl} />
+                  <InvestorCard name={element.name} imgSrc={element.imageUrl} />
                 </Grid>
               ))}
           </Grid>
@@ -62,7 +62,7 @@ export default function Welcome() {
     </>
   );
 }
-const brokersCard = [
+const investorCard = [
   {
     _id: "1",
     name: "Swanz",
