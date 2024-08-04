@@ -98,15 +98,12 @@ export default function Profile() {
       about: data.about,
       interests: data.interests,
     };
-    if (data._id) {
-      updateData._id = data._id;
-      // formData.append("_id", data._id);
-    }
+    if (data._id) updateData._id = data._id;
     formData.append("data", JSON.stringify(updateData));
     if (files[0]) formData.append("image", files[0]);
 
     try {
-      const { error } = await updateUser(formData, data._id);
+      const { error } = await updateUser(formData);
       if (error) {
         console.log("error", error);
         return setError(
@@ -117,9 +114,7 @@ export default function Profile() {
       refetch();
     } catch (error) {
       console.error("Error uploading data:", error);
-      setErrorMessage(
-        error.shortMessage || error.message || "Faild to update Ip"
-      );
+      setError(error.shortMessage || error.message || "Faild to update Ip");
     }
   };
 
@@ -172,7 +167,7 @@ export default function Profile() {
                     name="email"
                     type="email"
                     value={data.email}
-                    onChange={handleInputChange}
+                    readOnly
                     className="form-input mt-1"
                     placeholder="Enter Email"
                   />
