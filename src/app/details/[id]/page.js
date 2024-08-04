@@ -1,12 +1,14 @@
 "use client";
 import dynamic from "next/dynamic";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
 import { Box, Chip, Grid, Rating, Tab, Tabs } from "@mui/material";
 import PropTypes from "prop-types";
 import { useGetIpQuery } from "../../../services/ip/ip";
+import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
 
 const Navbar = dynamic(() => import("../../componants/Navbar"));
 const Switcher = dynamic(() => import("../../componants/Switcher"));
@@ -47,6 +49,8 @@ function a11yProps(index) {
   };
 }
 export default function PropertiesDetail(props) {
+  const router = useRouter();
+  const { user } = useSelector((state) => state.auth);
   const [value, setValue] = useState(0);
   const { data: ipDetails, isLoading } = useGetIpQuery(props?.params?.id);
   const innovatorsRating = useMemo(
@@ -64,6 +68,10 @@ export default function PropertiesDetail(props) {
   };
 
   const handleContact = () => {};
+
+  useEffect(() => {
+    if (user && !user.subscriber) router.replace("/");
+  }, [user]);
 
   return (
     <>

@@ -2,6 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useSelector } from "react-redux";
 
 export default function Card({
   name,
@@ -15,6 +16,7 @@ export default function Card({
   key,
   isEdit = true,
 }) {
+  const { user } = useSelector((state) => state.auth);
   return (
     <>
       <div
@@ -46,7 +48,11 @@ export default function Card({
         <div className="p-6">
           <div className="pb-3">
             <Link
-              href={`/details/${id}`}
+              href={
+                user && user.subscriber
+                  ? `/details/${id}`
+                  : "/payment?type=subscribe"
+              }
               className="text-lg hover:text-customGreen font-medium ease-in-out duration-500"
               style={{
                 lineHeight: "0.5 !important",
