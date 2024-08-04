@@ -33,7 +33,7 @@ export const ipApi = createApi({
     updateIp: build.mutation({
       query(body) {
         return {
-          url: `/${body.id}/details`,
+          url: `/`,
           method: "PUT",
           body,
         };

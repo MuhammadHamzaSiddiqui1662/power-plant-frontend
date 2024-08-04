@@ -1,10 +1,15 @@
 "use client"; // This is a client component 👈🏽
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { Alert, Grid } from "@mui/material";
 import "./style.css";
-import { useCreateIpMutation } from "../../services/ip/ip";
+import {
+  useGetIpQuery,
+  useCreateIpMutation,
+  useUpdateIpMutation,
+} from "../../services/ip/ip";
 import { IpStatus } from "../../types/ip";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const Navbar = dynamic(() => import("../componants/Navbar"));
 const Footer = dynamic(() => import("../componants/Footer"));
@@ -14,23 +19,29 @@ const BackgroundSection = dynamic(() =>
   import("../componants/BackgroundUploaderSection")
 );
 
+const initialData = {
+  name: "",
+  description: "",
+  abstract: "",
+  price: "",
+  status: IpStatus.InActive,
+  categories: [],
+  publishedDate: "",
+  patentNumber: "",
+  trademark: "",
+  copyright: "",
+  mainImg: "",
+  images: [],
+  sections: [{ title: "", content: "" }],
+};
+
 export default function UploadIP() {
-  const [uploadIp, { error }] = useCreateIpMutation();
-  const [data, setData] = useState({
-    name: "",
-    description: "",
-    abstract: "",
-    price: "",
-    status: IpStatus.InActive,
-    categories: [],
-    publishedDate: "",
-    patentNumber: "",
-    trademark: "",
-    copyright: "",
-    mainImg: "",
-    images: [],
-    sections: [{ title: "", content: "" }],
-  });
+  const router = useRouter();
+  const id = useSearchParams().get("id");
+  const { data: ip, refetch } = useGetIpQuery(id);
+  const [uploadIp, { error: createError }] = useCreateIpMutation();
+  const [updateIp, { error: updateError }] = useUpdateIpMutation();
+  const [data, setData] = useState(initialData);
   const [isPatented, setIsPatented] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -118,6 +129,11 @@ export default function UploadIP() {
     }));
   };
 
+  const handleCancel = () => {
+    setError("");
+    setData({ ...initialData, ...ip });
+  };
+
   const handleSubmit = async () => {
     const formData = new FormData();
     formData.append("data", JSON.stringify(data));
@@ -127,17 +143,28 @@ export default function UploadIP() {
     });
 
     try {
-      const { error } = await uploadIp(formData);
+      const { error } = ip
+        ? await updateIp(formData)
+        : await uploadIp(formData);
       if (error) {
         console.log("error", error);
         return setErrorMessage("In Complete Data");
       }
-      console.log("Response:", response);
+      refetch();
     } catch (error) {
-      console.error("Error uploading data:", error.shortMessage);
-      setErrorMessage("In Complete Data");
+      console.error("Error uploading data:", error);
+      setErrorMessage(
+        error.shortMessage || error.message || "Error in updating IP!"
+      );
     }
   };
+
+  useEffect(() => {
+    setData((prev) => ({
+      ...prev,
+      ...ip,
+    }));
+  }, [ip]);
 
   return (
     <>
@@ -416,7 +443,11 @@ export default function UploadIP() {
           <Grid xs={12} sm={6}>
             <div className="flex justify-end">
               <button
-                type="submit"
+                onClick={() => {
+                  router.push(
+                    `/payment?type=${isPatented ? "publish" : "patent"}`
+                  );
+                }}
                 className={`my-3 text-2xl btn bg-customGreen hover:bg-customGreen text-white rounded-md py-6 w-${
                   isPatented ? 40 : 60
                 } text-[32px]`}
