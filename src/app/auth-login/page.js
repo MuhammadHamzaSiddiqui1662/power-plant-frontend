@@ -40,7 +40,7 @@ export default function Login() {
       console.log("error --->", error);
       if (error) return setError(error.data.message);
       dispatch(setUserType(tabValue));
-      router.push("/");
+      router.push("/home");
     } catch (error) {
       console.log("error: ", error);
     }

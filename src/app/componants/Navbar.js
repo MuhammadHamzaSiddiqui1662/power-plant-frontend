@@ -327,7 +327,7 @@ export default function Navbar(props) {
 
               <li>
                 <Link
-                  href="/"
+                  href={accessToken ? "/home" : "/"}
                   activeclassname="active"
                   className="sub-menu-item"
                 >

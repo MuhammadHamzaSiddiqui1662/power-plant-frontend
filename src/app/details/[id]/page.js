@@ -50,12 +50,12 @@ function a11yProps(index) {
 }
 export default function PropertiesDetail(props) {
   const router = useRouter();
-  const { user } = useSelector((state) => state.auth);
+  const { user, accessToken } = useSelector((state) => state.auth);
   const [value, setValue] = useState(0);
   const { data: ipDetails, isLoading } = useGetIpQuery(props?.params?.id);
   const innovatorsRating = useMemo(
     () =>
-      ipDetails && ipDetails.userId.reviewsAsInnovator
+      ipDetails && ipDetails.userId && ipDetails.userId.reviewsAsInnovator
         ? ipDetails.userId.reviewsAsInnovator.length > 0
         : 0,
     [ipDetails]
@@ -70,8 +70,10 @@ export default function PropertiesDetail(props) {
   const handleContact = () => {};
 
   useEffect(() => {
-    if (user && !user.subscriber) router.replace("/");
-  }, [user]);
+    if (!accessToken) router.replace("/auth-login");
+    else if (user && !user.subscriber)
+      router.replace("/payment?type=subscribe");
+  }, [user, accessToken]);
 
   return (
     <>
