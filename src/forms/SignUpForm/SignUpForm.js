@@ -269,23 +269,21 @@ export default function SignUpForm() {
                     />
                   </div>
                 </Grid>
-                {tabValue == 1 && (
-                  <Grid item xs={12} sm={6}>
-                    <div className="mb-4">
-                      <label
-                        className="text-customDarkBlue font-medium"
-                        htmlFor="Interest"
-                      >
-                        Interest:
-                      </label>
-                      <CategorySelect
-                        categories={data.interests || []}
-                        onChange={handleCategoryChange}
-                        fullWidth={true}
-                      />
-                    </div>
-                  </Grid>
-                )}
+                <Grid item xs={12}>
+                  <div className="mb-4">
+                    <label
+                      className="text-customDarkBlue font-medium"
+                      htmlFor="Interest"
+                    >
+                      Interests:
+                    </label>
+                    <CategorySelect
+                      categories={data.interests || []}
+                      onChange={handleCategoryChange}
+                      fullWidth={true}
+                    />
+                  </div>
+                </Grid>
 
                 {tabValue == 2 && (
                   <>
