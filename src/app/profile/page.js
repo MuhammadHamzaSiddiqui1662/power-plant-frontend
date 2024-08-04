@@ -233,6 +233,7 @@ export default function Profile() {
                       price={item.price}
                       patentNo={item.patentNo}
                       image={item.image}
+                      isEdit={true}
                     />
                   ))}
                 </div>

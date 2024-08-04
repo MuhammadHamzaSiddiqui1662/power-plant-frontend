@@ -14,7 +14,7 @@ export default function Card({
   patentNumber,
   image,
   key,
-  isEdit = true,
+  isEdit = false,
 }) {
   const { user } = useSelector((state) => state.auth);
   return (
@@ -36,7 +36,7 @@ export default function Card({
           {isEdit && (
             <div className="absolute top-4 end-4">
               <Link
-                href="#"
+                href={`/upload-ip?id=${id}`}
                 className="btn btn-icon bg-white dark:bg-customGreen shadow dark:shadow-gray-700 rounded-full text-slate-100 dark:text-customGreen focus:text-customGreen dark:focus:text-red-600 hover:text-customGreen dark:hover:text-customGreen"
               >
                 <i className="mdi mdi-lead-pencil mdi-18px text-customDarkBlue"></i>

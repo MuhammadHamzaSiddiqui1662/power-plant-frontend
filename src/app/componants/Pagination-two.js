@@ -47,7 +47,6 @@ export default function PaginationTwo({
       <div className={gridClass}>
         {currentItems.map((item, index) => (
           <Card
-            isEdit={false}
             key={item._id}
             name={item.name}
             id={item._id}
