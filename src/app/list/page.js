@@ -16,7 +16,7 @@ const generateFilterQuery = (filterQuery) => {
   if (filterQuery.categories.length > 0) {
     matchStage.push(
       filterQuery.categories.reduce(
-        (prev, curr) => prev + `categories=${curr}`,
+        (prev, curr) => prev + `categories=${curr}&`,
         ""
       )
     );
