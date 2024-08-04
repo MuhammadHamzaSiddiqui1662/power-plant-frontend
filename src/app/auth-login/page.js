@@ -10,6 +10,7 @@ import { useLoginMutation } from "../../services/auth/auth";
 import { useDispatch } from "react-redux";
 import { setUserType } from "../../lib/features/authSlice";
 import ButtonContained from "../../components/ButtonContained/ButtonContained";
+import { UserType } from "../../types/user";
 
 export default function Login() {
   const router = useRouter();
@@ -40,7 +41,7 @@ export default function Login() {
       console.log("error --->", error);
       if (error) return setError(error.data.message);
       dispatch(setUserType(tabValue));
-      router.push("/home");
+      router.replace(tabValue == UserType.Broker ? "/investors" : "/home");
     } catch (error) {
       console.log("error: ", error);
     }
