@@ -110,7 +110,6 @@ export default function Profile() {
           error.shortMessage || error.message || "Faild to update Ip"
         );
       }
-      console.log("Response:", response);
       refetch();
     } catch (error) {
       console.error("Error uploading data:", error);
