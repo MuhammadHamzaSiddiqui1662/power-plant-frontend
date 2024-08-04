@@ -11,16 +11,20 @@ import {
 } from "../../services/auth/auth";
 import { Alert } from "@mui/material";
 import ButtonContained from "../../components/ButtonContained/ButtonContained";
+import { useDispatch } from "react-redux";
+import { setUserType } from "../../lib/features/authSlice";
 
 export default function OTPVerify() {
   const router = useRouter();
   const [seconds, setSeconds] = useState(120);
   const [isActive, setIsActive] = useState(false);
   const email = useSearchParams().get("email");
+  const userType = useSearchParams().get("userType");
   const [otp, setOTP] = useState("");
   const [error, setError] = useState("");
   const [verifyOtp, { isLoading: isVerifying }] = useVerifyOtpMutation();
   const [resendOtp, { isLoading: isResending }] = useResendOtpMutation();
+  const dispatch = useDispatch();
 
   const handleMessageChange = (e) => {
     setOTP(e.target.value);
@@ -46,8 +50,9 @@ export default function OTPVerify() {
         otp,
       });
       if (error) return setError(error.message);
+      dispatch(setUserType(userType));
       console.log(verifyOtpResponse);
-      router.push("/");
+      router.replace("/home");
     } catch (error) {
       console.log(`error --> ${error}`);
     }
