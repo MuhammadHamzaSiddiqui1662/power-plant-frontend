@@ -14,13 +14,34 @@ const GeneralTable = dynamic(() => import("../componants/Table"));
 const ManageCertificates = dynamic(() =>
   import("../componants/ManageCertificates")
 );
+const CategorySelect = dynamic(() => import("../componants/CategorySelect"));
+
 import { Plus } from "react-feather";
 import Link from "next/link";
+import { useSelector } from "react-redux";
+import {
+  useGetUserQuery,
+  useUpdateUserMutation,
+} from "../../services/user/user";
+
+const initialData = {
+  name: "",
+  email: "",
+  phone: "",
+  address: "",
+  about: "",
+  interests: [],
+};
 
 export default function Profile() {
   const [tabValue, setTabValue] = useState(0);
   const [selectedNames, setSelectedNames] = React.useState([]);
-  const [role, setRole] = useState(1);
+  const [role, setRole] = useState(0);
+  const { user, userType } = useSelector((state) => state.auth);
+  const [data, setData] = useState({ ...initialData, ...user });
+  const [error, setError] = useState("");
+  const [updateUser, { _error }] = useUpdateUserMutation();
+  const { refetch } = useGetUserQuery(user._id);
 
   const [files, setFiles] = useState([]);
 
@@ -42,6 +63,66 @@ export default function Profile() {
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
+
+  const handleInputChange = (event) => {
+    setError("");
+    setData((prev) => ({
+      ...prev,
+      [event.target.name]: event.target.value,
+    }));
+  };
+
+  const handleCategoryChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setError("");
+    setData((prev) => ({
+      ...prev,
+      interests: typeof value === "string" ? value.split(",") : value,
+    }));
+  };
+
+  const handleCancel = () => {
+    setError("");
+    setData({ ...initialData, ...user });
+  };
+
+  const handleSave = async () => {
+    const formData = new FormData();
+    const updateData = {
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      address: data.address,
+      about: data.about,
+      interests: data.interests,
+    };
+    if (data._id) {
+      updateData._id = data._id;
+      // formData.append("_id", data._id);
+    }
+    formData.append("data", JSON.stringify(updateData));
+    if (files[0]) formData.append("image", files[0]);
+
+    try {
+      const { error } = await updateUser(formData, data._id);
+      if (error) {
+        console.log("error", error);
+        return setError(
+          error.shortMessage || error.message || "Faild to update Ip"
+        );
+      }
+      console.log("Response:", response);
+      refetch();
+    } catch (error) {
+      console.error("Error uploading data:", error);
+      setErrorMessage(
+        error.shortMessage || error.message || "Faild to update Ip"
+      );
+    }
+  };
+
   return (
     <>
       {console.log(files, "HREEEMYFILESSSSSSSS")}
@@ -63,14 +144,16 @@ export default function Profile() {
                 <div>
                   <label
                     className="font-medium text-customDarkBlue"
-                    htmlFor="FirstName"
+                    htmlFor="name"
                   >
-                    First Name:
+                    Name:
                   </label>
                   <input
-                    id="FirstName"
-                    name="lirstName"
+                    id="name"
+                    name="name"
                     type="text"
+                    value={data.name}
+                    onChange={handleInputChange}
                     className="form-input mt-1"
                     placeholder="Enter First Name"
                   />
@@ -80,31 +163,16 @@ export default function Profile() {
                 <div>
                   <label
                     className="font-medium text-customDarkBlue"
-                    htmlFor="LastName"
-                  >
-                    Last Name:
-                  </label>
-                  <input
-                    id="LastName"
-                    name="lastName"
-                    type="text"
-                    className="form-input mt-1"
-                    placeholder="Enter Last Name"
-                  />
-                </div>
-              </Grid>
-              <Grid item xs={6}>
-                <div>
-                  <label
-                    className="font-medium text-customDarkBlue"
-                    htmlFor="Email"
+                    htmlFor="email"
                   >
                     Email:
                   </label>
                   <input
-                    id="Email"
+                    id="email"
                     name="email"
                     type="email"
+                    value={data.email}
+                    onChange={handleInputChange}
                     className="form-input mt-1"
                     placeholder="Enter Email"
                   />
@@ -114,16 +182,37 @@ export default function Profile() {
                 <div>
                   <label
                     className="font-medium text-customDarkBlue"
-                    htmlFor="Phone"
+                    htmlFor="phone"
                   >
                     Phone:
                   </label>
                   <input
-                    id="Phone"
+                    id="phone"
                     name="phone"
                     type="text"
+                    value={data.phone}
+                    onChange={handleInputChange}
                     className="form-input mt-1"
                     placeholder="Enter Phone no"
+                  />
+                </div>
+              </Grid>
+              <Grid item xs={6}>
+                <div>
+                  <label
+                    className="font-medium text-customDarkBlue"
+                    htmlFor="address"
+                  >
+                    Address:
+                  </label>
+                  <input
+                    id="address"
+                    name="address"
+                    type="text"
+                    value={data.address}
+                    onChange={handleInputChange}
+                    className="form-input mt-1"
+                    placeholder="Enter Address"
                   />
                 </div>
               </Grid>
@@ -131,13 +220,15 @@ export default function Profile() {
                 <div>
                   <label
                     className="font-medium text-customDarkBlue"
-                    htmlFor="About"
+                    htmlFor="about"
                   >
                     About:
                   </label>
                   <textarea
+                    id="about"
                     name="about"
-                    id="About"
+                    value={data.about}
+                    onChange={handleInputChange}
                     className="form-input h-28"
                     placeholder="Write here"
                   ></textarea>
@@ -151,13 +242,11 @@ export default function Profile() {
                   >
                     Interests:
                   </label>
-                  <div>
-                    <MultipleSelectChip
-                      options={["Engineering", "Nuclear Physics"]}
-                      selectedValues={selectedNames}
-                      onChange={setSelectedNames}
-                    />
-                  </div>
+                  <CategorySelect
+                    categories={data.interests}
+                    onChange={handleCategoryChange}
+                    fullWidth={true}
+                  />
                 </div>
               </Grid>
             </Grid>
@@ -174,8 +263,25 @@ export default function Profile() {
             </div>
           </Grid>
         </Grid>
+        <Grid xs={12} sm={6}>
+          <div className="flex mt-6 mb-10">
+            <button
+              type="reset"
+              className="my-3 text-xl btn btn-outlined text-customDarkBlue rounded-md py-6 w-40 text-[32px] px-0 me-5"
+              onClick={handleCancel}
+            >
+              Cancel
+            </button>
+            <button
+              className="my-3 text-xl btn bg-customGreen hover:bg-customGreen text-white rounded-md py-6 w-40 px-0 text-[32px]"
+              onClick={handleSave}
+            >
+              Save Changes
+            </button>
+          </div>
+        </Grid>
 
-        <Grid container className="mt-10">
+        <Grid container className="mt-10 mb-16">
           {role == 0 ? (
             <>
               <Grid item xs={6}>
@@ -258,22 +364,6 @@ export default function Profile() {
               </div>
             </Grid>
           )}
-          <Grid xs={12} sm={6}>
-            <div className="flex mt-10 mb-16">
-              <button
-                type="reset"
-                className="my-3 text-xl btn btn-outlined text-customDarkBlue rounded-md py-6 w-40 text-[32px] px-0 me-5"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="my-3 text-xl btn bg-customGreen hover:bg-customGreen text-white rounded-md py-6 w-40 px-0 text-[32px]"
-              >
-                Save Changes
-              </button>
-            </div>
-          </Grid>
         </Grid>
       </div>
       <Footer />

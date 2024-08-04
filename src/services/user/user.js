@@ -30,7 +30,7 @@ export const userApi = createApi({
     updateUser: build.mutation({
       query(body) {
         return {
-          url: `/${body.id}`,
+          url: `/`,
           method: "PUT",
           body,
         };
