@@ -7,17 +7,22 @@ const Progress = dynamic(() => import("../componants/Progress"));
 const Card = dynamic(() => import("../componants/Card"));
 
 import "./style.css";
-import { properties } from "../componants/Data";
 import { Avatar, Grid } from "@mui/material";
 import { useSelector } from "react-redux";
 import { UserType } from "../../types/user";
 import { useRouter } from "next/navigation";
 import { useGetAllQuery } from "../../services/ip/ip";
 
+const generateFilterQuery = (interests = []) => {
+  return interests.length > 0
+    ? interests.reduce((prev, curr) => prev + `categories=${curr}&`, "?")
+    : "";
+};
+
 export default function Welcome() {
   const router = useRouter();
   const { user, userType } = useSelector((state) => state.auth);
-  const { data: ips } = useGetAllQuery();
+  const { data: ips } = useGetAllQuery(generateFilterQuery(user?.interests));
 
   console.log(user);
   return (
