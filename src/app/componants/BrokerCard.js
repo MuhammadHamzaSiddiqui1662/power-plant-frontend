@@ -36,14 +36,22 @@ export default function BrokerCard({
           </Rating>
         </Stack>
       </div>
-      <div className="row justify-content-space-between align-items-center">
-        <div className="col-md-6">
-          <p className="text-customDarkBlue mt-8" style={{ fontSize: "20px" }}>
+      <div className="grid grid-row-5 text-center mt-8">
+        <div
+          className="grid grid-row-1"
+          style={{ border: "1px solid #8F98A5", borderRadius: "8px" }}
+        >
+          <p className="text-customDarkBlue mt-1" style={{ fontSize: "20px" }}>
+            Success Deals:
             {successfulDeals}
           </p>
         </div>
-        <div className="col-md-6">
+        <div
+          className="grid lg: grid-row-1"
+          style={{ border: "1px solid #8F98A5", borderRadius: "8px" }}
+        >
           <p className="text-customDarkBlue mt-1 " style={{ fontSize: "20px" }}>
+            In Progress:
             {dealsInProgress}
           </p>
         </div>
