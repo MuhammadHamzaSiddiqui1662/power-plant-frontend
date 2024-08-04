@@ -1,5 +1,5 @@
 "use client"; // This is a client component 👈🏽
-import React from "react";
+import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
 const Navbar = dynamic(() => import("../componants/Navbar"));
 const Footer = dynamic(() => import("../componants/Footer"));
@@ -7,10 +7,28 @@ const InvestorCard = dynamic(() => import("../componants/InvestorCard"));
 
 import "./style.css";
 import { Grid } from "@mui/material";
-import { useGetInvestorsQuery } from "../../services/user/user";
+import { useGetMyInvestorsQuery } from "../../services/hiring/hiring";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentInvestor } from "../../lib/features/hiringSlice";
+import { setCurrentIp } from "../../lib/features/ipSlice";
+import { useRouter } from "next/navigation";
 
 export default function Welcome() {
-  const { data: investor } = useGetInvestorsQuery();
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { user, accessToken } = useSelector((state) => state.auth);
+  const { data: investors } = useGetMyInvestorsQuery();
+
+  const handleSelectInvestor = (hiring) => {
+    dispatch(setCurrentInvestor(hiring.investor));
+    dispatch(setCurrentIp(hiring.ip));
+    router.replace("/home");
+  };
+
+  useEffect(() => {
+    if (!accessToken) return router.replace("/auth-login");
+    if (investors && investors.length == 0) return router.replace("/home");
+  }, [accessToken, investors]);
 
   return (
     <>
@@ -21,7 +39,7 @@ export default function Welcome() {
             <section className={`relative mt-40`}>
               <div className="container">
                 <p className={`heading font-bold leading-none text-center`}>
-                  Welcome back, Investor!
+                  Welcome back, {user?.name}!
                 </p>
                 <div className="flex justify-center">
                   <p className="px-2 desc-width text-customDarkBlue mt-8 mb-4 text-xl sub-heading text-center">
@@ -42,97 +60,23 @@ export default function Welcome() {
 
         <section>
           <Grid container className="container">
-            {investorCard.map((element) => (
-              <Grid key={element._id} item xs={12} sm={6} md={3}>
-                <InvestorCard name={element.name} imgSrc={element.imgSrc} />
-              </Grid>
-            ))}
-            {investor &&
-              investor.length > 0 &&
-              investor?.map((element) => (
-                <Grid key={element._id} item xs={12} sm={6} md={3}>
-                  <InvestorCard name={element.name} imgSrc={element.imageUrl} />
+            {investors &&
+              investors.length > 0 &&
+              investors?.map((investor) => (
+                <Grid key={investor._id} item xs={12} sm={6} md={3}>
+                  <InvestorCard
+                    name={investor.investor.name}
+                    imgSrc={
+                      "/images/client/01.jpg" || investor.investor.imageUrl
+                    }
+                    onClick={() => handleSelectInvestor(investor)}
+                  />
                 </Grid>
               ))}
           </Grid>
         </section>
       </div>
-
       <Footer />
     </>
   );
 }
-const investorCard = [
-  {
-    _id: "1",
-    name: "Swanz",
-    imgSrc: "/images/client/01.jpg",
-    interests: [0],
-    ratings: 3,
-    dealsInProgress: 2,
-    successfulDeals: 7,
-  },
-  {
-    _id: "2",
-    name: "Cover",
-    imgSrc: "/images/client/01.jpg",
-    interests: [0],
-    ratings: 5,
-    dealsInProgress: 1,
-    successfulDeals: 10,
-  },
-  {
-    _id: "3",
-    name: "Passtravel",
-    imgSrc: "/images/client/01.jpg",
-    interests: [0],
-    ratings: 4,
-    dealsInProgress: 2,
-    successfulDeals: 11,
-  },
-  {
-    _id: "4",
-    name: "Camy",
-    imgSrc: "/images/client/01.jpg",
-    interests: [0],
-    ratings: 4,
-    dealsInProgress: 3,
-    successfulDeals: 6,
-  },
-  {
-    _id: "5",
-    name: "Swanz",
-    imgSrc: "/images/client/01.jpg",
-    interests: [0],
-    ratings: 2,
-    dealsInProgress: 1,
-    successfulDeals: 8,
-  },
-  {
-    _id: "6",
-    name: "Cover",
-    imgSrc: "/images/client/01.jpg",
-    interests: [0],
-    ratings: 5,
-    dealsInProgress: 4,
-    successfulDeals: 9,
-  },
-  {
-    _id: "7",
-    name: "Passtravel",
-    imgSrc: "/images/client/01.jpg",
-    interests: [0],
-    ratings: 4,
-    dealsInProgress: 6,
-    successfulDeals: 7,
-  },
-  {
-    _id: "8",
-    name: "Camy",
-    imgSrc: "/images/client/01.jpg",
-    interests: [0],
-    ratings: 5,
-    dealsInProgress: 3,
-    successfulDeals: 10,
-  },
-];

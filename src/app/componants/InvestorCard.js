@@ -2,14 +2,16 @@
 import { Avatar } from "@mui/material";
 import React from "react";
 
-export default function InvestorCard({ imgSrc, name }) {
+export default function InvestorCard({ imgSrc, name, ...props }) {
   return (
     <div
+      className="cursor-pointer"
       style={{
         border: "1px solid #8F98A5",
         padding: "2rem",
         margin: "12px",
       }}
+      {...props}
     >
       <div className="flex flex-col justify-center items-center">
         <Avatar sx={{ width: 90, height: 90 }} alt="Remy Sharp" src={imgSrc} />
