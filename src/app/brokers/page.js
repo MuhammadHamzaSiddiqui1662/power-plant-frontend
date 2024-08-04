@@ -44,14 +44,29 @@ export default function Welcome() {
           <Grid container className="container">
             {brokersCard.map((element) => (
               <Grid key={element._id} item xs={12} sm={6} md={3}>
-                <BrokerCard name={element.name} imgSrc={element.imgSrc} />
+                <BrokerCard
+                  name={element.name}
+                  imgSrc={element.imgSrc}
+                  interests={element.interests}
+                  ratings={element.ratings}
+                  dealsInProgress={element.dealsInProgress}
+                  successfulDeals={element.successfulDeals}
+                />
+                <Grid item xs={12} sm={6} md={3}></Grid>
               </Grid>
             ))}
             {brokers &&
               brokers.length > 0 &&
               brokers?.map((element) => (
                 <Grid key={element._id} item xs={12} sm={6} md={3}>
-                  <BrokerCard name={element.name} imgSrc={element.imageUrl} />
+                  <BrokerCard
+                    name={element.name}
+                    imgSrc={element.imageUrl}
+                    interests={element.interests}
+                    ratings={element.ratings}
+                    dealsInProgress={element.dealsInProgress}
+                    successfulDeals={element.successfulDeals}
+                  />
                 </Grid>
               ))}
           </Grid>
@@ -65,74 +80,66 @@ export default function Welcome() {
 const brokersCard = [
   {
     _id: "1",
-    name: "Swanz",
+    name: "Steve Aoki",
     imgSrc: "/images/client/01.jpg",
-    interests: [0],
-    ratings: 3,
-    dealsInProgress: 2,
-    successfulDeals: 7,
+    interests: "Chemical Engineer",
+    successfulDeals: "Success Deals: 7",
+    dealsInProgress: "In Progress: 2",
   },
   {
     _id: "2",
-    name: "Cover",
+    name: "Steve Aoki",
     imgSrc: "/images/client/01.jpg",
-    interests: [0],
-    ratings: 5,
-    dealsInProgress: 1,
-    successfulDeals: 10,
+    interests: "Chemical Engineer",
+    successfulDeals: "Success Deals: 8",
+    dealsInProgress: "In Progress: 1",
   },
   {
     _id: "3",
-    name: "Passtravel",
+    name: "Steve Aoki",
     imgSrc: "/images/client/01.jpg",
-    interests: [0],
-    ratings: 4,
-    dealsInProgress: 2,
-    successfulDeals: 11,
+    interests: "Chemical Engineer",
+    successfulDeals: "Success Deals: 13",
+    dealsInProgress: "In Progress: 2",
   },
   {
     _id: "4",
-    name: "Camy",
+    name: "Steve Aoki",
     imgSrc: "/images/client/01.jpg",
-    interests: [0],
-    ratings: 4,
-    dealsInProgress: 3,
-    successfulDeals: 6,
+    interests: "Chemical Engineer",
+    successfulDeals: "Success Deals: 7",
+    dealsInProgress: "In Progress: 3",
   },
   {
     _id: "5",
-    name: "Swanz",
+    name: "Steve Aoki",
     imgSrc: "/images/client/01.jpg",
-    interests: [0],
-    ratings: 2,
-    dealsInProgress: 1,
-    successfulDeals: 8,
+    interests: "Chemical Engineer",
+    successfulDeals: "Success Deals: 9",
+    dealsInProgress: "In Progress: 1",
   },
   {
     _id: "6",
-    name: "Cover",
+    name: "Steve Aoki",
     imgSrc: "/images/client/01.jpg",
-    interests: [0],
-    ratings: 5,
-    dealsInProgress: 4,
-    successfulDeals: 9,
+    interests: "Chemical Engineer",
+    successfulDeals: "Success Deals: 5",
+    dealsInProgress: "In Progress: 4",
   },
   {
     _id: "7",
-    name: "Passtravel",
+    name: "Steve Aoki",
     imgSrc: "/images/client/01.jpg",
-    interests: [0],
-    ratings: 4,
-    dealsInProgress: 6,
-    successfulDeals: 7,
+    interests: "Chemical Engineer",
+    successfulDeals: "Success Deals: 8",
+    dealsInProgress: "In Progress: 6",
   },
   {
     _id: "8",
-    name: "Camy",
+    name: "Steve Aoki",
     imgSrc: "/images/client/01.jpg",
-    interests: [0],
-    ratings: 5,
-    dealsInProgress: 3,
-    successfulDeals: 10,
+    interests: "Chemical Engineer",
+    successfulDeals: "Success Deals: 10",
+    dealsInProgress: "In Progress: 3",
   },
 ];
