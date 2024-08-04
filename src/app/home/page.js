@@ -5,6 +5,12 @@ const Navbar = dynamic(() => import("../componants/Navbar"));
 const Footer = dynamic(() => import("../componants/Footer"));
 const Progress = dynamic(() => import("../componants/Progress"));
 const Card = dynamic(() => import("../componants/Card"));
+const MyBrokersPreview = dynamic(() =>
+  import("../componants/MyBrokersPreview")
+);
+const MyInvestorsPreview = dynamic(() =>
+  import("../componants/MyInvestorsPreview")
+);
 
 import "./style.css";
 import { Avatar, Grid } from "@mui/material";
@@ -12,6 +18,7 @@ import { useSelector } from "react-redux";
 import { UserType } from "../../types/user";
 import { useRouter } from "next/navigation";
 import { useGetAllQuery } from "../../services/ip/ip";
+import Link from "next/link";
 
 const generateFilterQuery = (interests = []) => {
   return interests.length > 0
@@ -51,8 +58,12 @@ export default function Welcome() {
             className="container"
           >
             <Grid item xs={12} sm={6} md={8}>
-              <div className="grid lg:grid-cols-3 md:grid-cols-1 grid-cols-1 mt-8 gap-[20px] text-start">
-                {ips &&
+              <div
+                className={`grid lg:grid-cols-${
+                  ips && ips.length > 0 ? 3 : 1
+                } md:grid-cols-1 grid-cols-1 mt-8 gap-[20px] text-start`}
+              >
+                {ips && ips.length > 0 ? (
                   ips.map((ip, index) => (
                     <Card
                       key={ip._id}
@@ -65,7 +76,29 @@ export default function Welcome() {
                       patentNumber={ip.patentNumber}
                       image={ip.image}
                     />
-                  ))}
+                  ))
+                ) : (
+                  <div>
+                    <p>No IPs matches your interest.</p>
+                    <p>
+                      Visit{" "}
+                      <Link
+                        href={"/list"}
+                        className="text-customGreen underline"
+                      >
+                        IP Listing
+                      </Link>{" "}
+                      page to veiw all IPs or{" "}
+                      <Link
+                        href={"/list"}
+                        className="text-customGreen underline"
+                      >
+                        edit
+                      </Link>{" "}
+                      your interests.
+                    </p>
+                  </div>
+                )}
               </div>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
@@ -111,62 +144,19 @@ export default function Welcome() {
                       </div>
                     </div>
                     <div className="mt-3">
-                      {[
-                        "Bikes",
-                        "Journalism",
-                        "Civil Engineering",
-                        "Mechanical Engineering",
-                      ].map((elem, i) => (
-                        <p key={i} className="mx-2">
-                          {elem}
-                        </p>
-                      ))}
-                      {user &&
-                        user.interests &&
+                      {user && user.interests && user.interests.length > 0 ? (
                         user.interests?.map((elem, i) => (
                           <p key={i} className="mx-2">
                             {elem}
                           </p>
-                        ))}
+                        ))
+                      ) : (
+                        <p className="mx-2">No interest selected yet.</p>
+                      )}
                     </div>
                   </div>
-                  <div className="avatar-div">
-                    <div className="flex items-center justify-between avatar-text">
-                      <p className="mx-2 text-2xl sm:text-2xl name">Brokers</p>
-                      <div
-                        className="flex flex-col cursor-pointer"
-                        onClick={() => router.push("/profile")}
-                      >
-                        <p className="btn btn-icon bg-white dark:bg-customGreen shadow dark:shadow-gray-700 rounded-full text-slate-100 dark:text-customGreen focus:text-customGreen dark:focus:text-red-600 hover:text-customGreen dark:hover:text-customGreen">
-                          <i className="mdi mdi-lead-pencil mdi-18px text-customDarkBlue"></i>
-                        </p>
-                      </div>
-                    </div>
-                    <div className="mt-3">
-                      {[
-                        "Bikes",
-                        "Journalism",
-                        "Civil Engineering",
-                        "Mechanical Engineering",
-                      ].map((elem, i) => (
-                        <div
-                          key={i}
-                          className="flex items-center avatar-text mt-4"
-                        >
-                          <div className="mx-2">
-                            <Avatar
-                              sx={{ width: 20, height: 20 }}
-                              alt="Remy Sharp"
-                              src="/images/client/01.jpg"
-                            />
-                          </div>
-                          <p className="text-base sm:text-sm md:text-lg lg:text-lg xl:text-2xl 2xl:text-2xl name">
-                            Kirsten Dunst
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                  {userType == UserType.Innvestor && <MyBrokersPreview />}
+                  {userType == UserType.Broker && <MyBrokersPreview />}
                 </Grid>
               </Grid>
             </Grid>
