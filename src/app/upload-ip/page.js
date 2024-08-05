@@ -24,7 +24,7 @@ const initialData = {
   description: "",
   abstract: "",
   price: "",
-  status: IpStatus.InActive,
+  status: IpStatus.Draft,
   categories: [],
   publishedDate: "",
   patentNumber: "",
