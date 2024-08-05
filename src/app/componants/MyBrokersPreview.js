@@ -2,8 +2,10 @@
 import React from "react";
 import { Avatar } from "@mui/material";
 import { useGetMyBrokersQuery } from "../../services/hiring/hiring";
+import { useRouter } from "next/navigation";
 
 export default function MyBrokersPreview() {
+  const router = useRouter();
   const { data: brokers } = useGetMyBrokersQuery();
   return (
     <div className="avatar-div">

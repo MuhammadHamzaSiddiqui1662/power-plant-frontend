@@ -2,8 +2,10 @@
 import React from "react";
 import { Avatar } from "@mui/material";
 import { useGetMyInvestorsQuery } from "../../services/hiring/hiring";
+import { useRouter } from "next/navigation";
 
 export default function MyInvestorsPreview() {
+  const router = useRouter();
   const { data: investors } = useGetMyInvestorsQuery();
 
   return (
