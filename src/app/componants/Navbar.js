@@ -159,14 +159,14 @@ export default function Navbar(props) {
           {navClass === "" || navClass === undefined ? (
             <Link className="logo" href="/">
               <Image
-                src="/images/pp-logo.png"
+                src="/images/logo.png"
                 className="inline-block dark:hidden"
                 alt=""
                 width={98}
                 height={24}
               />
               <Image
-                src="/images/pp-logo.png"
+                src="/images/logo.png"
                 className="hidden dark:inline-block"
                 alt=""
                 width={98}
@@ -177,14 +177,14 @@ export default function Navbar(props) {
             <Link className="logo" href="/">
               <span className="inline-block dark:hidden">
                 <Image
-                  src="/images/pp-logo.png"
+                  src="/images/logo.png"
                   className="l-dark"
                   alt=""
                   width={98}
                   height={24}
                 />
                 <Image
-                  src="/images/pp-logo.png"
+                  src="/images/logo.png"
                   className="l-light"
                   alt=""
                   width={98}
