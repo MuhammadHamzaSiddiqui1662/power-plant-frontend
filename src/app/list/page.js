@@ -8,7 +8,7 @@ const Footer = dynamic(() => import("../componants/Footer"));
 const PaginationTwo = dynamic(() => import("../componants/Pagination-two"));
 const CategorySelect = dynamic(() => import("../componants/CategorySelect"));
 import { FormControl, OutlinedInput } from "@mui/material";
-import { useGetAllQuery, useGetIpQuery } from "../../services/ip/ip";
+import { useGetAllQuery } from "../../services/ip/ip";
 
 const generateFilterQuery = (filterQuery) => {
   const matchStage = [];

@@ -13,8 +13,44 @@ import { useGetBrokersQuery } from "../../services/user/user";
 import { FormControl, OutlinedInput } from "@mui/material";
 import { useGetAllQuery, useGetIpQuery } from "../../services/ip/ip";
 
+const calculateRating = (reviews) =>
+  reviews.reduce(
+    (prev, curr) =>
+      prev +
+      (curr.priceNegotiation +
+        curr.responsiveness +
+        curr.communication +
+        curr.technicalSkills +
+        curr.behaviour) /
+        5,
+    [0]
+  );
+
+const generateFilterQuery = (filterQuery) => {
+  const matchStage = [];
+
+  if (filterQuery.categories.length > 0) {
+    matchStage.push(
+      filterQuery.categories.reduce(
+        (prev, curr) => prev + `categories=${curr}&`,
+        ""
+      )
+    );
+  }
+
+  if (filterQuery.min !== "") matchStage.push(`min=${filterQuery.min}`);
+
+  if (filterQuery.max !== "") matchStage.push(`max=${filterQuery.max}`);
+
+  const result =
+    matchStage.length > 0
+      ? matchStage.reduce((prev, curr) => `${prev}${curr}&`, "?")
+      : "";
+
+  return result;
+};
+
 export default function Welcome() {
-  const { data: brokers } = useGetBrokersQuery();
   const [filters, setFilters] = useState({
     search: "",
     categories: [],
@@ -22,7 +58,7 @@ export default function Welcome() {
     max: "",
   });
   const [filterQuery, setFilterQuery] = useState("");
-  const { data } = useGetAllQuery(filterQuery);
+  const { data: brokers } = useGetBrokersQuery(filterQuery);
 
   const handleInputChange = (event) => {
     console.log("input change", event);
@@ -172,32 +208,18 @@ export default function Welcome() {
         </div>
       </div>
 
-      <Navbar navClass="navbar-white" />
       <div className="mb-40">
         <section>
           <Grid container className="container">
-            {brokersCard.map((element) => (
-              <Grid key={element._id} item xs={12} sm={6} md={3}>
-                <BrokerCard
-                  name={element.name}
-                  imgSrc={element.imgSrc}
-                  interests={element.interests}
-                  ratings={element.ratings}
-                  dealsInProgress={element.dealsInProgress}
-                  successfulDeals={element.successfulDeals}
-                />
-                <Grid item xs={12} sm={6} md={3}></Grid>
-              </Grid>
-            ))}
             {brokers &&
               brokers.length > 0 &&
               brokers?.map((element) => (
-                <Grid key={element._id} item xs={12} sm={6} md={3}>
+                <Grid key={element._id} item xs={12} sm={6} md={4}>
                   <BrokerCard
                     name={element.name}
                     imgSrc={element.imageUrl}
                     interests={element.interests}
-                    ratings={element.ratings}
+                    ratings={calculateRating(element.reviewsAsBorker)}
                     dealsInProgress={element.dealsInProgress}
                     successfulDeals={element.successfulDeals}
                   />
@@ -211,69 +233,3 @@ export default function Welcome() {
     </div>
   );
 }
-const brokersCard = [
-  {
-    _id: "1",
-    name: "Steve Aoki",
-    imgSrc: "/images/client/01.jpg",
-    interests: "Chemical Engineer",
-    successfulDeals: "7",
-    dealsInProgress: "2",
-  },
-  {
-    _id: "2",
-    name: "Steve Aoki",
-    imgSrc: "/images/client/01.jpg",
-    interests: "Chemical Engineer",
-    successfulDeals: "8",
-    dealsInProgress: "1",
-  },
-  {
-    _id: "3",
-    name: "Steve Aoki",
-    imgSrc: "/images/client/01.jpg",
-    interests: "Chemical Engineer",
-    successfulDeals: "8",
-    dealsInProgress: "2",
-  },
-  {
-    _id: "4",
-    name: "Steve Aoki",
-    imgSrc: "/images/client/01.jpg",
-    interests: "Chemical Engineer",
-    successfulDeals: "7",
-    dealsInProgress: "3",
-  },
-  {
-    _id: "5",
-    name: "Steve Aoki",
-    imgSrc: "/images/client/01.jpg",
-    interests: "Chemical Engineer",
-    successfulDeals: "9",
-    dealsInProgress: "1",
-  },
-  {
-    _id: "6",
-    name: "Steve Aoki",
-    imgSrc: "/images/client/01.jpg",
-    interests: "Chemical Engineer",
-    successfulDeals: "5",
-    dealsInProgress: "4",
-  },
-  {
-    _id: "7",
-    name: "Steve Aoki",
-    imgSrc: "/images/client/01.jpg",
-    interests: "Chemical Engineer",
-    successfulDeals: "8",
-    dealsInProgress: "6",
-  },
-  {
-    _id: "8",
-    name: "Steve Aoki",
-    imgSrc: "/images/client/01.jpg",
-    interests: "Chemical Engineer",
-    successfulDeals: "10",
-    dealsInProgress: "3",
-  },
-];

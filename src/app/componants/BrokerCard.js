@@ -48,28 +48,35 @@ export default function BrokerCard({
             className="text-customDarkBlue mt-2"
             style={{ fontSize: "18px", color: "#808b96" }}
           >
-            {interests}
+            {interests[0]}
           </p>
           <Stack spacing={1} marginTop={2}>
-            <Rating name="ratings" precision={0.5}>
-              {ratings}
-            </Rating>
+            <Rating name="ratings" precision={0.5} value={ratings} />
           </Stack>
         </div>
       </Box>
-      <CardContent>
-        <Divider
-          orientation="horizontal"
-          sx={{ border: "1px solid #8F98A5" }}
-        />
-        <Grid container mt={2} mb={0}>
+      <Divider orientation="horizontal" sx={{ border: "1px solid #8F98A5" }} />
+      <CardContent
+        sx={{
+          p: 1,
+          ":last-child": {
+            p: 1,
+          },
+        }}
+      >
+        <Grid container mt={1} mb={0}>
           <Grid item xs={6} align="center">
             <Typography variant="body2">Success Deals</Typography>
-            <Typography variant="h6">{successfulDeals}</Typography>
+            <Typography variant="h6">{successfulDeals || 0}</Typography>
           </Grid>
-          <Grid item xs={6} align="center">
+          <Grid
+            item
+            xs={6}
+            align="center"
+            sx={{ borderLeft: "1px solid #8F98A5" }}
+          >
             <Typography variant="body2">In Progress</Typography>
-            <Typography variant="h6">{dealsInProgress}</Typography>
+            <Typography variant="h6">{dealsInProgress || 0}</Typography>
           </Grid>
         </Grid>
       </CardContent>
