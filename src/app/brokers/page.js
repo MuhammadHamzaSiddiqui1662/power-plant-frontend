@@ -216,6 +216,7 @@ export default function Welcome() {
               brokers?.map((element) => (
                 <Grid key={element._id} item xs={12} sm={6} md={4}>
                   <BrokerCard
+                    id={element._id}
                     name={element.name}
                     imgSrc={element.imageUrl}
                     interests={element.interests}
