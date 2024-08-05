@@ -1,8 +1,16 @@
 "use client"; // This is a client component 👈🏽
-import { Avatar } from "@mui/material";
 import * as React from "react";
-import Rating from "@mui/material/Rating";
-import Stack from "@mui/material/Stack";
+import {
+  Card,
+  CardContent,
+  Grid,
+  Typography,
+  Rating,
+  Stack,
+  Box,
+  Avatar,
+  Divider,
+} from "@mui/material";
 
 export default function BrokerCard({
   imgSrc,
@@ -13,49 +21,58 @@ export default function BrokerCard({
   successfulDeals,
 }) {
   return (
-    <div
-      style={{
-        border: "1px solid #8F98A5",
+    <Card
+      sx={{
+        border: "2px solid #8F98A5",
         borderRadius: "10px",
-        padding: "2rem",
-        margin: "12px",
+        marginLeft: "15px",
+        marginRight: "15px",
+        marginBottom: "12px",
+        marginTop: "50px",
+        textAlign: "center",
+        paddingTop: "30px",
+        marginBottom: "1px",
       }}
     >
-      <div className="flex flex-col justify-center items-center">
-        <Avatar sx={{ width: 90, height: 90 }} alt="Remy Sharp" src={imgSrc} />
-        <p className="text-customDarkBlue mt-8 text-2xl sm:text-2xl">{name}</p>
-        <p
-          className="text-customDarkBlue mt-2 text-2xl sm:text-2xl"
-          style={{ fontSize: "12px", color: "#808b96" }}
-        >
-          {interests}
-        </p>
-        <Stack spacing={1} marginTop={1}>
-          <Rating name="ratings" precision={0.5}>
-            {ratings}
-          </Rating>
-        </Stack>
-      </div>
-      <div className="grid grid-row-5 text-center mt-8">
-        <div
-          className="grid grid-row-1"
-          style={{ border: "1px solid #8F98A5", borderRadius: "8px" }}
-        >
-          <p className="text-customDarkBlue mt-1" style={{ fontSize: "20px" }}>
-            Success Deals:
-            {successfulDeals}
+      <Box mb={2}>
+        <div className="flex flex-col justify-center items-center">
+          <Avatar
+            sx={{ width: 100, height: 100 }}
+            alt="Remy Sharp"
+            src={imgSrc}
+          />
+          <p className="text-customDarkBlue mt-8 text-2xl sm:text-2xl">
+            {name}
           </p>
-        </div>
-        <div
-          className="grid lg: grid-row-1"
-          style={{ border: "1px solid #8F98A5", borderRadius: "8px" }}
-        >
-          <p className="text-customDarkBlue mt-1 " style={{ fontSize: "20px" }}>
-            In Progress:
-            {dealsInProgress}
+          <p
+            className="text-customDarkBlue mt-2"
+            style={{ fontSize: "18px", color: "#808b96" }}
+          >
+            {interests}
           </p>
+          <Stack spacing={1} marginTop={2}>
+            <Rating name="ratings" precision={0.5}>
+              {ratings}
+            </Rating>
+          </Stack>
         </div>
-      </div>
-    </div>
+      </Box>
+      <CardContent>
+        <Divider
+          orientation="horizontal"
+          sx={{ border: "1px solid #8F98A5" }}
+        />
+        <Grid container mt={2} mb={0}>
+          <Grid item xs={6} align="center">
+            <Typography variant="body2">Success Deals</Typography>
+            <Typography variant="h6">{successfulDeals}</Typography>
+          </Grid>
+          <Grid item xs={6} align="center">
+            <Typography variant="body2">In Progress</Typography>
+            <Typography variant="h6">{dealsInProgress}</Typography>
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
   );
 }
