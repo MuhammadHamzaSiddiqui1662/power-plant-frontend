@@ -6,7 +6,10 @@ import Footer from "../componants/Footer";
 import { Alert, Box, Tab, Tabs } from "@mui/material";
 import "./style.css";
 import { useRouter } from "next/navigation";
-import { useLoginMutation } from "../../services/auth/auth";
+import {
+  useForgotPasswordMutation,
+  useLoginMutation,
+} from "../../services/auth/auth";
 import { useDispatch } from "react-redux";
 import { setUserType } from "../../lib/features/authSlice";
 import ButtonContained from "../../components/ButtonContained/ButtonContained";
@@ -22,6 +25,8 @@ export default function Login() {
   });
   const [error, setError] = useState("");
   const [login, { isLoading }] = useLoginMutation();
+  const [forgotPassword, { forgotPasswordLoading }] =
+    useForgotPasswordMutation();
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -42,6 +47,20 @@ export default function Login() {
       if (error) return setError(error.data.message);
       dispatch(setUserType(tabValue));
       router.replace(tabValue == UserType.Broker ? "/investors" : "/home");
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!data.email) return setError("Email required!");
+    try {
+      const { error } = await forgotPassword(data);
+      console.log("error --->", error);
+      if (error) return setError(error.data.message);
+      router.push(
+        `/auth-reset-password?email=${data.email}&userType=${tabValue}`
+      );
     } catch (error) {
       console.log("error: ", error);
     }
@@ -80,7 +99,7 @@ export default function Login() {
           </div>
           <div className="flex justify-center">
             <div className="max-w-[400px] w-full m-auto p-6 bg-white dark:bg-slate-900 dark:shadow-gray-700 rounded-md">
-              <Box className="p-6">
+              <Box className="py-6 px-2">
                 <form
                   className="ltr:text-left rtl:text-right grid grid-cols-1"
                   onSubmit={handleSubmit}
@@ -147,6 +166,17 @@ export default function Login() {
                     >
                       Login
                     </ButtonContained>
+                  </div>
+                  <div className="text-center mt-2 mb-4">
+                    <span className="text-customGrayColor me-2">
+                      {`Don't remember Password?`}
+                    </span>
+                    <span
+                      className="text-customGreen font-semibold cursor-pointer me-2"
+                      onClick={handleForgotPassword}
+                    >
+                      Forgot Password
+                    </span>
                   </div>
                   <div className="text-center">
                     <span className="text-customGrayColor me-2">

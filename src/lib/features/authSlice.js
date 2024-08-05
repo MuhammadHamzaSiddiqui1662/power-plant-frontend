@@ -68,6 +68,16 @@ const authSlice = createSlice({
         state.user.interests = payload.interests;
       }
     );
+    builder.addMatcher(
+      authApi.endpoints.resetPassword.matchFulfilled,
+      (state, { payload }) => {
+        state.user = payload.user;
+        state.accessToken = payload.accessToken;
+        state.refreshToken = payload.refreshToken;
+        state.accessTokenExpiry = payload.accessTokenExpiry;
+        state.refreshTokenExpiry = payload.refreshTokenExpiry;
+      }
+    );
   },
 });
 
