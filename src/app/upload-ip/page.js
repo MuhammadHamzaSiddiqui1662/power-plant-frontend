@@ -10,6 +10,7 @@ import {
 } from "../../services/ip/ip";
 import { IpStatus } from "../../types/ip";
 import { useRouter, useSearchParams } from "next/navigation";
+import ButtonContained from "../../components/ButtonContained/ButtonContained";
 
 const Navbar = dynamic(() => import("../componants/Navbar"));
 const Footer = dynamic(() => import("../componants/Footer"));
@@ -39,8 +40,10 @@ export default function UploadIP() {
   const router = useRouter();
   const id = useSearchParams().get("id");
   const { data: ip, refetch } = useGetIpQuery(id);
-  const [uploadIp, { error: createError }] = useCreateIpMutation();
-  const [updateIp, { error: updateError }] = useUpdateIpMutation();
+  const [uploadIp, { isLoading: isUploading, error: createError }] =
+    useCreateIpMutation();
+  const [updateIp, { isLoading: isUpdating, error: updateError }] =
+    useUpdateIpMutation();
   const [data, setData] = useState(initialData);
   const [isPatented, setIsPatented] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -427,17 +430,19 @@ export default function UploadIP() {
             <div className="flex">
               <button
                 type="submit"
+                onClick={handleCancel}
                 className="my-3 text-2xl btn btn-outlined text-customDarkBlue rounded-md py-6 w-40 text-[32px] me-5"
               >
                 Cancel
               </button>
-              <button
-                // type="submit"
+              <ButtonContained
                 onClick={handleSubmit}
+                isLoading={isUploading || isUpdating}
+                disabled={isUploading || isUpdating}
                 className="my-3 text-2xl btn bg-customGreen hover:bg-customGreen text-white rounded-md py-6 w-40 text-[32px]"
               >
                 Save
-              </button>
+              </ButtonContained>
             </div>
           </Grid>
           <Grid xs={12} sm={6}>
