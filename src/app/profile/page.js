@@ -1,24 +1,19 @@
 "use client"; // This is a client component 👈🏽
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
-import { Box, Grid, Tab, Tabs } from "@mui/material";
+import { Grid } from "@mui/material";
 import "./style.css";
-import { properties } from "../componants/Data";
 const Navbar = dynamic(() => import("../componants/Navbar"));
 const Switcher = dynamic(() => import("../componants/Switcher"));
 const Footer = dynamic(() => import("../componants/Footer"));
 const Uploader = dynamic(() => import("../componants/UploadImage"));
-const Card = dynamic(() => import("../componants/Card"));
-const MultipleSelectChip = dynamic(() => import("../componants/ChipSelector"));
-const GeneralTable = dynamic(() => import("../componants/Table"));
 const ManageCertificates = dynamic(() =>
   import("../componants/ManageCertificates")
 );
 const ManageIPs = dynamic(() => import("../componants/ManageIPs"));
+const ManageBrokers = dynamic(() => import("../componants/ManageBrokers"));
 const CategorySelect = dynamic(() => import("../componants/CategorySelect"));
 
-import { Plus } from "react-feather";
-import Link from "next/link";
 import { useSelector } from "react-redux";
 import {
   useGetUserQuery,
@@ -35,7 +30,6 @@ const initialData = {
 };
 
 export default function Profile() {
-  const [role, setRole] = useState(0);
   const { user, userType } = useSelector((state) => state.auth);
   const [data, setData] = useState({ ...initialData, ...user });
   const [error, setError] = useState("");
@@ -274,14 +268,7 @@ export default function Profile() {
           {userType == 0 ? (
             <ManageIPs />
           ) : userType === 1 ? (
-            <Grid item xs={12} md={10}>
-              <div className="mt-10">
-                <p className="text-2xl text-customDarkBlue mb-3">
-                  Manage Bokers
-                </p>
-                <GeneralTable columns={columns} rows={rows} />
-              </div>
-            </Grid>
+            <ManageBrokers />
           ) : (
             <Grid item xs={12}>
               <div className="mt-10">
@@ -298,29 +285,6 @@ export default function Profile() {
     </>
   );
 }
-const columns = [
-  {
-    id: "name",
-    label: "Brokers",
-    align: "center",
-    width: "20%",
-    linking: "/aboutus",
-  },
-  {
-    id: "ip",
-    label: "IPs",
-    align: "center",
-    width: "20%",
-    linking: "/aboutus",
-  },
-  {
-    id: "manage",
-    label: "Brokers",
-    align: "center",
-    width: "60%",
-    linking: "/aboutus",
-  },
-];
 
 const rows2 = [
   { interest: "Engineering" },
@@ -370,14 +334,5 @@ const columns2 = [
     label: "Certifcate6",
     align: "center",
     width: "14%",
-  },
-];
-
-const rows = [
-  { name: "Philip", ip: "Abc, Acg", manage: "Manage" },
-  {
-    name: "Arlene",
-    ip: "Nails  ",
-    manage: "Manage",
   },
 ];
