@@ -267,7 +267,7 @@ export default function Profile() {
         <Grid container className="mt-10 mb-16">
           {userType == 0 ? (
             <ManageIPs />
-          ) : userType === 1 ? (
+          ) : userType == 1 ? (
             <ManageBrokers />
           ) : (
             <Grid item xs={12}>
