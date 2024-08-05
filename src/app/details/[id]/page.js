@@ -50,7 +50,7 @@ function a11yProps(index) {
 }
 export default function PropertiesDetail(props) {
   const router = useRouter();
-  const { user, accessToken } = useSelector((state) => state.auth);
+  const { user, userType, accessToken } = useSelector((state) => state.auth);
   const [value, setValue] = useState(0);
   const { data: ipDetails, isLoading } = useGetIpQuery(props?.params?.id);
   const innovatorsRating = useMemo(
@@ -281,17 +281,21 @@ export default function PropertiesDetail(props) {
                   Contact
                 </button>
               </div>
-              <h3 className="text-3xl text-center">
-                Not an expert, hire a broker instead.
-              </h3>
-              <div className="mt-4 mb-8 flex justify-center">
-                <Link
-                  href={`/brokers`}
-                  className="mb-4 btn border bg-customGreen text-white rounded-md mt-auto transition duration-300 w-60"
-                >
-                  Hire a Broker
-                </Link>
-              </div>
+              {userType !== 2 && (
+                <>
+                  <h3 className="text-3xl text-center">
+                    Not an expert, hire a broker instead.
+                  </h3>
+                  <div className="mt-4 mb-8 flex justify-center">
+                    <Link
+                      href={`/brokers`}
+                      className="mb-4 btn border bg-customGreen text-white rounded-md mt-auto transition duration-300 w-60"
+                    >
+                      Hire a Broker
+                    </Link>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </section>
