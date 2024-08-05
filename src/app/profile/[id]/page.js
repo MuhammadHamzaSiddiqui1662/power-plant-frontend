@@ -61,14 +61,20 @@ export default function ViewProfile(props) {
               Interests
             </p>
 
-            {user?.interests.map((element, i) => (
-              <Chip
-                key={i}
-                className="text-customDarkBlue me-3 mt-3 chips-blue font-normal"
-                label={element}
-              />
-            ))}
-            {userType === 2 && (
+            {user && user?.interests && user?.interests.length > 0 ? (
+              user?.interests.map((element, i) => (
+                <Chip
+                  key={i}
+                  className="text-customDarkBlue me-3 mt-3 chips-blue font-normal"
+                  label={element}
+                />
+              ))
+            ) : (
+              <div className="pt-2 pb-4">
+                <p>No Interest added.</p>
+              </div>
+            )}
+            {userType == 2 && (
               <>
                 {" "}
                 <div className="flex">
@@ -77,7 +83,7 @@ export default function ViewProfile(props) {
                   </p>
                 </div>
                 <Grid container className="mt-1">
-                  {user && user.certificates ? (
+                  {user && user.certificates && user.certificates.length > 0 ? (
                     user?.certificates.map((certificate) => (
                       <Grid item xs={3}>
                         <div className="p-2">
@@ -87,7 +93,7 @@ export default function ViewProfile(props) {
                     ))
                   ) : (
                     <Grid item xs={12}>
-                      <div className="p-2">
+                      <div className="py-2">
                         <p>No certificates uploaded.</p>
                       </div>
                     </Grid>
@@ -127,23 +133,29 @@ export default function ViewProfile(props) {
                     Published IPs
                   </p>
                   <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 mt-3 gap-[30px] text-start">
-                    {ips.map((item, index) => (
-                      <Card
-                        key={item._id}
-                        name={item.name}
-                        id={item._id}
-                        description={item.description}
-                        year={item.publishedDate}
-                        categories={item.categories}
-                        price={item.price}
-                        patentNumber={item.patentNumber}
-                        image={item.image}
-                      />
-                    ))}
+                    {ips && ips.length > 0 ? (
+                      ips.map((item, index) => (
+                        <Card
+                          key={item._id}
+                          name={item.name}
+                          id={item._id}
+                          description={item.description}
+                          year={item.publishedDate}
+                          categories={item.categories}
+                          price={item.price}
+                          patentNumber={item.patentNumber}
+                          image={item.image}
+                        />
+                      ))
+                    ) : (
+                      <div className="py-2">
+                        <p>No published IPs from this user.</p>
+                      </div>
+                    )}
                   </div>
                 </Grid>
               )}
-              {userType === 2 && (
+              {userType == 2 && (
                 <Grid item xs={12}>
                   <div className="flex justify-start mt-5">
                     <button
