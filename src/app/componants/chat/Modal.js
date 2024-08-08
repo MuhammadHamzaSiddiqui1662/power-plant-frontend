@@ -36,11 +36,7 @@ export default function ChatModal({ visible, setVisible }) {
       });
       if (error) return setError(error.message);
       console.log(createChatgResponse);
-      if (createChatgResponse.chatId) {
-        if (chatId) {
-          socket.emit("joinChat", { chatId });
-        }
-      }
+     
     } catch (error) {
       console.log(`error --> ${error}`);
     }

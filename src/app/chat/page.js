@@ -13,6 +13,10 @@ import io from 'socket.io-client';
 import "./style.css";
 
 import {
+  useGetProfileMutation,
+} from "../../services/user/user";
+
+import {
   useChatsMutation,
   useChatMutation,
   useUpdateChatMutation,
@@ -26,11 +30,15 @@ import {
   useDeleteMessageMutation
 } from "../../services/message/message";
 
+
+
 export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [chatsList, setChatsList] = useState([]);
+  const [user, setUser] = useState();
   const [message, setMessage] = useState('');
   const [senderId, setSenderId] = useState('');
+  const [brokerId, setBrokerId] = useState('');
   const [chatId, setChatId] = useState('')
   const [chatClickedIndex, setChatClickedIndex] = useState(0);
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
@@ -38,10 +46,12 @@ export default function Chat() {
   const [isMobile, setIsMobile] = useState(false);
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
+  const [getProfile, { isLoading: isGetting }] = useGetProfileMutation();
   const [chats, { isLoading: isGetting }] = useChatsMutation();
   const [getChatById, { isLoading: isGettingById }] = useChatMutation();
   const [updateChat, { isLoading: isUpdating }] = useUpdateChatMutation();
   const [deleteChat, { isLoading: isDeleting }] = useDeleteChatMutation();
+  
   const socket = io('http://localhost:3001');
 
   const handleOpenReviewModal = () => {
@@ -50,10 +60,6 @@ export default function Chat() {
 
   const handleOpenChatModal = () => {
     setChatModalVisible(true);
-  };
-
-  const handleCloseReviewModal = () => {
-    setReviewModalVisible(false);
   };
 
   const closeDeal = () => {
@@ -98,12 +104,20 @@ export default function Chat() {
     }
   };
 
+  const getAllChatsHandler = async () => {
+    try {
+      const { data: getUserProfileResponse, error } = await getProfile();
+      if (error) return setError(error.message);
+      setUser(getUserProfileResponse)
+      console.log(getUserProfileResponse);
+    } catch (error) {
+      console.log(`error --> ${error}`);
+    }
+  };
 
   const getAllChatsHandler = async () => {
     try {
-      console.log("called")
       const { data: getAllChatsResponse, error } = await chats();
-
       if (error) return setError(error.message);
       setChatsList(getAllChatsResponse)
       console.log(getAllChatsResponse);
@@ -114,16 +128,13 @@ export default function Chat() {
 
   const getChatByIdHandler = async (Id) => {
     try {
-      console.log("Id clicked " + Id)
       const { data: getChatByIdResponse, error } = await getChatById(Id);
       if (error) return setError(error.message);
       if (getChatByIdResponse._id) {
-        console.log(getChatByIdResponse.participants[0]._id)
         setChatId(getChatByIdResponse._id);
         setSenderId(getChatByIdResponse.participants[0]._id);
         socket.emit("joinChat", { chatId });
       }
-      console.log(getChatByIdResponse);
     } catch (error) {
       console.log(`error --> ${error}`);
     }
@@ -153,12 +164,11 @@ export default function Chat() {
     }
   };
 
-
   useEffect(() => {
 
-
-
     getAllChatsHandler();
+
+    getAllChatsHandler
 
     const handleResize = () => {
       if (window.innerWidth <= 768) {
@@ -219,7 +229,7 @@ export default function Chat() {
   if (isMobile) {
     return (
       <>
-        <ReviewModal visible={reviewModalVisible} setVisible={setReviewModalVisible} />
+        <ReviewModal visible={reviewModalVisible} setVisible={setReviewModalVisible} brokerId={brokerId} reviewType={user.userType} />
 
         <ChatModal visible={chatModalVisible} setVisible={setChatModalVisible} />
 
@@ -481,7 +491,7 @@ export default function Chat() {
 
   return (
     <>
-      <ReviewModal visible={reviewModalVisible} setVisible={setReviewModalVisible} />
+      <ReviewModal visible={reviewModalVisible} setVisible={setReviewModalVisible} brokerId={brokerId} reviewType={user.userType} />
 
       <ChatModal visible={chatModalVisible} setVisible={setChatModalVisible} />
 
