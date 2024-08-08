@@ -16,10 +16,13 @@ export const ipApi = createApi({
   }),
   endpoints: (build) => ({
     getAll: build.query({
-      query: () => `/`,
+      query: (filter = "") => `/${filter}`,
     }),
     getIp: build.query({
       query: (id) => `/${id}`,
+    }),
+    getMyIps: build.query({
+      query: () => `/my-ips`,
     }),
     createIp: build.mutation({
       query(body) {
@@ -33,7 +36,7 @@ export const ipApi = createApi({
     updateIp: build.mutation({
       query(body) {
         return {
-          url: `/${body.id}/details`,
+          url: `/`,
           method: "PUT",
           body,
         };
@@ -57,4 +60,5 @@ export const {
   usePublishIpMutation,
   useGetAllQuery,
   useGetIpQuery,
+  useGetMyIpsQuery,
 } = ipApi;

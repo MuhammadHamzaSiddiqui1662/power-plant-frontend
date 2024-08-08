@@ -2,19 +2,21 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useSelector } from "react-redux";
 
 export default function Card({
   name,
   id,
   description,
   year,
-  category,
+  categories,
   price,
-  patentNo,
+  patentNumber,
   image,
   key,
-  isEdit = true,
+  isEdit = false,
 }) {
+  const { user } = useSelector((state) => state.auth);
   return (
     <>
       <div
@@ -23,18 +25,18 @@ export default function Card({
       >
         <div className="relative">
           <Image
-            src={image}
+            src={"/images/ip/mainImg.webp"}
             alt=""
             width={0}
             height={0}
             sizes="100vw"
-            style={{ width: "100%", height: "auto" }}
+            style={{ width: "100%", height: "auto", maxHeight: 160 }}
             priority
           />
           {isEdit && (
             <div className="absolute top-4 end-4">
               <Link
-                href="#"
+                href={`/upload-ip?id=${id}`}
                 className="btn btn-icon bg-white dark:bg-customGreen shadow dark:shadow-gray-700 rounded-full text-slate-100 dark:text-customGreen focus:text-customGreen dark:focus:text-red-600 hover:text-customGreen dark:hover:text-customGreen"
               >
                 <i className="mdi mdi-lead-pencil mdi-18px text-customDarkBlue"></i>
@@ -44,47 +46,62 @@ export default function Card({
         </div>
 
         <div className="p-6">
-          <div className="pb-4">
+          <div className="pb-3">
             <Link
-              href={`/details/${id}`}
+              href={
+                user && user.subscriber
+                  ? `/details/${id}`
+                  : "/payment?type=subscribe"
+              }
               className="text-lg hover:text-customGreen font-medium ease-in-out duration-500"
+              style={{
+                lineHeight: "0.5 !important",
+              }}
             >
               {name}
             </Link>
           </div>
-          <div style={{ height: "80px", overflow: "hidden" }}>
-            <p
-              className="font-medium ease-in-out duration-500"
-              style={{
-                display: "-webkit-box",
-                WebkitBoxOrient: "vertical",
-                WebkitLineClamp: 3,
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              {description}
-            </p>
-          </div>
+          <p
+            className="text-sm ease-in-out duration-500"
+            style={{
+              display: "-webkit-box",
+              WebkitBoxOrient: "vertical",
+              WebkitLineClamp: 3,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {description}
+          </p>
 
-          <ul className="pt-5 flex justify-between items-center list-none flex-wrap">
+          <ul className="pt-4 flex justify-between items-center list-none flex-wrap">
             <li>
-              <span className="text-slate-400">Price</span>
-              <p className="text-lg font-medium">${price}</p>
+              <span className="text-slate-400 text-sm">Price</span>
+              <p className="text-md font-medium" style={{ lineHeight: 1 }}>
+                ${price}
+              </p>
             </li>
             <li>
-              <span className="text-slate-400">Year of Publication</span>
-              <p className="text-lg font-medium">{year}</p>
+              <span className="text-slate-400 text-sm">
+                Year of Publication
+              </span>
+              <p className="text-md font-medium" style={{ lineHeight: 1 }}>
+                {new Date(year).getFullYear()}
+              </p>
             </li>
           </ul>
-          <ul className="pt-6 flex justify-between items-center list-none flex-wrap">
-            <li>
-              <span className="text-slate-400">Patent#</span>
-              <p className="text-lg font-medium">{patentNo}</p>
+          <ul className="list-none">
+            <li className="pt-2">
+              <span className="text-slate-400 text-sm">Patent#</span>
+              <p className="text-md font-medium" style={{ lineHeight: 1 }}>
+                {patentNumber}
+              </p>
             </li>
-            <li style={{ width: "130px" }}>
-              <span className="text-slate-400">Category</span>
-              <p className="text-lg font-medium">{category}</p>
+            <li className="pt-3">
+              <span className="text-slate-400 text-sm">Category</span>
+              <p className="text-md font-medium" style={{ lineHeight: 1 }}>
+                {categories?.join(", ")}
+              </p>
             </li>
           </ul>
         </div>

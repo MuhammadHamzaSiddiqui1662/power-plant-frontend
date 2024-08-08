@@ -15,8 +15,9 @@ const league_Spartan = League_Spartan({
 });
 
 export const metadata = {
-  title: "Hously - React Next Js Real Estate Template",
-  description: "Hously React Next Js Real Estate Template",
+  title: "Power Plant",
+  description:
+    "Power Plant - a transparent and organized market place for Intellectual Properties",
 };
 
 export default function RootLayout({ children }) {
@@ -25,7 +26,11 @@ export default function RootLayout({ children }) {
       <body className={`${league_Spartan.className}`}>
         <AppRouterCacheProvider>
           <ThemeProvider>
-            <StoreProvider><AntdStyledComponentsRegistry>{children}</AntdStyledComponentsRegistry></StoreProvider>
+            <StoreProvider>
+              <AntdStyledComponentsRegistry>
+                {children}
+              </AntdStyledComponentsRegistry>
+            </StoreProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

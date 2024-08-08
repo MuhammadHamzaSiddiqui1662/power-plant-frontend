@@ -9,19 +9,19 @@ export default function Feature() {
     {
       title: "Search for IPs",
       description:
-        "If the distribution of letters and words is random, the reader will not be distracted from making.",
+        "Browse a comprehensive library of intellectual property assets by industry, technology, and transaction type to find the perfect match for your needs.",
       Icon: Unicons.UilEstate,
     },
     {
-      title: "Meeting with Agent",
+      title: "Contact Innovator or Hire Broker",
       description:
-        "If the distribution of letters and words is random, the reader will not be distracted from making.",
+        "Reach out directly to the innovator for more details or hire a professional broker to manage the transaction on your behalf.",
       Icon: Unicons.UilBag,
     },
     {
       title: "Close the Deal",
       description:
-        "If the distribution of letters and words is random, the reader will not be distracted from making.",
+        "Finalize the transaction with clear and transparent processes, ensuring a smooth and efficient deal closure.",
       Icon: Unicons.UilKeySkeleton,
     },
   ];
@@ -32,11 +32,6 @@ export default function Feature() {
           <h3 className="mb-4 md:text-3xl md:leading-normal text-2xl leading-normal font-semibold">
             How It Works
           </h3>
-
-          <p className="text-slate-400 max-w-xl mx-auto">
-            A great platform to buy, sell your intellectual properties without
-            any hassle.
-          </p>
         </div>
 
         <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 mt-8 gap-[30px]">
@@ -62,14 +57,14 @@ export default function Feature() {
             );
           })}
         </div>
-        <div className="my-10 flex justify-center">
+        {/* <div className="my-10 flex justify-center">
           <Link
             href="#"
             className="btn bg-customGreen hover:bg-green-700 text-white text-center rounded-md mt-3"
           >
             Read More{" "}
           </Link>
-        </div>
+        </div> */}
       </div>
     </>
   );

@@ -1,40 +1,64 @@
 "use client"; // This is a client component 👈🏽
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { Alert, Grid } from "@mui/material";
 import "./style.css";
-import { useCreateIpMutation } from "../../services/ip/ip";
+import {
+  useGetIpQuery,
+  useCreateIpMutation,
+  useUpdateIpMutation,
+} from "../../services/ip/ip";
 import { IpStatus } from "../../types/ip";
+import { useRouter, useSearchParams } from "next/navigation";
+import ButtonContained from "../../components/ButtonContained/ButtonContained";
 
 const Navbar = dynamic(() => import("../componants/Navbar"));
 const Footer = dynamic(() => import("../componants/Footer"));
+const CategorySelect = dynamic(() => import("../componants/CategorySelect"));
 const Uploader = dynamic(() => import("../componants/UploadImage"));
 const BackgroundSection = dynamic(() =>
   import("../componants/BackgroundUploaderSection")
 );
 
+const initialData = {
+  name: "",
+  description: "",
+  abstract: "",
+  price: "",
+  status: IpStatus.Draft,
+  categories: [],
+  publishedDate: "",
+  patentNumber: "",
+  trademark: "",
+  copyright: "",
+  mainImg: "",
+  images: [],
+  sections: [{ title: "", content: "" }],
+};
+
 export default function UploadIP() {
-  const [uploadIp, { error }] = useCreateIpMutation();
-  const [data, setData] = useState({
-    name: "",
-    description: "",
-    abstract: "",
-    price: "",
-    status: IpStatus.InActive,
-    category: "",
-    hasPatent: true,
-    publishedDate: "",
-    patentNumber: "",
-    trademark: "",
-    copyright: "",
-    mainImg: "",
-    images: [],
-    sections: [{ title: "", content: "" }],
-  });
+  const router = useRouter();
+  const id = useSearchParams().get("id");
+  const { data: ip, refetch } = useGetIpQuery(id);
+  const [uploadIp, { isLoading: isUploading, error: createError }] =
+    useCreateIpMutation();
+  const [updateIp, { isLoading: isUpdating, error: updateError }] =
+    useUpdateIpMutation();
+  const [data, setData] = useState(initialData);
+  const [isPatented, setIsPatented] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  console.log("data", JSON.parse(data.hasPatent), data);
 
   const [files, setFiles] = useState({});
+
+  const handleCategoryChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setData((prev) => ({
+      ...prev,
+      categories: typeof value === "string" ? value.split(",") : value,
+    }));
+  };
 
   const handleFileUpload = (file, index) => {
     setErrorMessage("");
@@ -108,6 +132,11 @@ export default function UploadIP() {
     }));
   };
 
+  const handleCancel = () => {
+    setError("");
+    setData({ ...initialData, ...ip });
+  };
+
   const handleSubmit = async () => {
     const formData = new FormData();
     formData.append("data", JSON.stringify(data));
@@ -117,17 +146,28 @@ export default function UploadIP() {
     });
 
     try {
-      const { error } = await uploadIp(formData);
+      const { error } = ip
+        ? await updateIp(formData)
+        : await uploadIp(formData);
       if (error) {
         console.log("error", error);
         return setErrorMessage("In Complete Data");
       }
-      console.log("Response:", response);
+      refetch();
     } catch (error) {
-      console.error("Error uploading data:", error.shortMessage);
-      setErrorMessage("In Complete Data");
+      console.error("Error uploading data:", error);
+      setErrorMessage(
+        error.shortMessage || error.message || "Error in updating IP!"
+      );
     }
   };
+
+  useEffect(() => {
+    setData((prev) => ({
+      ...prev,
+      ...ip,
+    }));
+  }, [ip]);
 
   return (
     <>
@@ -173,47 +213,9 @@ export default function UploadIP() {
                   <div className="mb-4">
                     <label
                       className="font-medium text-customDarkBlue"
-                      htmlFor="patentNumber"
-                    >
-                      Patent number:
-                    </label>
-                    <input
-                      id="patentNumber"
-                      name="patentNumber"
-                      type="text"
-                      className="form-input mt-1"
-                      placeholder="Enter patent number here"
-                      value={data.patentNumber}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                </Grid>
-                <Grid item xs={12}>
-                  <div className="mb-4">
-                    <label
-                      className="font-medium text-customDarkBlue"
-                      htmlFor="publishedDate"
-                    >
-                      Published date:
-                    </label>
-                    <input
-                      id="publishedDate"
-                      name="publishedDate"
-                      type="text"
-                      className="form-input mt-1"
-                      placeholder="Enter date here"
-                      value={data.publishedDate}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                </Grid>
-                <Grid item xs={12}>
-                  <div className="mb-4">
-                    <label
-                      className="font-medium text-customDarkBlue"
                       htmlFor="price"
                     >
-                      Price:
+                      Price ($):
                     </label>
                     <input
                       id="price"
@@ -224,6 +226,25 @@ export default function UploadIP() {
                       value={data.price}
                       onChange={handleInputChange}
                     />
+                  </div>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <div className="mb-4">
+                    <label
+                      className="font-medium text-customDarkBlue"
+                      htmlFor="description"
+                    >
+                      Description:
+                    </label>
+                    <textarea
+                      name="description"
+                      id="description"
+                      className="form-input h-32"
+                      placeholder="Enter your description here"
+                      value={data.description}
+                      onChange={handleInputChange}
+                    ></textarea>
                   </div>
                 </Grid>
               </Grid>
@@ -243,8 +264,8 @@ export default function UploadIP() {
                           id="option1"
                           name="hasPatent"
                           className="form-radio text-customGreen"
-                          value={true}
-                          onChange={handleInputChange}
+                          checked={isPatented}
+                          onChange={() => setIsPatented(true)}
                         />
                         <label
                           htmlFor="option1"
@@ -262,8 +283,8 @@ export default function UploadIP() {
                           id="option2"
                           name="hasPatent"
                           className="form-radio text-customGreen"
-                          value={false}
-                          onChange={handleInputChange}
+                          checked={!isPatented}
+                          onChange={() => setIsPatented(false)}
                         />
                         <label
                           htmlFor="option2"
@@ -275,40 +296,58 @@ export default function UploadIP() {
                     </div>
                   </div>
                 </Grid>
-                {/* <Grid item xs={12}></Grid> */}
+                {isPatented && (
+                  <>
+                    <Grid item xs={12}>
+                      <div className="mb-4">
+                        <label
+                          className="font-medium text-customDarkBlue"
+                          htmlFor="patentNumber"
+                        >
+                          Patent number:
+                        </label>
+                        <input
+                          id="patentNumber"
+                          name="patentNumber"
+                          type="text"
+                          className="form-input mt-1"
+                          placeholder="Enter patent number here"
+                          value={data.patentNumber}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <div className="mb-4">
+                        <label
+                          className="font-medium text-customDarkBlue"
+                          htmlFor="publishedDate"
+                        >
+                          Published date:
+                        </label>
+                        <input
+                          id="publishedDate"
+                          name="publishedDate"
+                          type="text"
+                          className="form-input mt-1"
+                          placeholder="Enter date here"
+                          value={data.publishedDate}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                    </Grid>
+                  </>
+                )}
                 <Grid item xs={12}>
                   <div className="mb-4">
                     <label className="font-medium text-customDarkBlue block mb-2">
                       Category:
                     </label>
-                    <select
-                      className="dropdown"
-                      name="category"
-                      value={data.category}
-                      onChange={handleInputChange}
-                    >
-                      <option value="option1">Option 1</option>
-                      <option value="option2">Option 2</option>
-                      <option value="option3">Option 3</option>
-                    </select>
-                  </div>
-                </Grid>
-                <Grid item xs={12}>
-                  <div className="mb-4">
-                    <label
-                      className="font-medium text-customDarkBlue"
-                      htmlFor="description"
-                    >
-                      Description:
-                    </label>
-                    <textarea
-                      name="description"
-                      id="description"
-                      className="form-input h-32"
-                      placeholder="Enter your description here"
-                      value={data.description}
-                      onChange={handleInputChange}
-                    ></textarea>
+                    <CategorySelect
+                      categories={data.categories}
+                      onChange={handleCategoryChange}
+                      fullWidth={true}
+                    />
                   </div>
                 </Grid>
               </Grid>
@@ -391,27 +430,34 @@ export default function UploadIP() {
             <div className="flex">
               <button
                 type="submit"
+                onClick={handleCancel}
                 className="my-3 text-2xl btn btn-outlined text-customDarkBlue rounded-md py-6 w-40 text-[32px] me-5"
               >
                 Cancel
               </button>
-              <button
-                // type="submit"
+              <ButtonContained
                 onClick={handleSubmit}
-                className="my-3 text-2xl btn btn-outlined text-customDarkBlue rounded-md py-6 w-40 text-[32px] "
+                isLoading={isUploading || isUpdating}
+                disabled={isUploading || isUpdating}
+                className="my-3 text-2xl btn bg-customGreen hover:bg-customGreen text-white rounded-md py-6 w-40 text-[32px]"
               >
                 Save
-              </button>
+              </ButtonContained>
             </div>
           </Grid>
           <Grid xs={12} sm={6}>
-            {" "}
             <div className="flex justify-end">
               <button
-                type="submit"
-                className="my-3 text-2xl btn bg-customGreen hover:bg-customGreen text-white rounded-md py-6 w-40 text-[32px]"
+                onClick={() => {
+                  router.push(
+                    `/payment?type=${isPatented ? "publish" : "patent"}`
+                  );
+                }}
+                className={`my-3 text-2xl btn bg-customGreen hover:bg-customGreen text-white rounded-md py-6 w-${
+                  isPatented ? 40 : 60
+                } text-[32px]`}
               >
-                Publish
+                {isPatented ? "Publish" : "Apply Patent"}
               </button>
             </div>
           </Grid>

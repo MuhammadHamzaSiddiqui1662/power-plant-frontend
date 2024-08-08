@@ -1,51 +1,190 @@
-import React from "react";
-import Link from "next/link";
-import Image from "next/image";
-import dynamic from 'next/dynamic';
+"use client";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Row, Col, Input } from "antd";
+import Navbar from "../componants/Navbar";
+import Footer from "../componants/Footer";
+import "./style.css";
+import {
+  useResendOtpMutation,
+  useResetPasswordMutation,
+} from "../../services/auth/auth";
+import { Alert } from "@mui/material";
+import ButtonContained from "../../components/ButtonContained/ButtonContained";
+import { useDispatch } from "react-redux";
+import { setUserType } from "../../lib/features/authSlice";
 
-
-const Switcher = dynamic(()=>import('../componants/Switcher'));
 export default function Login() {
-    
-    
-    return (
-        <>
-            <section className="md:h-screen py-36 flex items-center relative overflow-hidden zoom-image">
-                <div
-                    style={{ backgroundImage: "url('/images/bg/01.jpg')" }}
-                    className="absolute inset-0 image-wrap z-1 bg-no-repeat bg-center bg-cover">
-                </div>
-                <div  className="absolute inset-0 bg-gradient-to-b from-transparent to-black z-2"></div>
-                <div className="container z-3">
-                    <div className="flex justify-center">
-                        <div className="max-w-[400px] w-full m-auto p-6 bg-white dark:bg-slate-900 shadow-md dark:shadow-gray-700 rounded-md">
-                            <Link href="/"><Image src="/images/logo-icon-64.png" className="mx-auto" alt="" width={64} height={64} /></Link>
-                            <h5 className="my-6 text-xl font-semibold">Reset Your Password</h5>
-                            <div className="grid grid-cols-1">
-                                <p className="text-slate-400 mb-6">Please enter your email address. You will receive a link to create a new password via email.</p>
-                                <form className="ltr:text-left rtl:text-right">
-                                    <div className="grid grid-cols-1">
-                                        <div className="mb-4">
-                                            <label className="font-medium" htmlFor="LoginEmail">Email Address:</label>
-                                            <input id="LoginEmail" type="email" className="form-input mt-3" placeholder="name@example.com" />
-                                        </div>
+  const router = useRouter();
+  const [seconds, setSeconds] = useState(120);
+  const [isActive, setIsActive] = useState(false);
+  const email = useSearchParams().get("email");
+  const userType = useSearchParams().get("userType");
+  const [otp, setOTP] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [resetPassword, { isLoading: isReseting }] = useResetPasswordMutation();
+  const [resendOtp, { isLoading: isResending }] = useResendOtpMutation();
+  const dispatch = useDispatch();
 
-                                        <div className="mb-4">
-                                            <Link href="#" className="btn bg-green-600 hover:bg-green-700 text-white rounded-md w-full">Send</Link>
-                                        </div>
+  const handleMessageChange = (e) => {
+    setOTP(e.target.value);
+    console.log(otp);
+  };
 
-                                        <div className="text-center">
-                                            <span className="text-slate-400 me-2">Remember your password ? </span><Link href="/auth-login" className="text-black dark:text-white font-bold">Sign in</Link>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <Switcher />
-        </>
-    );
-    
+  const handleResend = async () => {
+    try {
+      const { data: resendOTPResponse, error } = await resendOtp({ email });
+      if (error) return setError(error.message);
+      setSeconds(120);
+      setIsActive(false);
+      console.log(resendOTPResponse);
+    } catch (error) {
+      console.log(`errror --> ${error}`);
+    }
+  };
+
+  const handleSend = async () => {
+    try {
+      const { data: verifyOtpResponse, error } = await resetPassword({
+        email,
+        otp,
+        password,
+      });
+      if (error) return setError(error.message);
+      dispatch(setUserType(userType));
+      console.log(verifyOtpResponse);
+      router.replace("/home");
+    } catch (error) {
+      console.log(`error --> ${error}`);
+    }
+  };
+
+  const onChange = (text) => {
+    console.log("onChange:", text);
+    setOTP(text);
+  };
+
+  const sharedProps = {
+    onChange,
+  };
+
+  useEffect(() => {
+    let interval = null;
+
+    if (!isActive && seconds > 0) {
+      interval = setInterval(() => {
+        setSeconds((prevSeconds) => prevSeconds - 1);
+      }, 1000);
+    } else if (seconds === 0) {
+      setIsActive(true);
+    }
+
+    return () => clearInterval(interval);
+  }, [isActive, seconds]);
+
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
+
+  return (
+    <>
+      <Navbar />
+      <section className="my-28">
+        <div className="container-otp">
+          <Row justify={"center"}>
+            <Col md={24} className="text-center">
+              <h5 className="my-6 text-4xl">Reset Password</h5>
+            </Col>
+          </Row>
+          {error && (
+            <Row justify={"center"}>
+              <Col className="text-center pd-12">
+                <Alert
+                  variant="outlined"
+                  severity="error"
+                  className="mb-4 w-80"
+                >
+                  {error}
+                </Alert>
+              </Col>
+            </Row>
+          )}
+          <Row justify={"center"}>
+            <Col md={24} className="pd-12 text-center f-16 b-5xx">
+              <h4>Enter your new password</h4>
+            </Col>
+          </Row>
+          <Row justify={"center"}>
+            <Col span={24} md={24} className="text-center pd-12">
+              <input
+                id="LoginPassword"
+                name="password"
+                type="password"
+                className="form-input mb-3"
+                placeholder="New Password:"
+                value={password}
+                onChange={(e) => {
+                  setError("");
+                  setPassword(e.target.value);
+                }}
+              />
+            </Col>
+          </Row>
+          <Row justify={"center"}>
+            <Col md={24} className="pd-12 text-center f-16 b-5xx">
+              <h4>Please enter the One-time-password to verify your account</h4>
+            </Col>
+          </Row>
+          <Row justify={"center"}>
+            <Col span={24} md={24} className="text-center pd-12">
+              <Input.OTP
+                value={otp}
+                onChange={handleMessageChange}
+                formatter={(str) => str.toUpperCase()}
+                {...sharedProps}
+              />
+            </Col>
+          </Row>
+          <Row justify={"center"}>
+            <Col span={6} md={20} className="text-center pd-12">
+              <h4 className="f-16 b-5xx">
+                OTP expires in{" "}
+                <span className="f-16 b-5xx">{formatTime(seconds)}</span>
+              </h4>
+            </Col>
+          </Row>
+          <Row justify={"center"}>
+            <Col span={10} md={24} className="pd-12 text-center">
+              <h4 className="f-16 b-5xx">
+                {`Didn't receive the Verification code, `}
+                <a
+                  className={isActive === false ? "disabled" : "resend-anchor"}
+                  onClick={handleResend}
+                >
+                  Click to Resend
+                </a>
+              </h4>
+            </Col>
+          </Row>
+          <Row justify={"center"}>
+            <Col span={6} md={12} className="pd-12 text-center">
+              <ButtonContained
+                style={{ backgroundColor: "#6BB955" }}
+                type="primary"
+                onClick={handleSend}
+                isLoading={isReseting || isResending}
+                disabled={isReseting || isResending}
+              >
+                Continue
+              </ButtonContained>
+            </Col>
+          </Row>
+        </div>
+      </section>
+      <Footer />
+    </>
+  );
 }

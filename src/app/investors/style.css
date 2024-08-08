@@ -1,0 +1,34 @@
+.heading {
+  font-size: 4rem;
+  @media only screen and (max-width: 940px) {
+    font-size: 3rem;
+  }
+  @media only screen and (max-width: 735px) {
+    font-size: 2.5rem;
+  }
+}
+.avatar-div {
+  background-color: #f4f5f6;
+  padding: 1.2rem;
+  border-radius: 15px;
+  margin: 20px;
+  @media only screen and (max-width: 599px) {
+    margin: 0px;
+    margin-top: 20px;
+  }
+}
+
+.designation {
+  color: black;
+}
+
+.name {
+  color: black;
+}
+
+.desc-width {
+  width: 80%;
+  @media only screen and (max-width: 899px) {
+    width: 100%;
+  }
+}
