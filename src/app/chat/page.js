@@ -34,7 +34,8 @@ export default function Chat() {
   const messageRef = useRef([]);
   const [messages, setMessages] = useState([]);
   const [chatsList, setChatsList] = useState([]);
-  const user = useSelector((state) => state.auth);
+  const [receiverList, setReceiverList] = useState([]);
+  const user = useSelector((state) => state.auth.user);
   const userType = useSelector((state) => state.auth.userType);
   const [message, setMessage] = useState('');
   const [brokerId, setBrokerId] = useState('');
@@ -52,17 +53,17 @@ export default function Chat() {
   const socket = io('http://localhost:3001');
 
   socket.on('newMessage', (message) => {
-    setMessages([...messageRef.current, message]);
-    console.log(messageWindowRef.current.scrollHeight)
+    setMessages((prevMessages) => [...prevMessages, message]);
     if (messageWindowRef.current) {
       messageWindowRef.current.scrollTop = messageWindowRef.current.scrollHeight + 600;
     }
   });
 
+
   socket.on('userStatusChanged', (userId, online) => {
     setChatsList((prevChats) => {
       return prevChats.map((chat) => {
-        if (chat.broker._id === userId) {
+        if (chat.receiver._id === userId) {
           return { ...chat, online: online }
         }
         return chat;
@@ -81,12 +82,12 @@ export default function Chat() {
       minute: '2-digit'
     })
   }
+
   const handleOpenChatModal = () => {
     setChatModalVisible(true);
   };
 
   const closeDealMessageHandler = () => {
-    messageRef.current = messages;
     try {
       if (selectedChat._id != '') {
         socket.emit('sendMessage', { chatId: selectedChat._id, senderId: user._id, type: MessageType.CloseChat });
@@ -108,9 +109,8 @@ export default function Chat() {
   };
 
   const sendMessageHandler = (e) => {
-    e.preventDefault();
-    messageRef.current = messages;
     try {
+      e.preventDefault();
       if (selectedChat._id != '') {
         socket.emit('sendMessage', { chatId: selectedChat._id, senderId: user._id, type: MessageType.Text, content: message });
         setMessage('');
@@ -121,20 +121,74 @@ export default function Chat() {
     }
   };
 
+  const extractReceivers = (chats) => {
+    let _receiverList = [];
+    try {
+
+      if (userType == 0) {
+        _receiverList = chats
+          .map((ch) => ({ _id: ch._id, receiver: ch.broker != null ? ch.broker : ch.investor, closed: ch.closed }));
+      }
+      if (userType == 1) {
+        _receiverList = chats
+          .map((ch) => ({ _id: ch._id, receiver: ch.broker != null ? ch.broker : ch.innovator, closed: ch.closed }));
+      }
+      if (userType == 2) {
+        _receiverList = chats
+          .map((ch) => ({ _id: ch._id, receiver: ch.innovator != null ? ch.innovator : ch.investor, closed: ch.closed }));
+      }
+
+      setReceiverList(_receiverList);
+    } catch (error) {
+      console.log(error)
+    }
+    return _receiverList;
+
+  }
+
+  const extractReceiver = (chatObject) => {
+    try {
+      let _receiver = {};
+
+      if (userType == 0) {
+        _receiver = {
+          _id: chatObject._id,
+          receiver: chatObject.broker != null ? chatObject.broker : chatObject.investor,
+          closed: chatObject.closed
+        };
+      }
+      if (userType == 1) {
+        _receiver = {
+          _id: chatObject._id,
+          receiver: chatObject.broker != null ? chatObject.broker : chatObject.innovator,
+          closed: chatObject.closed
+        };
+      }
+      if (userType == 2) {
+        _receiver = {
+          _id: chatObject._id,
+          receiver: chatObject.innovator != null ? chatObject.innovator : chatObject.investor,
+          closed: chatObject.closed
+        };
+      }
+
+      return _receiver
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const getAllChatsHandler = async () => {
     try {
       const { data: getAllChatsResponse, error } = await chats();
-      if (error) return setError(error.message);
-      setChatsList(getAllChatsResponse)
-      if (getAllChatsResponse[0]._id) {
-        console.log(getAllChatsResponse[0]._id);
-        await chatClickHandler(getAllChatsResponse[0]._id)
-        setSelectedChat(getAllChatsResponse[0]);
-        // socket.emit("joinChat", { chatId: selectedChat._id });
-        // socket.on('previousMessages', (msgs) => {
-        //   setMessages(msgs);
-        // });
 
+      if (error) return setError(error.message);
+
+      if (getAllChatsResponse[0]._id) {
+        let recList = extractReceivers(getAllChatsResponse);
+        setChatsList(recList)
+        await chatClickHandler(getAllChatsResponse[0]._id)
+        setSelectedChat(recList[0]);
       }
     } catch (error) {
       console.log(`error --> ${error}`);
@@ -147,16 +201,16 @@ export default function Chat() {
       const { data: getChatByIdResponse, error } = await getChatById(Id);
       if (error) return setError(error.message);
       if (getChatByIdResponse._id) {
-        setSelectedChat(getChatByIdResponse);
-        setBrokerId(getChatByIdResponse.broker._id);
+        let receiver = extractReceiver(getChatByIdResponse);
+        setSelectedChat(receiver);
+        setBrokerId(receiver.receiver._id);
         socket.emit("joinChat", { chatId: getChatByIdResponse._id });
         socket.on('previousMessages', (msgs) => {
           setMessages(msgs);
           unseenMessageIds = msgs.filter((m) => !m.seen).map((m) => m._id);
         });
 
-        console.log(unseenMessageIds)
-        socket.emit("messageSeen", { messageId: unseenMessageIds[0], userId: user._id });
+        socket.emit("messageSeen", { messageId: unseenMessageIds, userId: user._id });
       }
     } catch (error) {
       console.log(`error --> ${error}`);
@@ -191,12 +245,12 @@ export default function Chat() {
 
     socket.emit("userOnline", user._id);
 
-
     getAllChatsHandler();
+
+
 
     if (messageWindowRef.current) {
       messageWindowRef.current.scrollTop = messageWindowRef.current.scrollHeight;
-      console.log(messageWindowRef.current.scrollHeight)
     }
 
     const handleResize = () => {
@@ -244,23 +298,23 @@ export default function Chat() {
               <text className="fl-r f-14 b-5xx">CHAT +</text>
 
               <div className="chat-container">
-                {chatsList.map((chat, index) => (
+                {receiverList.map((chat, index) => (
 
                   <Card key={chat._id} className={`m-40 chat-card ${chatClickedIndex === chat._id ? "active" : ""}`} onClick={() => chatClickHandler(chat._id)}>
                     <Row className="pd-12">
                       <Col xs={3} sm={3} md={3} lg={5} xl={2} xxl={1} >
-                        {chat.broker.online === true ?
+                        {chat.receiver.online === true ?
                           <Badge status="success" dot offset={[-5, 45]} className="pd-5">
-                            <Avatar src={chat.broker.imageUrl} shape="circle" className="h-5x w-5x"></Avatar>
+                            <Avatar src={chat.receiver.imageUrl} shape="circle" className="h-5x w-5x"></Avatar>
                           </Badge> :
-                          <Avatar src={chat.broker.imageUrl} shape="circle" className="h-5x w-5x"> </Avatar>
+                          <Avatar src={chat.receiver.imageUrl} shape="circle" className="h-5x w-5x"> </Avatar>
                         }
                       </Col>
 
                       <Col xs={2} sm={2} md={3} lg={0} xl={3} xxl={2}></Col>
 
                       <Col xs={13} sm={10} md={8} lg={8} xl={8} xxl={16}>
-                        <text className="f-16 b-7xx">{chat.broker.name}</text>
+                        <text className="f-16 b-7xx">{chat.receiver.name}</text>
                         <br />
                         <text className="f-12 c-grey">{chat.last_message}</text>
                       </Col>
@@ -285,11 +339,11 @@ export default function Chat() {
                   <div className="pd-24">
                     <Row>
                       <Col xs={{ span: 1 }}>
-                        <Avatar className="h-4x w-4x" src={selectedChat.broker.imageUrl} shape="circle" />
+                        <Avatar className="h-4x w-4x" src={selectedChat.receiver.imageUrl} shape="circle" />
                       </Col>
 
                       <Col xs={3} sm={3} md={6} lg={5} className="pd-0-15">
-                        <text className="f-16 b-7xx" >{selectedChat.broker.name}</text>
+                        <text className="f-16 b-7xx" >{selectedChat.receiver.name}</text>
                         <br />
                         <text className="f-12">C#1249UoH</text>
                       </Col>
@@ -505,29 +559,29 @@ export default function Chat() {
                 <text className="fl-r f-14 b-5xx">CHAT +</text>
 
                 <div className="chat-container">
-                  {chatsList.map((chat, index) => (
+                  {receiverList.map((chat, index) => (
                     <Card key={chat._id} className={`m-40 chat-card ${chatClickedIndex === chat._id ? "active" : ""}`} onClick={() => chatClickHandler(chat._id)}>
                       <Row className="pd-12">
                         <Col xs={3} sm={3} md={3} lg={5} xl={2} xxl={1} >
-                          {chat.broker.online === true ?
+                          {chat.receiver.online === true ?
                             <Badge status="success" dot offset={[-5, 45]} className="pd-5">
-                              <Avatar src={chat.broker.imageUrl} shape="circle" className="h-5x w-5x"></Avatar>
+                              <Avatar src={chat.receiver.imageUrl} shape="circle" className="h-5x w-5x"></Avatar>
                             </Badge> :
-                            <Avatar src={chat.broker.imageUrl} shape="circle" className="h-5x w-5x"> </Avatar>
+                            <Avatar src={chat.receiver.imageUrl} shape="circle" className="h-5x w-5x"> </Avatar>
                           }
                         </Col>
 
                         <Col xs={3} sm={3} md={3} lg={0} xl={3} xxl={2}></Col>
 
                         <Col xs={3} sm={3} md={3} lg={8} xl={8} xxl={16}>
-                          <text className="f-16 b-7xx">{chat.broker.name}</text>
+                          <text className="f-16 b-7xx">{chat.receiver.name}</text>
                           <br />
-                          <text className="f-12 c-grey">{chat.broker.last_message}</text>
+                          <text className="f-12 c-grey">{chat.last_message}</text>
                         </Col>
 
                         <Col xs={3} sm={3} md={3} lg={1} xl={3} xxl={3}>
                           {chat.last_message_count > 0 ?
-                            <Badge color="green" count={chat.broker.last_message_count} offset={[80, 20]} ></Badge> :
+                            <Badge color="green" count={chat.last_message_count} offset={[80, 20]} ></Badge> :
                             <text></text>}
                         </Col>
 
@@ -548,11 +602,11 @@ export default function Chat() {
                 <div className="pd-24">
                   <Row>
                     <Col xs={{ span: 1 }}>
-                      <Avatar className="h-4x w-4x" src={selectedChat.broker.imageUrl} shape="circle" />
+                      <Avatar className="h-4x w-4x" src={selectedChat.receiver.imageUrl} shape="circle" />
                     </Col>
 
                     <Col xs={3} sm={3} md={6} lg={5} className="pd-0-15">
-                      <text className="f-16 b-7xx" >{selectedChat.broker.name}</text>
+                      <text className="f-16 b-7xx" >{selectedChat.receiver.name}</text>
                       <br />
                       <text className="f-12">C#1249UoH</text>
                     </Col>
