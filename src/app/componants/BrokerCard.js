@@ -54,7 +54,7 @@ export default function BrokerCard({
               {interests[0]}
             </p>
             <Stack spacing={1} marginTop={2}>
-              <Rating name="ratings" precision={0.5} value={ratings} readOnly />
+              <Rating name="ratings" precision={0.1} value={ratings} readOnly />
             </Stack>
           </div>
         </Box>
