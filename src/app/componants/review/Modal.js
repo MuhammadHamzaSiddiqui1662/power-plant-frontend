@@ -7,9 +7,16 @@ import "./ModalCSS.css";
 import {
   useAddReviewMutation,
 } from "../../../services/user/user";
+import { ReviewType } from "../../../types/ReviewType";
+
+import {
+  useUpdateChatMutation,
+} from "../../../services/chat/chat";
+import { Router } from "next/router";
+import { useRouter } from "next/navigation";
 
 
-export default function ReviewModal({ visible, setVisible, brokerId, reviewType }) {
+export default function ReviewModal({ visible, setVisible, brokerId, userType, chat }) {
   const [successFullCheck, setSuccessFullCheck] = useState(false)
   const [description, setDescription] = useState("");
   const [negotiationRating, setNegotiationRating] = useState(0);
@@ -17,8 +24,17 @@ export default function ReviewModal({ visible, setVisible, brokerId, reviewType 
   const [communicationRating, setCommunicationRating] = useState(0);
   const [skillsRating, setSkillsRating] = useState(0);
   const [addReview, { isLoading: isAdding }] = useAddReviewMutation();
+  const [updateChat, { isLoading: isUpdating }] = useUpdateChatMutation();
+  const router = useRouter();
 
   const handleCancel = async (e) => {
+    setSuccessFullCheck(false);
+    setDescription('');
+    setNegotiationRating(0);
+    setResponsivenessRating(0);
+    setCommunicationRating(0);
+    setSkillsRating(0);
+
     setVisible(false)
   };
 
@@ -46,29 +62,62 @@ export default function ReviewModal({ visible, setVisible, brokerId, reviewType 
     setSkillsRating(value);
   };
 
+  const getReviewType = (type) => {
+    if (type == 0) {
+      return ReviewType.ReviewsAsInnovator
+    }
+    if (type == 1) {
+      return ReviewType.ReviewsAsInvestor
+    }
+    if (type == 2) {
+      return ReviewType.ReviewsAsBorker
+    }
+  }
+
   const addReviewHandler = async () => {
     try {
-      //userIdToReview, reviewType
-      
-      let review={
-        isSuccessfull:successFullCheck,
-        description:description,
-        negotiation:negotiationRating,
-        responsiveness:responsivenessRating,
-        communication:communicationRating,
-        skills:skillsRating
-      }
+      let reviewType = getReviewType(userType);
 
-      console.log(review)
+      let body = {
+        id: brokerId,
+        reviewType: reviewType,
+        data: {
+          dealSuccessFul: successFullCheck,
+          comments: description,
+          behaviour: 4,
+          priceNegotiation: negotiationRating,
+          responsiveness: responsivenessRating,
+          communication: communicationRating,
+          technicalSkills: skillsRating
+        }
+      };
 
-      const { data: addReviewResponse, error } = await addReview({
-        brokerId,
-        reviewType,
-        review
-      });
+      const { data: addReviewResponse, error } = await addReview(body);
+
       if (error) return setError(error.message);
-      console.log(addReviewResponse);
-      if (addReviewResponse._id) {
+
+      if (addReviewResponse) {
+        let chatObject = {
+             _id: chat._id,
+             closed:true,
+             innovator:chat.innovator,
+             investor:chat.investor,
+             broker:chat.broker,
+             __v:0
+        }
+
+        let closeChat = {
+          id: chat._id,
+          chat: chatObject
+        }
+        const { data: closeChatResponse, error } = await updateChat(closeChat);
+
+        if (error) return setError(error.message);
+
+        if (closeChatResponse) {
+          handleCancel();
+          router.reload('/chat');
+        }
       }
     } catch (error) {
       console.log(`error --> ${error}`);

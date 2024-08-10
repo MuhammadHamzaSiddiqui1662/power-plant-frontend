@@ -20,6 +20,8 @@
     "@mui/material-nextjs": "^5.16.4",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
     "@reduxjs/toolkit": "^2.2.6",
+    "@stripe/react-stripe-js": "^2.7.3",
+    "@stripe/stripe-js": "^4.1.0",
     "antd": "^5.19.3",
     "autoprefixer": "10.4.14",
     "eslint": "8.44.0",

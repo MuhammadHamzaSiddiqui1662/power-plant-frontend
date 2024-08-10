@@ -16,18 +16,39 @@ export const userApi = createApi({
   }),
   endpoints: (build) => ({
     getProfile: build.mutation({
-      query() {
+      query(id) {
         return {
-          url: `/profile`,
+          url: `/profile?id=${id}`,
           method: "GET",
         };
       },
     }),
     addReview: build.mutation({
-      query(id, reviewType, body) {
+      query(body) {
         return {
-          url: `/${id}/${reviewType}/reviews`,
+          url: `/${body.id}/${body.reviewType}/reviews`,
           method: "POST",
+          body:body.data,
+        };
+      },
+    }),
+    getAllUsers: build.query({
+      query: (filter = "") => `/${filter}`,
+    }),
+    getUser: build.query({
+      query: (id) => `/${id}`,
+    }),
+    getBrokers: build.query({
+      query: (filter = "") => `/brokers/${filter}`,
+    }),
+    getInvestors: build.query({
+      query: (filter = "") => `/investors/${filter}`,
+    }),
+    updateUser: build.mutation({
+      query(body) {
+        return {
+          url: `/`,
+          method: "PUT",
           body,
         };
       },
@@ -39,4 +60,9 @@ export const {
   endpoints,
   useGetProfileMutation,
   useAddReviewMutation,
+  useGetAllUsersQuery,
+  useGetBrokersQuery,
+  useGetInvestorsQuery,
+  useGetUserQuery,
+  useUpdateUserMutation,
 } = userApi;

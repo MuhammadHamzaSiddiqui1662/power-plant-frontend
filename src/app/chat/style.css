@@ -74,7 +74,8 @@
 .input-message {
   border-color: white !important;
   padding: 15px 10px !important;
-  max-width: 85% !important
+  max-width: 85% !important;
+  height:50px !important
 }
 .message-box {
   width: 100% !important;
@@ -159,7 +160,8 @@
 .input-message {
   border-color: white !important;
   padding: 15px 10px !important;
-  max-width: 85% !important
+  max-width: 85% !important;
+  height:50px !important
 }
 .message-box {
   width: 100% !important;
@@ -244,7 +246,8 @@
 .input-message {
   border-color: white !important;
   padding: 15px 10px !important;
-  max-width: 85% !important
+  max-width: 85% !important;
+  height:50px !important
 }
 .message-box {
   width: 100% !important;
@@ -325,7 +328,8 @@
 .input-message {
   border-color: white !important;
   padding: 15px 10px !important;
-  max-width: 85% !important
+  max-width: 85% !important;
+  height:50px !important
 }
 .message-box {
   width: 100% !important;
@@ -404,7 +408,9 @@
 .input-message {
   border-color: white !important;
   padding: 15px 10px !important;
-  max-width: 85% !important
+  max-width: 95% !important;
+  width: 95% !important;
+  height:50px !important
 }
 .message-box {
   width: 100% !important;
@@ -497,7 +503,7 @@ background-color:#6BB955 !important;
 
 .message {
   margin-bottom: 10px;
-  padding: 8px 12px;
+  /* padding: 8px 12px; */
   border-radius: 8px;
   max-width: 80%;
   /* Adjust as needed */

@@ -5,7 +5,8 @@ import "./ModalCSS.css";
 import { useCreateChatMutation } from "../../../services/chat/chat";
 
 export default function ChatModal({ visible, setVisible }) {
-  const [participants, setParticipants] = useState([]);
+  const [innovatorId, setInnovatorId] = useState([]);
+  const [brokerId, setBrokerId] = useState([]);
   const [error, setError] = useState("");
   const [createChat, { isLoading: isCreating }] = useCreateChatMutation();
 
@@ -14,25 +15,18 @@ export default function ChatModal({ visible, setVisible }) {
   };
 
   const InputIDHandler = (e) => {
-    setParticipants((prev) => {
-      const temp = [...prev];
-      temp[0] = e.target.value;
-      return temp;
-    });
+    setInnovatorId(e.target.value);
   };
 
   const InputBrokerIDHandler = (e) => {
-    setParticipants((prev) => {
-      const temp = [...prev];
-      temp[1] = e.target.value;
-      return temp;
-    });
+    setBrokerId(e.target.value);
   };
 
   const HandleCreateChat = async () => {
     try {
       const { data: createChatgResponse, error } = await createChat({
-        participants,
+        innovator:innovatorId,
+        broker:brokerId
       });
       if (error) return setError(error.message);
       console.log(createChatgResponse);
@@ -60,7 +54,7 @@ export default function ChatModal({ visible, setVisible }) {
               <Row>
                 <Col md={22}>
                 <Input 
-                value={participants[0]}
+                value={innovatorId}
                 onChange={InputIDHandler}
                 placeholder="Enter your Id"
               ></Input>
@@ -72,7 +66,7 @@ export default function ChatModal({ visible, setVisible }) {
               <Row>
                 <Col md={22}>
                 <Input
-                value={participants[1]}
+                value={brokerId}
                 onChange={InputBrokerIDHandler}
                 placeholder="Enter broker Id"
               ></Input>

@@ -13,13 +13,47 @@ import { useGetUserQuery } from "../../../services/user/user";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "next/navigation";
 import { useGetAllQuery } from "../../../services/ip/ip";
+import { useCreateChatMutation } from "../../../services/chat/chat";
+import { useRouter } from "next/navigation";
 
 export default function ViewProfile(props) {
+  const loginUser = useSelector((state) => state.auth.user);
+  const loginUserType = useSelector((state) => state.auth.userType);
   const userType =
     useSearchParams().get("userType") ||
     useSelector((state) => state.auth.userType);
   const { data: user } = useGetUserQuery(props?.params?.id);
   const { data: ips } = useGetAllQuery(`?userId=${props?.params?.id}`);
+  const [createChat, { isLoading: isCreating }] = useCreateChatMutation();
+  const router = useRouter();
+
+  const getChatObject = (chat, _user, _type) => {
+    if (_type == 0) {
+      chat.innovator = _user._id;
+    }
+    else if (_type == 1) {
+      chat.investor = _user._id;
+    }
+    else if (_type == 2) {
+      chat.broker = _user._id;
+    }
+    return chat;
+  }
+
+  const CreateChatHandler = async () => {
+    try {
+      let chat = {}
+      getChatObject(chat, loginUser, loginUserType);
+      getChatObject(chat, user, userType)
+      const { data: createChatgResponse, error } = await createChat(chat);
+      if (error) return setError(error.message);
+      console.log(createChatgResponse);
+      router.replace(`/chat`);
+
+    } catch (error) {
+      console.log(`error --> ${error}`);
+    }
+  };
 
   return (
     <>
@@ -32,10 +66,10 @@ export default function ViewProfile(props) {
                 {userType == 0
                   ? "Innovator"
                   : userType == 1
-                  ? "Investor"
-                  : userType === 2
-                  ? "Broker"
-                  : ""}{" "}
+                    ? "Investor"
+                    : userType === 2
+                      ? "Broker"
+                      : ""}{" "}
                 Profile
               </p>
             </div>
@@ -161,6 +195,8 @@ export default function ViewProfile(props) {
                     <button
                       type="submit"
                       className="my-3 text-2xl btn bg-customGreen hover:bg-customGreen text-white rounded-md py-6 w-60 text-[32px]"
+                      onClick={CreateChatHandler}
+                      
                     >
                       Hire / Contact
                     </button>

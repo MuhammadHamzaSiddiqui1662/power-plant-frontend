@@ -163,8 +163,7 @@ export default function Welcome() {
           </Grid>
         </section>
       </div>
-
-      <Footer />
+    <Footer />
     </>
   );
 }

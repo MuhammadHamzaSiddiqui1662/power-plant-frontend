@@ -6,6 +6,7 @@ import { hiringApi } from "../services/hiring/hiring";
 import { chatApi } from "../services/chat/chat";
 import { messageApi } from "../services/message/message";
 import { packageApi } from "../services/package/package";
+import { paymentApi } from "../services/payment/payment";
 import authReducer from "./features/authSlice";
 import ipReducer from "./features/ipSlice";
 import hiringReducer from "./features/hiringSlice";
@@ -36,6 +37,7 @@ const rootReducer = combineReducers({
   [chatApi.reducerPath]: chatApi.reducer,
   [messageApi.reducerPath]: messageApi.reducer,
   [packageApi.reducerPath]: packageApi.reducer,
+  [paymentApi.reducerPath]: paymentApi.reducer,
 });
 
 export const makeStore = () => {
@@ -53,7 +55,8 @@ export const makeStore = () => {
         .concat(hiringApi.middleware)
         .concat(chatApi.middleware)
         .concat(messageApi.middleware)
-        .concat(packageApi.middleware),
+        .concat(packageApi.middleware)
+        .concat(paymentApi.middleware)
   });
 
   const persistor = persistStore(store);

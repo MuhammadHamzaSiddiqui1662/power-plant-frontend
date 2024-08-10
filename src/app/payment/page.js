@@ -8,18 +8,23 @@ import Navbar from "../componants/Navbar";
 import Footer from "../componants/Footer";
 import "./style.css";
 import { useStripePaymentIntentMutation } from "../../services/payment/payment";
-import { CheckoutForm } from "../componants/payment/checkout-form";
+import CheckoutForm from "../componants/payment/checkoutForm";
 import { loadStripe } from "@stripe/stripe-js";
 import {
   Elements,
 } from "@stripe/react-stripe-js";
+import { useParams, useSearchParams } from "next/navigation";
+import { useGetPackageByTypeQuery } from "../../services/package/package";
 
-const STRIPE_PUBLISHABLE_KEY = import.meta.env.STRIPE_PUBLISHABLE_KEY;
+const STRIPE_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+console.log(STRIPE_PUBLISHABLE_KEY)
 const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
 
 export default function Payment() {
+  const type = useSearchParams().get("type");
+  const { data: _package } = useGetPackageByTypeQuery(type);
   const [clientSecret, setClientSecret] = useState('');
-  const [selectedPackageId, setSelectedPackageId] = useState('');
+  const [packageId, setPackageId] = useState('66aeb3a23d2188536150901b');
   const [selectedCardType, setSelectedCardType] = useState(1);
   const [paymentData, setPaymentData] = useState({
     displayName: "",
@@ -44,14 +49,16 @@ export default function Payment() {
   const stripeClick = (type) => {
     setSelectedCardType(type)
   };
-
+const currency="4567"
+//const selectedPackageId= "666b078651455c3fc88e074b"
   const createPaymentIntent = async () => {
     try {
       const { data: stripePaymentIntentResponse, error } = stripePaymentIntent({
         currency,
-        selectedPackageId
+        packageId
       });
       if (error) return setError(error.message);
+      setClientSecret(stripePaymentIntentResponse.data.clientSecret)
       console.log(stripePaymentIntentResponse);
     } catch (error) {
       console.log(`errror --> ${error}`);
@@ -68,7 +75,9 @@ export default function Payment() {
   //   }
   // };
 
-  return (
+  return !_package ? (
+    <></>
+  ) : (
     <>
       <Navbar />
       <section className="my-28">
@@ -185,7 +194,7 @@ export default function Payment() {
                 </Row>
               </Typography>
               <Col span={4} offset={13}>
-                <Button className="pay-now-btn" onClick={handlePayment} type="primary"><text className="f-16">Pay Now</text></Button>
+                <Button className="pay-now-btn" onClick={createPaymentIntent} type="primary"><text className="f-16">Pay Now</text></Button>
               </Col>
             </Card>
 

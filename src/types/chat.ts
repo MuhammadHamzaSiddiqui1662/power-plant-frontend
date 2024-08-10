@@ -1,5 +1,6 @@
 export interface ChatData {
     participants: [{
-        type: string
+        type: string,
+        broker: object
     }],
 }
