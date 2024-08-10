@@ -9,7 +9,7 @@ import PropTypes from "prop-types";
 import { useGetIpQuery } from "../../../services/ip/ip";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
-
+import { useCreateChatMutation } from "../../../services/chat/chat";
 const Navbar = dynamic(() => import("../../componants/Navbar"));
 const Switcher = dynamic(() => import("../../componants/Switcher"));
 const Footer = dynamic(() => import("../../componants/Footer"));
@@ -48,6 +48,7 @@ function a11yProps(index) {
     "aria-controls": `simple-tabpanel-${index}`,
   };
 }
+
 export default function PropertiesDetail(props) {
   const router = useRouter();
   const { user, userType, accessToken } = useSelector((state) => state.auth);
@@ -60,6 +61,8 @@ export default function PropertiesDetail(props) {
         : 0,
     [ipDetails]
   );
+  const [createChat, { isLoading: isCreating }] = useCreateChatMutation();
+
   console.log("ipDetails", ipDetails);
   console.log("innovatorsRating", innovatorsRating);
 
@@ -67,7 +70,35 @@ export default function PropertiesDetail(props) {
     setValue(newValue);
   };
 
-  const handleContact = () => {};
+  const getChatObject = (chat, _id, _type) => {
+    if (_type == 0) {
+      chat.innovator = _id;
+    }
+    else if (_type == 1) {
+      chat.investor = _id;
+    }
+    else if (_type == 2) {
+      chat.broker = _id;
+    }
+    return chat;
+  }
+
+  const handleContact = async () => {
+    try{
+      let chat = {}
+      let innovatorUserType=1;
+      getChatObject(chat, ipDetails.userId._id, innovatorUserType);
+      getChatObject(chat, user._id, userType)
+
+      const { data: createChatgResponse, error } = await createChat(chat);
+      if (error) return setError(error.message);
+      console.log(createChatgResponse);
+      router.replace(`/chat`);
+
+    }catch(error){
+      console.log(error)
+    }
+  };
 
   useEffect(() => {
     if (!accessToken) router.replace("/auth-login");

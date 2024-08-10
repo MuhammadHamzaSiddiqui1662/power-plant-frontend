@@ -25,11 +25,10 @@ export const messageApi = createApi({
       },
     }),
     message: build.mutation({
-      query(body) {
+      query(id) {
         return {
           url: `/${id}`,
           method: "GET",
-          body,
         };
       },
     }),

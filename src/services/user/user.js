@@ -15,6 +15,23 @@ export const userApi = createApi({
     },
   }),
   endpoints: (build) => ({
+    getProfile: build.mutation({
+      query(id) {
+        return {
+          url: `/profile?id=${id}`,
+          method: "GET",
+        };
+      },
+    }),
+    addReview: build.mutation({
+      query(body) {
+        return {
+          url: `/${body.id}/${body.reviewType}/reviews`,
+          method: "POST",
+          body:body.data,
+        };
+      },
+    }),
     getAllUsers: build.query({
       query: (filter = "") => `/${filter}`,
     }),
@@ -40,6 +57,9 @@ export const userApi = createApi({
 });
 
 export const {
+  endpoints,
+  useGetProfileMutation,
+  useAddReviewMutation,
   useGetAllUsersQuery,
   useGetBrokersQuery,
   useGetInvestorsQuery,

@@ -1,9 +1,10 @@
 import { api } from "../config/axios";
 import { ChatData } from "../types/chat";
 
-export const getAllChat = async (data: ChatData) => {
+export const getAllChat = async () => {
     try {
         const response = await api.get(`/chats/`);
+        console.log(response.data)
         return response.data;
     } catch (error) {
         throw error.response.data;
