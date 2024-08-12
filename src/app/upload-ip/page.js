@@ -1,10 +1,17 @@
 "use client"; // This is a client component 👈🏽
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { Alert, Grid } from "@mui/material";
 import "./style.css";
-import { useCreateIpMutation } from "../../services/ip/ip";
+import {
+  useGetIpQuery,
+  useCreateIpMutation,
+  useUpdateIpMutation,
+} from "../../services/ip/ip";
 import { IpStatus } from "../../types/ip";
+import { useRouter, useSearchParams } from "next/navigation";
+import ButtonContained from "../../components/ButtonContained/ButtonContained";
+import ToastMessage, {MyToastContainer} from "../componants/Toast";
 
 const Navbar = dynamic(() => import("../componants/Navbar"));
 const Footer = dynamic(() => import("../componants/Footer"));
@@ -14,23 +21,31 @@ const BackgroundSection = dynamic(() =>
   import("../componants/BackgroundUploaderSection")
 );
 
+const initialData = {
+  name: "",
+  description: "",
+  abstract: "",
+  price: "",
+  status: IpStatus.Draft,
+  categories: [],
+  publishedDate: "",
+  patentNumber: "",
+  trademark: "",
+  copyright: "",
+  mainImg: "",
+  images: [],
+  sections: [{ title: "", content: "" }],
+};
+
 export default function UploadIP() {
-  const [uploadIp, { error }] = useCreateIpMutation();
-  const [data, setData] = useState({
-    name: "",
-    description: "",
-    abstract: "",
-    price: "",
-    status: IpStatus.InActive,
-    categories: [],
-    publishedDate: "",
-    patentNumber: "",
-    trademark: "",
-    copyright: "",
-    mainImg: "",
-    images: [],
-    sections: [{ title: "", content: "" }],
-  });
+  const router = useRouter();
+  const id = useSearchParams().get("id");
+  const { data: ip, refetch } = useGetIpQuery(id);
+  const [uploadIp, { isLoading: isUploading, error: createError }] =
+    useCreateIpMutation();
+  const [updateIp, { isLoading: isUpdating, error: updateError }] =
+    useUpdateIpMutation();
+  const [data, setData] = useState(initialData);
   const [isPatented, setIsPatented] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -60,7 +75,12 @@ export default function UploadIP() {
       delete newFiles[`file${index}`];
       return newFiles;
     });
+  
+    setUploaders((prevUploaders) =>
+      prevUploaders.filter((uploader, idx) => idx !== index)
+    );
   };
+  
 
   const handleBackgroundUpload = (file) => {
     setErrorMessage("");
@@ -126,15 +146,12 @@ export default function UploadIP() {
     }));
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault(); // Prevent the default form submission behavior
-  
-    // Check if any images are uploaded
-    if (Object.keys(files).length === 0) {
-      setErrorMessage("Please upload at least one image.");
-      return;
-    }
-  
+  const handleCancel = () => {
+    setError("");
+    setData({ ...initialData, ...ip });
+  };
+
+  const handleSubmit = async () => {
     const formData = new FormData();
     formData.append("data", JSON.stringify(data));
   
@@ -143,20 +160,37 @@ export default function UploadIP() {
     });
   
     try {
-      const response = await uploadIp(formData);
-      if (response.error) {
-        console.log("error", response.error);
-        setErrorMessage("Failed to upload data.");
-      } else {
-        console.log("Response:", response);
-        setErrorMessage("");
+      const { error } = ip
+        ? await updateIp(formData)
+        : await uploadIp(formData);
+  
+      if (error) {
+        console.log("error", error);
+        setErrorMessage("Incomplete Data");
+        ToastMessage({ message: "Failed to upload IP: Incomplete Data", type: "error" });
+        return;
       }
+  
+      refetch();
+      setErrorMessage("");  
+      ToastMessage({ message: "IP has been uploaded successfully!", type: "success" });
     } catch (error) {
-      console.error("Error uploading data:", error.message);
-      // setErrorMessage("Failed to upload data.");
+      console.error("Error uploading data:", error);
+      setErrorMessage(
+        error.shortMessage || error.message || "Error in updating IP!"
+      );
+      ToastMessage({ message: "Error in updating IP!", type: "error" });
     }
   };
   
+  
+  
+  useEffect(() => {
+    setData((prev) => ({
+      ...prev,
+      ...ip,
+    }));
+  }, [ip]);
 
   return (
     <>
@@ -338,6 +372,7 @@ export default function UploadIP() {
                     <CategorySelect
                       categories={data.categories}
                       onChange={handleCategoryChange}
+                      fullWidth={true}
                     />
                   </div>
                 </Grid>
@@ -366,10 +401,7 @@ export default function UploadIP() {
           </Grid>
           <Grid container>
             <Grid xs={12}>
-              <label
-                className="font-medium text-customDarkBlue"
-                htmlFor="images"
-              >
+              <label className="font-medium text-customDarkBlue" htmlFor="images">
                 Upload images:
               </label>
               <div className="flex items-center my-4">
@@ -379,9 +411,10 @@ export default function UploadIP() {
                       {uploader.component}
                       <button
                         onClick={() => handleRemoveFile(index)}
-                        className="absolute top-0 right-0 text-red-500 text-lg"
+                        className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center transform translate-x-1/2 -translate-y-1/2 hover:bg-red-600 shadow-lg"
+                        style={{ fontSize: "24px", lineHeight: "1" }}
                       >
-                        ×
+                        &times;
                       </button>
                     </div>
                   ))}
@@ -390,11 +423,13 @@ export default function UploadIP() {
                   onClick={handleAddUploader}
                   className="w-28 h-28 border-2 border-solid border-gray-300 rounded cursor-pointer flex items-center justify-center mr-2.5"
                 >
-                  <p className=" text-customGrayColor">+</p>
+                  <p className="text-customGrayColor">+</p>
                 </div>
               </div>
             </Grid>
           </Grid>
+
+
           <Grid container>
             {data.sections.map((section, index) => (
               <Grid item xs={12} key={index}>
@@ -427,26 +462,36 @@ export default function UploadIP() {
               </div>
             </Grid>
           </Grid>
+
+          <MyToastContainer/>
           <Grid xs={12} sm={6}>
             <div className="flex">
               <button
                 type="submit"
+                onClick={handleCancel}
                 className="my-3 text-2xl btn btn-outlined text-customDarkBlue rounded-md py-6 w-40 text-[32px] me-5"
               >
                 Cancel
               </button>
-              <button
+              <ButtonContained
                 onClick={handleSubmit}
+                isLoading={isUploading || isUpdating}
+                disabled={isUploading || isUpdating}
                 className="my-3 text-2xl btn bg-customGreen hover:bg-customGreen text-white rounded-md py-6 w-40 text-[32px]"
               >
                 Save
-              </button>
+                
+              </ButtonContained>
             </div>
           </Grid>
           <Grid xs={12} sm={6}>
             <div className="flex justify-end">
               <button
-                type="submit"
+                onClick={() => {
+                  router.push(
+                    `/payment?type=${isPatented ? "publish" : "patent"}`
+                  );
+                }}
                 className={`my-3 text-2xl btn bg-customGreen hover:bg-customGreen text-white rounded-md py-6 w-${
                   isPatented ? 40 : 60
                 } text-[32px]`}

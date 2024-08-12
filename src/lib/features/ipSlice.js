@@ -13,6 +13,9 @@ const ipSlice = createSlice({
     setIps: (state, action) => {
       state.ip = action.payload;
     },
+    setCurrentIp: (state, { payload }) => {
+      state.currentIp = payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(
@@ -30,6 +33,6 @@ const ipSlice = createSlice({
   },
 });
 
-export const { setIps } = ipSlice.actions;
+export const { setIps, setCurrentIp } = ipSlice.actions;
 
 export default ipSlice.reducer;

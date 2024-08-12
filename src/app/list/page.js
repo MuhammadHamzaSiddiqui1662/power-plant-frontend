@@ -1,5 +1,5 @@
 "use client"; // This is a client component 👈🏽
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import dynamic from "next/dynamic";
 
 const Navbar = dynamic(() => import("../componants/Navbar"));
@@ -8,7 +8,7 @@ const Footer = dynamic(() => import("../componants/Footer"));
 const PaginationTwo = dynamic(() => import("../componants/Pagination-two"));
 const CategorySelect = dynamic(() => import("../componants/CategorySelect"));
 import { FormControl, OutlinedInput } from "@mui/material";
-import { useGetAllQuery, useGetIpQuery } from "../../services/ip/ip";
+import { useGetAllQuery } from "../../services/ip/ip";
 
 const generateFilterQuery = (filterQuery) => {
   const matchStage = [];
@@ -16,7 +16,7 @@ const generateFilterQuery = (filterQuery) => {
   if (filterQuery.categories.length > 0) {
     matchStage.push(
       filterQuery.categories.reduce(
-        (prev, curr) => prev + `categories=${curr}`,
+        (prev, curr) => prev + `categories=${curr}&`,
         ""
       )
     );
@@ -41,7 +41,7 @@ export default function List() {
     min: "",
     max: "",
   });
-  const filterQuery = useMemo(() => generateFilterQuery(filters), [filters]);
+  const [filterQuery, setFilterQuery] = useState("");
   const { data } = useGetAllQuery(filterQuery);
 
   const handleInputChange = (event) => {
@@ -60,6 +60,11 @@ export default function List() {
       ...prev,
       categories: typeof value === "string" ? value.split(",") : value,
     }));
+  };
+
+  const handleSearch = () => {
+    console.log(filterQuery);
+    setFilterQuery(generateFilterQuery(filters));
   };
 
   return (
@@ -133,7 +138,7 @@ export default function List() {
                       className="form-input filter-input-box bg-gray-50 dark:bg-slate-800 border-0"
                       options={minPrice}
                     /> */}
-                    <FormControl size="small">
+                    <FormControl size="small" fullWidth>
                       <OutlinedInput
                         type="number"
                         placeholder="Min Price"
@@ -158,7 +163,7 @@ export default function List() {
                       className="form-input filter-input-box bg-gray-50 dark:bg-slate-800 border-0"
                       options={maxPrice}
                     /> */}
-                    <FormControl size="small">
+                    <FormControl size="small" fullWidth>
                       <OutlinedInput
                         type="number"
                         placeholder="Max Price"
@@ -172,11 +177,11 @@ export default function List() {
 
                 <div className="lg:mt-6">
                   <input
-                    type="submit"
                     id="search-buy"
                     name="search"
                     className="btn bg-green-600 hover:bg-green-700 border-green-600 hover:border-green-700 text-white searchbtn submit-btn w-full !h-12 rounded"
                     value="Search"
+                    onClick={handleSearch}
                   />
                 </div>
               </div>

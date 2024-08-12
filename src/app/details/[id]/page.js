@@ -1,13 +1,15 @@
 "use client";
 import dynamic from "next/dynamic";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
 import { Box, Chip, Grid, Rating, Tab, Tabs } from "@mui/material";
 import PropTypes from "prop-types";
 import { useGetIpQuery } from "../../../services/ip/ip";
-
+import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import { useCreateChatMutation } from "../../../services/chat/chat";
 const Navbar = dynamic(() => import("../../componants/Navbar"));
 const Switcher = dynamic(() => import("../../componants/Switcher"));
 const Footer = dynamic(() => import("../../componants/Footer"));
@@ -46,16 +48,21 @@ function a11yProps(index) {
     "aria-controls": `simple-tabpanel-${index}`,
   };
 }
+
 export default function PropertiesDetail(props) {
+  const router = useRouter();
+  const { user, userType, accessToken } = useSelector((state) => state.auth);
   const [value, setValue] = useState(0);
   const { data: ipDetails, isLoading } = useGetIpQuery(props?.params?.id);
   const innovatorsRating = useMemo(
     () =>
-      ipDetails && ipDetails.userId.reviewsAsInnovator
+      ipDetails && ipDetails.userId && ipDetails.userId.reviewsAsInnovator
         ? ipDetails.userId.reviewsAsInnovator.length > 0
         : 0,
     [ipDetails]
   );
+  const [createChat, { isLoading: isCreating }] = useCreateChatMutation();
+
   console.log("ipDetails", ipDetails);
   console.log("innovatorsRating", innovatorsRating);
 
@@ -63,7 +70,41 @@ export default function PropertiesDetail(props) {
     setValue(newValue);
   };
 
-  const handleContact = () => {};
+  const getChatObject = (chat, _id, _type) => {
+    if (_type == 0) {
+      chat.innovator = _id;
+    }
+    else if (_type == 1) {
+      chat.investor = _id;
+    }
+    else if (_type == 2) {
+      chat.broker = _id;
+    }
+    return chat;
+  }
+
+  const handleContact = async () => {
+    try{
+      let chat = {}
+      let innovatorUserType=1;
+      getChatObject(chat, ipDetails.userId._id, innovatorUserType);
+      getChatObject(chat, user._id, userType)
+
+      const { data: createChatgResponse, error } = await createChat(chat);
+      if (error) return setError(error.message);
+      console.log(createChatgResponse);
+      router.replace(`/chat`);
+
+    }catch(error){
+      console.log(error)
+    }
+  };
+
+  useEffect(() => {
+    if (!accessToken) router.replace("/auth-login");
+    else if (user && !user.subscriber)
+      router.replace("/payment?type=subscribe");
+  }, [user, accessToken]);
 
   return (
     <>
@@ -78,10 +119,11 @@ export default function PropertiesDetail(props) {
                 src="/images/ip/mainImg.webp"
                 alt=""
                 width={0}
-                height={0}
+                height={500}
                 sizes="100vw"
-                style={{ width: "100%", height: "auto" }}
+                style={{ width: "100%", height: 500 }}
                 priority
+                className="object-cover overflow-hidden"
               />
             </div>
           </div>
@@ -270,17 +312,21 @@ export default function PropertiesDetail(props) {
                   Contact
                 </button>
               </div>
-              <h3 className="text-3xl text-center">
-                Not an expert, hire a broker instead.
-              </h3>
-              <div className="mt-4 mb-8 flex justify-center">
-                <Link
-                  href={`/brokers`}
-                  className="mb-4 btn border bg-customGreen text-white rounded-md mt-auto transition duration-300 w-60"
-                >
-                  Hire a Broker
-                </Link>
-              </div>
+              {userType !== 2 && (
+                <>
+                  <h3 className="text-3xl text-center">
+                    Not an expert, hire a broker instead.
+                  </h3>
+                  <div className="mt-4 mb-8 flex justify-center">
+                    <Link
+                      href={`/brokers`}
+                      className="mb-4 btn border bg-customGreen text-white rounded-md mt-auto transition duration-300 w-60"
+                    >
+                      Hire a Broker
+                    </Link>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </section>

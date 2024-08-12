@@ -75,7 +75,7 @@ export default function Footer() {
                   <div className="lg:col-span-4 md:col-span-12">
                     <Link href="#" className="text-[22px] focus:outline-none">
                       <Image
-                        src="/images/pp-logo.png"
+                        src="/images/logo.png"
                         alt=""
                         width={98}
                         height={28}

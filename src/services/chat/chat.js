@@ -8,7 +8,7 @@ export const chatApi = createApi({
     prepareHeaders: (headers, { getState }) => {
       // By default, if we have a token in the store, let's use that for authenticated requests
       const token = getState().auth.accessToken;
-      console.log("token---->"+token)
+      console.log("token---->" + token)
       if (token) {
         headers.set("authorization", `Bearer ${token}`);
       }
@@ -17,18 +17,18 @@ export const chatApi = createApi({
   }),
   endpoints: (build) => ({
     chats: build.mutation({
-      query(){
-return{
-url:`/`,
-method:"GET",
-};
+      query() {
+        return {
+          url: `/`,
+          method: "GET",
+        };
       }
     }),
     chat: build.mutation({
-      query(id){
-        return{
-        url:`/${id}`,
-        method:"GET",
+      query(id) {
+        return {
+          url: `/${id}`,
+          method: "GET",
         };
       }
     }),
@@ -44,9 +44,9 @@ method:"GET",
     updateChat: build.mutation({
       query(body) {
         return {
-          url: `/${id}`,
+          url: `/${body.id}`,
           method: "PUT",
-          body,
+          body:body.chat,
         };
       },
     }),

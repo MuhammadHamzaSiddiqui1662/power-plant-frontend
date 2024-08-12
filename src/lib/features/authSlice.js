@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { authApi } from "../../services/auth/auth";
+import { userApi } from "../../services/user/user";
 
 const initialState = {
   user: {
@@ -54,6 +55,23 @@ const authSlice = createSlice({
     builder.addMatcher(
       authApi.endpoints.refreshToken.matchFulfilled,
       (state, { payload }) => {
+        state.accessToken = payload.accessToken;
+        state.refreshToken = payload.refreshToken;
+        state.accessTokenExpiry = payload.accessTokenExpiry;
+        state.refreshTokenExpiry = payload.refreshTokenExpiry;
+      }
+    );
+    builder.addMatcher(
+      userApi.endpoints.updateUser.matchFulfilled,
+      (state, { payload }) => {
+        state.user = payload;
+        state.user.interests = payload.interests;
+      }
+    );
+    builder.addMatcher(
+      authApi.endpoints.resetPassword.matchFulfilled,
+      (state, { payload }) => {
+        state.user = payload.user;
         state.accessToken = payload.accessToken;
         state.refreshToken = payload.refreshToken;
         state.accessTokenExpiry = payload.accessTokenExpiry;

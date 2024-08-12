@@ -2,10 +2,19 @@
 import React from "react";
 import { useState } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
 import { Alert, Box, Grid, Tab, Tabs } from "@mui/material";
 import { useRegisterMutation } from "../../services/auth/auth";
 import { useRouter } from "next/navigation";
 import ButtonContained from "../../components/ButtonContained/ButtonContained";
+import ToastMessage, {MyToastContainer} from "../../app/componants/Toast";
+
+const Uploader = dynamic(() => import("../../app/componants/UploadImage"));
+
+const CategorySelect = dynamic(() =>
+  import("../../app/componants/CategorySelect")
+);
 
 export default function SignUpForm() {
   const [tabValue, setTabValue] = useState(0);
@@ -17,9 +26,47 @@ export default function SignUpForm() {
     confirmPassword: "",
     address: "",
   });
+  const [files, setFiles] = useState({});
+
   const [error, setError] = useState("");
   const [register, { isLoading }] = useRegisterMutation();
   const router = useRouter();
+
+  const handleImageUpload = (file) => {
+    setError("");
+    console.log(file);
+    setFiles((prevFiles) => ({
+      ...prevFiles,
+      image: file,
+    }));
+  };
+
+  const handlePdfUpload = (file) => {
+    setError("");
+    console.log(file);
+    setFiles((prevFiles) => ({
+      ...prevFiles,
+      pdf: file,
+    }));
+  };
+
+  const handleFileUpload = (file, index) => {
+    setError("");
+    setFiles((prevFiles) => ({
+      ...prevFiles,
+      [`file${index}`]: file,
+    }));
+  };
+
+  const handleCategoryChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setData((prev) => ({
+      ...prev,
+      interests: typeof value === "string" ? value.split(",") : value,
+    }));
+  };
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -33,24 +80,39 @@ export default function SignUpForm() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const { email } = data;
-    console.log("submit");
+    e.preventDefault(); 
+    const { confirmPassword, ...requestBody } = {
+      ...data,
+      userType: tabValue,
+    };
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(requestBody));
+    if (files) {
+      if (files.image) formData.append("image", files.image);
+      if (files.pdf) formData.append("pdf", files.pdf);
+    }
     try {
-      const { confirmPassword, ...requestBody } = {
-        ...data,
-        userType: tabValue,
-      };
-      const { data: responseData, error } = await register(requestBody);
-      if (error) return setError(error.data.message);
-      console.log("Session:", responseData);
+      const { data: responseData, error } = await register(formData);
+  
+      if (error) {
+        console.log("error", error);
+        return setError(error.data.message);
+      }
+      // Show success toast message
+      ToastMessage({ message: "Signup successful!", type: "success" });
+  
+      console.log("Response:", responseData);
       localStorage.setItem("emailToVerify", data.email);
-      router.replace(`/otp-verify?email=${email}&userType=${tabValue}`);
+      router.replace(`/otp-verify?email=${data.email}&userType=${tabValue}`);
     } catch (error) {
-      console.error(error);
+      console.error(
+        "Error uploading data:",
+        error.shortMessage || error.message
+      );
       setError(error.shortMessage || error.message);
     }
   };
+  
 
   return (
     <>
@@ -149,7 +211,7 @@ export default function SignUpForm() {
                       id="phone"
                       type="text"
                       className="form-input mt-2"
-                      placeholder="0123456789"
+                      placeholder="+1 234 567890"
                       name="phone"
                       value={data.phone}
                       onChange={handleDataChange}
@@ -206,32 +268,28 @@ export default function SignUpForm() {
                       id="confirm-password"
                       type="password"
                       className="form-input mt-2"
-                      placeholder="Onfirm Password"
+                      placeholder="Confirm Password"
                       name="confirmPassword"
                       value={data.confirmPassword}
                       onChange={handleDataChange}
                     />
                   </div>
                 </Grid>
-                {tabValue == 1 && (
-                  <Grid item xs={12} sm={6}>
-                    <div className="mb-4">
-                      <label
-                        className="text-customDarkBlue font-medium"
-                        htmlFor="Interest"
-                      >
-                        Interest:
-                      </label>
-
-                      <select className="form-input mt-2" name="cars" id="cars">
-                        <option value="volvo">Volvo</option>
-                        <option value="saab">Saab</option>
-                        <option value="opel">Opel</option>
-                        <option value="audi">Audi</option>
-                      </select>
-                    </div>
-                  </Grid>
-                )}
+                <Grid item xs={12}>
+                  <div className="mb-4">
+                    <label
+                      className="text-customDarkBlue font-medium"
+                      htmlFor="Interest"
+                    >
+                      Interests:
+                    </label>
+                    <CategorySelect
+                      categories={data.interests || []}
+                      onChange={handleCategoryChange}
+                      fullWidth={true}
+                    />
+                  </div>
+                </Grid>
 
                 {tabValue == 2 && (
                   <>
@@ -243,12 +301,7 @@ export default function SignUpForm() {
                         >
                           Upload Profile Picture:
                         </label>
-                        <input
-                          id="picture"
-                          type="file"
-                          className="form-input mt-2"
-                          placeholder="Type here"
-                        />
+                        <Uploader index={0} onFileUpload={handleImageUpload} />
                       </div>
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -259,12 +312,10 @@ export default function SignUpForm() {
                         >
                           Upload Identity Card:
                         </label>
-                        <input
-                          multiple
-                          id="idCard"
-                          type="file"
-                          className="form-input mt-2"
-                          placeholder="Type here"
+                        <Uploader
+                          index={1}
+                          onFileUpload={handlePdfUpload}
+                          pdfOnly={true}
                         />
                       </div>
                     </Grid>
@@ -293,6 +344,7 @@ export default function SignUpForm() {
                   Sign Up
                 </ButtonContained>
               </div>
+              <MyToastContainer/>
               <div className="text-center">
                 <span className="text-slate-400 me-2">
                   Already have an account?

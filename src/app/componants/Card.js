@@ -2,6 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useSelector } from "react-redux";
 
 export default function Card({
   name,
@@ -13,8 +14,9 @@ export default function Card({
   patentNumber,
   image,
   key,
-  isEdit = true,
+  isEdit = false,
 }) {
+  const { user } = useSelector((state) => state.auth);
   return (
     <>
       <div
@@ -28,13 +30,13 @@ export default function Card({
             width={0}
             height={0}
             sizes="100vw"
-            style={{ width: "100%", height: "auto" }}
+            style={{ width: "100%", height: "auto", maxHeight: 160 }}
             priority
           />
           {isEdit && (
             <div className="absolute top-4 end-4">
               <Link
-                href="#"
+                href={`/upload-ip?id=${id}`}
                 className="btn btn-icon bg-white dark:bg-customGreen shadow dark:shadow-gray-700 rounded-full text-slate-100 dark:text-customGreen focus:text-customGreen dark:focus:text-red-600 hover:text-customGreen dark:hover:text-customGreen"
               >
                 <i className="mdi mdi-lead-pencil mdi-18px text-customDarkBlue"></i>
@@ -46,7 +48,11 @@ export default function Card({
         <div className="p-6">
           <div className="pb-3">
             <Link
-              href={`/details/${id}`}
+              href={
+                user && user.subscriber
+                  ? `/details/${id}`
+                  : "/payment?type=subscribe"
+              }
               className="text-lg hover:text-customGreen font-medium ease-in-out duration-500"
               style={{
                 lineHeight: "0.5 !important",

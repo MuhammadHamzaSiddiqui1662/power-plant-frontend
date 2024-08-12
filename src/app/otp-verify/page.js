@@ -10,17 +10,22 @@ import {
   useVerifyOtpMutation,
 } from "../../services/auth/auth";
 import { Alert } from "@mui/material";
+import ToastMessage, {MyToastContainer} from "../componants/Toast";
 import ButtonContained from "../../components/ButtonContained/ButtonContained";
+import { useDispatch } from "react-redux";
+import { setUserType } from "../../lib/features/authSlice";
 
 export default function OTPVerify() {
   const router = useRouter();
   const [seconds, setSeconds] = useState(120);
   const [isActive, setIsActive] = useState(false);
   const email = useSearchParams().get("email");
+  const userType = useSearchParams().get("userType");
   const [otp, setOTP] = useState("");
   const [error, setError] = useState("");
   const [verifyOtp, { isLoading: isVerifying }] = useVerifyOtpMutation();
   const [resendOtp, { isLoading: isResending }] = useResendOtpMutation();
+  const dispatch = useDispatch();
 
   const handleMessageChange = (e) => {
     setOTP(e.target.value);
@@ -30,7 +35,13 @@ export default function OTPVerify() {
   const handleResend = async () => {
     try {
       const { data: resendOTPResponse, error } = await resendOtp({ email });
-      if (error) return setError(error.message);
+      if (error) {
+        setError(error.message);
+        ToastMessage({ message: "Failed to resend OTP!", type: "error" });
+        return;
+      }
+      ToastMessage({ message: "OTP resent successfully!", type: "success" });
+
       setSeconds(120);
       setIsActive(false);
       console.log(resendOTPResponse);
@@ -45,9 +56,15 @@ export default function OTPVerify() {
         email,
         otp,
       });
-      if (error) return setError(error.message);
+      if (error) {
+        setError(error.message);
+        ToastMessage({ message: "OTP verification failed!", type: "error" });
+        return;
+      }
+      ToastMessage({ message: "OTP verified successfully!", type: "success" });
+      dispatch(setUserType(userType));
       console.log(verifyOtpResponse);
-      router.push("/");
+      router.replace("/home");
     } catch (error) {
       console.log(`error --> ${error}`);
     }
@@ -85,6 +102,7 @@ export default function OTPVerify() {
   return (
     <>
       <Navbar />
+      <MyToastContainer />
       <section className="my-28">
         <div className="container-otp">
           <Row justify={"center"}>

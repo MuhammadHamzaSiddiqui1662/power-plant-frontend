@@ -21,6 +21,9 @@ export const ipApi = createApi({
     getIp: build.query({
       query: (id) => `/${id}`,
     }),
+    getMyIps: build.query({
+      query: () => `/my-ips`,
+    }),
     createIp: build.mutation({
       query(body) {
         return {
@@ -33,7 +36,7 @@ export const ipApi = createApi({
     updateIp: build.mutation({
       query(body) {
         return {
-          url: `/${body.id}/details`,
+          url: `/`,
           method: "PUT",
           body,
         };
@@ -57,4 +60,5 @@ export const {
   usePublishIpMutation,
   useGetAllQuery,
   useGetIpQuery,
+  useGetMyIpsQuery,
 } = ipApi;

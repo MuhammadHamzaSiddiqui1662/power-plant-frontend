@@ -27,7 +27,7 @@ export default function Navbar(props) {
   };
 
   const toggleMenuNotification = () => {
-  setOpen((prev) => !prev);
+    setOpen((prev) => !prev);
   };
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -159,14 +159,14 @@ export default function Navbar(props) {
           {navClass === "" || navClass === undefined ? (
             <Link className="logo" href="/">
               <Image
-                src="/images/pp-logo.png"
+                src="/images/logo.png"
                 className="inline-block dark:hidden"
                 alt=""
                 width={98}
                 height={24}
               />
               <Image
-                src="/images/pp-logo.png"
+                src="/images/logo.png"
                 className="hidden dark:inline-block"
                 alt=""
                 width={98}
@@ -177,14 +177,14 @@ export default function Navbar(props) {
             <Link className="logo" href="/">
               <span className="inline-block dark:hidden">
                 <Image
-                  src="/images/pp-logo.png"
+                  src="/images/logo.png"
                   className="l-dark"
                   alt=""
                   width={98}
                   height={24}
                 />
                 <Image
-                  src="/images/pp-logo.png"
+                  src="/images/logo.png"
                   className="l-light"
                   alt=""
                   width={98}
@@ -227,14 +227,14 @@ export default function Navbar(props) {
               <Link
                 href="/chat"
                 className="btn btn-icon bg-customGreen border-customGreen dark:border-green-600 text-white rounded-full"
-                >
+              >
                 <MessageSquare className="h-4 w-4 stroke-[3]"></MessageSquare>
               </Link>
             </li>
 
             <li className="inline mb-0 me-2">
               <Link
-                  href="#"
+                href="#"
                 onClick={toggleMenuNotification}
                 className="btn btn-icon rounded-full border border-customGreen bg-transparent text-customGreen"
               >
@@ -327,7 +327,7 @@ export default function Navbar(props) {
 
               <li>
                 <Link
-                  href="/"
+                  href={accessToken ? "/home" : "/"}
                   activeclassname="active"
                   className="sub-menu-item"
                 >

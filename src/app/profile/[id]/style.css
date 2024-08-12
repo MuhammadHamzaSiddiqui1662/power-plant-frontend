@@ -1,0 +1,22 @@
+.heading {
+  font-size: 3rem;
+  @media only screen and (max-width: 940px) {
+    font-size: 2rem;
+  }
+  @media only screen and (max-width: 735px) {
+    font-size: 2rem;
+  }
+}
+
+.hire-now-btn{
+  background-color:#6BB955 !important;
+  padding: 25px 50px !important;
+}
+
+.f-18{
+  font-size: 18px;
+}
+
+.white{
+  color: white;
+}

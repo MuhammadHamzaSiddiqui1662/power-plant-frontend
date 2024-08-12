@@ -4,31 +4,126 @@ import { Row, Col, Checkbox, Card, Rate, Input, Modal, Typography, Button } from
 const { Title, Paragraph, Text, } = Typography;
 import "./ModalCSS.css";
 
-export default function ReviewModal({visible,setVisible}) {
-  const [tabValue, setTabValue] = useState(0);
-  const [data, setData] = useState({
-    displayName: "",
-    phone: "",
-    email: "",
-    password: "",
-    address: "",
-    accountNumber: "",
-    paypal: "",
-  });
-  const [error, setError] = useState("");
+import {
+  useAddReviewMutation,
+} from "../../../services/user/user";
+import { ReviewType } from "../../../types/ReviewType";
+
+import {
+  useUpdateChatMutation,
+} from "../../../services/chat/chat";
+import { Router } from "next/router";
+import { useRouter } from "next/navigation";
+
+
+export default function ReviewModal({ visible, setVisible, brokerId, userType, chat }) {
+  const [successFullCheck, setSuccessFullCheck] = useState(false)
+  const [description, setDescription] = useState("");
+  const [negotiationRating, setNegotiationRating] = useState(0);
+  const [responsivenessRating, setResponsivenessRating] = useState(0);
+  const [communicationRating, setCommunicationRating] = useState(0);
+  const [skillsRating, setSkillsRating] = useState(0);
+  const [addReview, { isLoading: isAdding }] = useAddReviewMutation();
+  const [updateChat, { isLoading: isUpdating }] = useUpdateChatMutation();
+  const router = useRouter();
+
   const handleCancel = async (e) => {
+    setSuccessFullCheck(false);
+    setDescription('');
+    setNegotiationRating(0);
+    setResponsivenessRating(0);
+    setCommunicationRating(0);
+    setSkillsRating(0);
+
     setVisible(false)
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const successFullCheckboxHandler = (e) => {
+    setSuccessFullCheck(e.target.checked)
+  };
+
+  const descriptionChangeHandler = (e) => {
+    setDescription(e.target.value)
+  };
+
+  const negotiationRatingHandler = (value) => {
+    setNegotiationRating(value);
+  };
+
+  const responsivenessRatingHandler = (value) => {
+    setResponsivenessRating(value);
+  };
+
+  const communicationRatingHandler = (value) => {
+    setCommunicationRating(value);
+  };
+
+  const skillsRatingHandler = (value) => {
+    setSkillsRating(value);
+  };
+
+  const getReviewType = (type) => {
+    if (type == 0) {
+      return ReviewType.ReviewsAsInnovator
+    }
+    if (type == 1) {
+      return ReviewType.ReviewsAsInvestor
+    }
+    if (type == 2) {
+      return ReviewType.ReviewsAsBorker
+    }
+  }
+
+  const addReviewHandler = async () => {
     try {
-      const session = await signUp(data);
-      console.log("Session:", session);
+      let reviewType = getReviewType(userType);
+
+      let body = {
+        id: brokerId,
+        reviewType: reviewType,
+        data: {
+          dealSuccessFul: successFullCheck,
+          comments: description,
+          behaviour: 4,
+          priceNegotiation: negotiationRating,
+          responsiveness: responsivenessRating,
+          communication: communicationRating,
+          technicalSkills: skillsRating
+        }
+      };
+
+      const { data: addReviewResponse, error } = await addReview(body);
+
+      if (error) return setError(error.message);
+
+      if (addReviewResponse) {
+        let chatObject = {
+             _id: chat._id,
+             closed:true,
+             innovator:chat.innovator,
+             investor:chat.investor,
+             broker:chat.broker,
+             __v:0
+        }
+
+        let closeChat = {
+          id: chat._id,
+          chat: chatObject
+        }
+        const { data: closeChatResponse, error } = await updateChat(closeChat);
+
+        if (error) return setError(error.message);
+
+        if (closeChatResponse) {
+          handleCancel();
+          router.reload('/chat');
+        }
+      }
     } catch (error) {
-      console.log("error: ", error);
+      console.log(`error --> ${error}`);
     }
   };
+
 
   return (
     <>
@@ -45,29 +140,41 @@ export default function ReviewModal({visible,setVisible}) {
 
               <h1 className="f-24 b-7xx">You are going to dehire now, kindly rate accordingly: </h1>
 
-              <Checkbox className="checkbox-deal" ><text className="f-18 b-5xx">Successfull deal</text></Checkbox>
+              <Checkbox className="checkbox-deal" checked={successFullCheck} onChange={successFullCheckboxHandler}><text className="f-18 b-5xx">Successfull deal</text></Checkbox>
 
-              <Input.TextArea placeholder="Enter description here" className="input-area"></Input.TextArea>
+              <Input.TextArea
+                placeholder="Enter description here"
+                className="input-area"
+                value={description}
+                onChange={descriptionChangeHandler}
+              ></Input.TextArea>
 
               <Row className="pd-18">
                 <Col xs={{ span: 8 }}><text className="f-18 b-5xx">Price negotiation</text></Col>
-                <Col xs={{ span: 6, offset: 10 }} className="pd-10"><Rate></Rate></Col>
+                <Col xs={{ span: 6, offset: 10 }} className="pd-10">
+                  <Rate value={negotiationRating} onChange={negotiationRatingHandler}></Rate>
+                </Col>
               </Row>
               <Row className="pd-18">
                 <Col xs={{ span: 6 }}><text className="f-18 b-5xx">Responsiveness</text></Col>
-                <Col xs={{ span: 6, offset: 12 }} className="pd-10"><Rate></Rate></Col>
+                <Col xs={{ span: 6, offset: 12 }} className="pd-10">
+                  <Rate value={responsivenessRating} onChange={responsivenessRatingHandler}> </Rate></Col>
               </Row>
               <Row className="pd-18">
                 <Col xs={{ span: 6 }}><text className="f-18 b-5xx">Communication</text></Col>
-                <Col xs={{ span: 6, offset: 12 }} className="pd-10"><Rate></Rate></Col>
+                <Col xs={{ span: 6, offset: 12 }} className="pd-10">
+                  <Rate value={communicationRating} onChange={communicationRatingHandler}></Rate>
+                </Col>
               </Row>
               <Row className="pd-18">
                 <Col xs={{ span: 6 }}><text className="f-18 b-5xx">Technical Skills</text></Col>
-                <Col xs={{ span: 6, offset: 12 }} className="pd-10"><Rate></Rate></Col>
+                <Col xs={{ span: 6, offset: 12 }} className="pd-10">
+                  <Rate value={skillsRating} onChange={skillsRatingHandler}></Rate>
+                </Col>
               </Row>
 
               <Col span={4} offset={10}>
-                <Button className="c-green pd-18-24" type="primary">Dehire</Button>
+                <Button className="c-green pd-18-24" type="primary" onClick={addReviewHandler}>Dehire</Button>
               </Col>
 
             </Card>
