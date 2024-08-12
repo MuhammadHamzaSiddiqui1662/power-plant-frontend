@@ -10,7 +10,7 @@ import {
   useVerifyOtpMutation,
 } from "../../services/auth/auth";
 import { Alert } from "@mui/material";
-import ToastMessage, {MyToastContainer} from "../componants/Toast";
+import ToastMessage from "../componants/Toast";
 import ButtonContained from "../../components/ButtonContained/ButtonContained";
 import { useDispatch } from "react-redux";
 import { setUserType } from "../../lib/features/authSlice";
@@ -102,7 +102,6 @@ export default function OTPVerify() {
   return (
     <>
       <Navbar />
-      <MyToastContainer />
       <section className="my-28">
         <div className="container-otp">
           <Row justify={"center"}>

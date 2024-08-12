@@ -8,7 +8,7 @@ import { Alert, Box, Grid, Tab, Tabs } from "@mui/material";
 import { useRegisterMutation } from "../../services/auth/auth";
 import { useRouter } from "next/navigation";
 import ButtonContained from "../../components/ButtonContained/ButtonContained";
-import ToastMessage, {MyToastContainer} from "../../app/componants/Toast";
+import ToastMessage from "../../app/componants/Toast";
 
 const Uploader = dynamic(() => import("../../app/componants/UploadImage"));
 
@@ -80,7 +80,7 @@ export default function SignUpForm() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     const { confirmPassword, ...requestBody } = {
       ...data,
       userType: tabValue,
@@ -93,14 +93,14 @@ export default function SignUpForm() {
     }
     try {
       const { data: responseData, error } = await register(formData);
-  
+
       if (error) {
         console.log("error", error);
         return setError(error.data.message);
       }
       // Show success toast message
       ToastMessage({ message: "Signup successful!", type: "success" });
-  
+
       console.log("Response:", responseData);
       localStorage.setItem("emailToVerify", data.email);
       router.replace(`/otp-verify?email=${data.email}&userType=${tabValue}`);
@@ -112,7 +112,6 @@ export default function SignUpForm() {
       setError(error.shortMessage || error.message);
     }
   };
-  
 
   return (
     <>
@@ -344,7 +343,6 @@ export default function SignUpForm() {
                   Sign Up
                 </ButtonContained>
               </div>
-              <MyToastContainer/>
               <div className="text-center">
                 <span className="text-slate-400 me-2">
                   Already have an account?

@@ -6,6 +6,7 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import AntdStyledComponentsRegistry from "./componants/AntdStyledComponentsRegistry";
 import StoreProvider from "./StoreProvider";
 import ThemeProvider from "./ThemeProvider";
+import { MyToastContainer } from "./componants/Toast";
 
 const league_Spartan = League_Spartan({
   subsets: ["latin"],
@@ -29,6 +30,7 @@ export default function RootLayout({ children }) {
             <StoreProvider>
               <AntdStyledComponentsRegistry>
                 {children}
+                <MyToastContainer />
               </AntdStyledComponentsRegistry>
             </StoreProvider>
           </ThemeProvider>

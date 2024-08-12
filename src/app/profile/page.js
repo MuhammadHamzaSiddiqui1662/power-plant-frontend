@@ -10,7 +10,7 @@ const Uploader = dynamic(() => import("../componants/UploadImage"));
 const ManageCertificates = dynamic(() =>
   import("../componants/ManageCertificates")
 );
-import ToastMessage, {MyToastContainer} from "../componants/Toast";
+import ToastMessage from "../componants/Toast";
 const ManageIPs = dynamic(() => import("../componants/ManageIPs"));
 const ManageBrokers = dynamic(() => import("../componants/ManageBrokers"));
 const CategorySelect = dynamic(() => import("../componants/CategorySelect"));
@@ -91,19 +91,24 @@ export default function Profile() {
     if (data._id) updateData._id = data._id;
     formData.append("data", JSON.stringify(updateData));
     if (files[0]) formData.append("image", files[0]);
-  
+
     try {
       const { error } = await updateUser(formData);
-      
+
       if (error) {
         console.log("error", error);
-        setError(error.shortMessage || error.message || "Failed to update data");
+        setError(
+          error.shortMessage || error.message || "Failed to update data"
+        );
         ToastMessage({ message: "Failed to update data!", type: "error" });
         return;
       }
-  
-      ToastMessage({ message: "User data updated successfully!", type: "success" });
-  
+
+      ToastMessage({
+        message: "User data updated successfully!",
+        type: "success",
+      });
+
       refetch();
     } catch (error) {
       console.error("Error uploading data:", error);
@@ -111,13 +116,11 @@ export default function Profile() {
       ToastMessage({ message: "Failed to update data!", type: "error" });
     }
   };
-  
 
   return (
     <>
       {console.log(files, "HREEEMYFILESSSSSSSS")}
       <Navbar navClass="navbar-white" />
-      <MyToastContainer />
       <Grid container>
         <Grid item xs={12}>
           <section className={`relative mt-32`}>

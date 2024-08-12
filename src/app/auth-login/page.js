@@ -14,8 +14,7 @@ import { useDispatch } from "react-redux";
 import { setUserType } from "../../lib/features/authSlice";
 import ButtonContained from "../../components/ButtonContained/ButtonContained";
 import { UserType } from "../../types/user";
-import ToastMessage, {MyToastContainer} from "../componants/Toast";
-
+import ToastMessage from "../componants/Toast";
 
 export default function Login() {
   const router = useRouter();
@@ -47,7 +46,11 @@ export default function Login() {
       const { error } = await login(data);
       console.log("error --->", error);
       if (error) return setError(error.data.message);
-      ToastMessage({ message: "Login successful!", type: "success" });
+      ToastMessage({
+        message: "Login successful!",
+        type: "success",
+        autoCloseAfter: 1000,
+      });
       dispatch(setUserType(tabValue));
       router.replace(tabValue == UserType.Broker ? "/investors" : "/home");
     } catch (error) {
@@ -161,7 +164,6 @@ export default function Login() {
                       </label>
                     </div>
                   </div>
-                  <MyToastContainer/>
                   <div className="mb-4 flex justify-center">
                     <ButtonContained
                       type="submit"

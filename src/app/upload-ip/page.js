@@ -11,7 +11,7 @@ import {
 import { IpStatus } from "../../types/ip";
 import { useRouter, useSearchParams } from "next/navigation";
 import ButtonContained from "../../components/ButtonContained/ButtonContained";
-import ToastMessage, {MyToastContainer} from "../componants/Toast";
+import ToastMessage from "../componants/Toast";
 
 const Navbar = dynamic(() => import("../componants/Navbar"));
 const Footer = dynamic(() => import("../componants/Footer"));
@@ -75,12 +75,11 @@ export default function UploadIP() {
       delete newFiles[`file${index}`];
       return newFiles;
     });
-  
+
     setUploaders((prevUploaders) =>
       prevUploaders.filter((uploader, idx) => idx !== index)
     );
   };
-  
 
   const handleBackgroundUpload = (file) => {
     setErrorMessage("");
@@ -154,26 +153,32 @@ export default function UploadIP() {
   const handleSubmit = async () => {
     const formData = new FormData();
     formData.append("data", JSON.stringify(data));
-  
+
     Object.keys(files).forEach((key) => {
       formData.append(key, files[key]);
     });
-  
+
     try {
       const { error } = ip
         ? await updateIp(formData)
         : await uploadIp(formData);
-  
+
       if (error) {
         console.log("error", error);
         setErrorMessage("Incomplete Data");
-        ToastMessage({ message: "Failed to upload IP: Incomplete Data", type: "error" });
+        ToastMessage({
+          message: "Failed to upload IP: Incomplete Data",
+          type: "error",
+        });
         return;
       }
-  
+
       refetch();
-      setErrorMessage("");  
-      ToastMessage({ message: "IP has been uploaded successfully!", type: "success" });
+      setErrorMessage("");
+      ToastMessage({
+        message: "IP has been uploaded successfully!",
+        type: "success",
+      });
     } catch (error) {
       console.error("Error uploading data:", error);
       setErrorMessage(
@@ -182,9 +187,7 @@ export default function UploadIP() {
       ToastMessage({ message: "Error in updating IP!", type: "error" });
     }
   };
-  
-  
-  
+
   useEffect(() => {
     setData((prev) => ({
       ...prev,
@@ -401,7 +404,10 @@ export default function UploadIP() {
           </Grid>
           <Grid container>
             <Grid xs={12}>
-              <label className="font-medium text-customDarkBlue" htmlFor="images">
+              <label
+                className="font-medium text-customDarkBlue"
+                htmlFor="images"
+              >
                 Upload images:
               </label>
               <div className="flex items-center my-4">
@@ -428,7 +434,6 @@ export default function UploadIP() {
               </div>
             </Grid>
           </Grid>
-
 
           <Grid container>
             {data.sections.map((section, index) => (
@@ -463,7 +468,6 @@ export default function UploadIP() {
             </Grid>
           </Grid>
 
-          <MyToastContainer/>
           <Grid xs={12} sm={6}>
             <div className="flex">
               <button
@@ -480,7 +484,6 @@ export default function UploadIP() {
                 className="my-3 text-2xl btn bg-customGreen hover:bg-customGreen text-white rounded-md py-6 w-40 text-[32px]"
               >
                 Save
-                
               </ButtonContained>
             </div>
           </Grid>
