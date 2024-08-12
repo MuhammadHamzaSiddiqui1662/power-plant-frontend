@@ -54,6 +54,14 @@ export default function UploadIP() {
     }));
   };
 
+  const handleRemoveFile = (index) => {
+    setFiles((prevFiles) => {
+      const newFiles = { ...prevFiles };
+      delete newFiles[`file${index}`];
+      return newFiles;
+    });
+  };
+
   const handleBackgroundUpload = (file) => {
     setErrorMessage("");
     setFiles((prevFiles) => ({
@@ -118,26 +126,37 @@ export default function UploadIP() {
     }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event) => {
+    event.preventDefault(); // Prevent the default form submission behavior
+  
+    // Check if any images are uploaded
+    if (Object.keys(files).length === 0) {
+      setErrorMessage("Please upload at least one image.");
+      return;
+    }
+  
     const formData = new FormData();
     formData.append("data", JSON.stringify(data));
-
+  
     Object.keys(files).forEach((key) => {
       formData.append(key, files[key]);
     });
-
+  
     try {
-      const { error } = await uploadIp(formData);
-      if (error) {
-        console.log("error", error);
-        return setErrorMessage("In Complete Data");
+      const response = await uploadIp(formData);
+      if (response.error) {
+        console.log("error", response.error);
+        setErrorMessage("Failed to upload data.");
+      } else {
+        console.log("Response:", response);
+        setErrorMessage("");
       }
-      console.log("Response:", response);
     } catch (error) {
-      console.error("Error uploading data:", error.shortMessage);
-      setErrorMessage("In Complete Data");
+      console.error("Error uploading data:", error.message);
+      // setErrorMessage("Failed to upload data.");
     }
   };
+  
 
   return (
     <>
@@ -172,6 +191,7 @@ export default function UploadIP() {
                       id="name"
                       name="name"
                       type="text"
+                      required
                       className="form-input mt-1"
                       placeholder="Enter name here"
                       value={data.name}
@@ -191,6 +211,7 @@ export default function UploadIP() {
                       id="price"
                       name="price"
                       type="text"
+                      required
                       className="form-input mt-1"
                       placeholder="Enter price here"
                       value={data.price}
@@ -211,6 +232,7 @@ export default function UploadIP() {
                       name="description"
                       id="description"
                       className="form-input h-32"
+                      required
                       placeholder="Enter your description here"
                       value={data.description}
                       onChange={handleInputChange}
@@ -298,7 +320,7 @@ export default function UploadIP() {
                         <input
                           id="publishedDate"
                           name="publishedDate"
-                          type="text"
+                          type="date"
                           className="form-input mt-1"
                           placeholder="Enter date here"
                           value={data.publishedDate}
@@ -333,6 +355,7 @@ export default function UploadIP() {
                 <textarea
                   name="abstract"
                   id="abstract"
+                  required
                   className="form-input h-32"
                   placeholder="Enter your abstract here"
                   value={data.abstract}
@@ -344,14 +367,24 @@ export default function UploadIP() {
           <Grid container>
             <Grid xs={12}>
               <label
-                className="font-medium text-customDarkBlue "
+                className="font-medium text-customDarkBlue"
                 htmlFor="images"
               >
                 Upload images:
               </label>
               <div className="flex items-center my-4">
                 <div className="flex flex-wrap">
-                  {uploaders?.map((uploader) => uploader.component)}
+                  {uploaders?.map((uploader, index) => (
+                    <div key={index} className="relative mr-4">
+                      {uploader.component}
+                      <button
+                        onClick={() => handleRemoveFile(index)}
+                        className="absolute top-0 right-0 text-red-500 text-lg"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
                 </div>
                 <div
                   onClick={handleAddUploader}
@@ -394,7 +427,6 @@ export default function UploadIP() {
               </div>
             </Grid>
           </Grid>
-          {/* <Grid container> */}
           <Grid xs={12} sm={6}>
             <div className="flex">
               <button
@@ -404,7 +436,6 @@ export default function UploadIP() {
                 Cancel
               </button>
               <button
-                // type="submit"
                 onClick={handleSubmit}
                 className="my-3 text-2xl btn bg-customGreen hover:bg-customGreen text-white rounded-md py-6 w-40 text-[32px]"
               >

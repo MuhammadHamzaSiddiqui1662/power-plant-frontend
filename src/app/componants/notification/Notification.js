@@ -11,7 +11,7 @@ export default function NotificationMenu({ open, setOpen }) {
         borderRadius: 5,
         maxHeight: 460,
         overflowY: "auto",
-        scrollbarWidth: "thin",
+        scrollbarWidth: "thin", 
         display: `${open ? "block" : "none"}`,
       }}
     >
