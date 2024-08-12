@@ -223,14 +223,16 @@ export default function Navbar(props) {
 
           {/* <!-- Login button Start --> */}
           <ul className="buy-button list-none mb-0">
-            <li className="inline mb-0 me-2">
-              <Link
-                href="/chat"
-                className="btn btn-icon bg-customGreen border-customGreen dark:border-green-600 text-white rounded-full"
-              >
-                <MessageSquare className="h-4 w-4 stroke-[3]"></MessageSquare>
-              </Link>
-            </li>
+            {accessToken && (
+              <li className="inline mb-0 me-2">
+                <Link
+                  href="/chat"
+                  className="btn btn-icon bg-customGreen border-customGreen dark:border-green-600 text-white rounded-full"
+                >
+                  <MessageSquare className="h-4 w-4 stroke-[3]"></MessageSquare>
+                </Link>
+              </li>
+            )}
 
             <li className="inline mb-0 me-2">
               <Link
