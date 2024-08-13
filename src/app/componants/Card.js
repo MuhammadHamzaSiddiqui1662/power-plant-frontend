@@ -81,22 +81,26 @@ export default function Card({
                 ${price}
               </p>
             </li>
-            <li>
-              <span className="text-slate-400 text-sm">
-                Year of Publication
-              </span>
-              <p className="text-md font-medium" style={{ lineHeight: 1 }}>
-                {new Date(year).getFullYear()}
-              </p>
-            </li>
+            {year && (
+              <li>
+                <span className="text-slate-400 text-sm">
+                  Year of Publication
+                </span>
+                <p className="text-md font-medium" style={{ lineHeight: 1 }}>
+                  {new Date(year).getFullYear()}
+                </p>
+              </li>
+            )}
           </ul>
           <ul className="list-none">
-            <li className="pt-2">
-              <span className="text-slate-400 text-sm">Patent#</span>
-              <p className="text-md font-medium" style={{ lineHeight: 1 }}>
-                {patentNumber}
-              </p>
-            </li>
+            {patentNumber && (
+              <li className="pt-2">
+                <span className="text-slate-400 text-sm">Patent#</span>
+                <p className="text-md font-medium" style={{ lineHeight: 1 }}>
+                  {patentNumber}
+                </p>
+              </li>
+            )}
             <li className="pt-3">
               <span className="text-slate-400 text-sm">Category</span>
               <p className="text-md font-medium" style={{ lineHeight: 1 }}>

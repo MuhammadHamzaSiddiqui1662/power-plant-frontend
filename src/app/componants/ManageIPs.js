@@ -72,13 +72,13 @@ export default function ManageIPs() {
               <Card
                 key={index}
                 name={item.name}
-                id={item.id}
+                id={item._id}
                 description={item.description}
-                year={item.year}
-                category={item.category}
+                year={item.publishedDate}
+                categories={item.categories}
                 price={item.price}
-                patentNo={item.patentNo}
-                image={item.image}
+                patentNumber={item.patentNumber}
+                image={item.mainImg}
                 isEdit={true}
               />
             ))
