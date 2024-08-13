@@ -16,18 +16,13 @@ import {
   useChatsMutation,
   useChatMutation,
   useUpdateChatMutation,
-  useDeleteChatMutation,
 } from "../../services/chat/chat";
 
 import {
-  useMessageMutation,
-  useSendMessageMutation,
-  useUpdateMessageMutation,
   useDeleteMessageMutation
 } from "../../services/message/message";
+
 import { MessageType } from "../../types/MessageType";
-
-
 
 export default function Chat() {
   const messageWindowRef = useRef(null);
@@ -48,7 +43,7 @@ export default function Chat() {
   const [chats, { isLoading: isGetting }] = useChatsMutation();
   const [getChatById, { isLoading: isGettingById }] = useChatMutation();
   const [updateChat, { isLoading: isUpdating }] = useUpdateChatMutation();
-  const [deleteChat, { isLoading: isDeleting }] = useDeleteChatMutation();
+  const [deleteMessage, { isLoading: isDeleting }] = useDeleteMessageMutation();
 
   const socket = io('http://localhost:3001');
 
@@ -59,6 +54,37 @@ export default function Chat() {
     }
   });
 
+  socket.on('messageNotification', (chat) => {
+    setReceiverList((prevChats) => {
+      return prevChats.map((c) => {
+        if ((c._id === chat._id)) {
+          return {
+            ...c,
+            unReadMessages: chat.unReadMessages,
+            lastMessage: chat.lastMessage,
+          }
+        }
+        return c;
+      })
+    });
+
+  });
+
+  socket.on('messageSeen', (chat) => {
+    setReceiverList((prevChats) => {
+      return prevChats.map((c) => {
+        if ((c._id === chat._id)) {
+          return {
+            ...c,
+            unReadMessages: chat.unReadMessages,
+            lastMessage: chat.lastMessage,
+          }
+        }
+        return c;
+      })
+    });
+
+  });
 
   socket.on('userStatusChanged', (userId, online) => {
     setChatsList((prevChats) => {
@@ -90,7 +116,7 @@ export default function Chat() {
   const closeDealMessageHandler = () => {
     try {
       if (selectedChat._id != '') {
-        socket.emit('sendMessage', { chatId: selectedChat._id, senderId: user._id, type: MessageType.CloseChat });
+        socket.emit('sendMessage', { chatId: selectedChat._id, senderId: user._id, type: MessageType.CloseChat, receiverId: selectedChat.receiver._id });
       }
     } catch (error) {
       console.log(`error --> ${error}`);
@@ -112,7 +138,7 @@ export default function Chat() {
     try {
       e.preventDefault();
       if (selectedChat._id != '') {
-        socket.emit('sendMessage', { chatId: selectedChat._id, senderId: user._id, type: MessageType.Text, content: message });
+        socket.emit('sendMessage', { chatId: selectedChat._id, senderId: user._id, type: MessageType.Text, content: message, receiverId: selectedChat.receiver._id });
         setMessage('');
       }
     } catch (error) {
@@ -127,17 +153,34 @@ export default function Chat() {
 
       if (userType == 0) {
         _receiverList = chats
-          .map((ch) => ({ _id: ch._id, receiver: ch.broker != null ? ch.broker : ch.investor, closed: ch.closed }));
+          .map((ch) => ({
+            _id: ch._id,
+            receiver: ch.broker != null ? ch.broker : ch.investor,
+            closed: ch.closed,
+            unReadMessages: ch.unReadMessages,
+            lastMessage: ch.lastMessage,
+          }));
       }
       if (userType == 1) {
         _receiverList = chats
-          .map((ch) => ({ _id: ch._id, receiver: ch.broker != null ? ch.broker : ch.innovator, closed: ch.closed }));
+          .map((ch) => ({
+            _id: ch._id,
+            receiver: ch.broker != null ? ch.broker : ch.innovator,
+            closed: ch.closed,
+            unReadMessages: ch.unReadMessages,
+            lastMessage: ch.lastMessage,
+          }));
       }
       if (userType == 2) {
         _receiverList = chats
-          .map((ch) => ({ _id: ch._id, receiver: ch.innovator != null ? ch.innovator : ch.investor, closed: ch.closed }));
+          .map((ch) => ({
+            _id: ch._id,
+            receiver: ch.innovator != null ? ch.innovator : ch.investor,
+            closed: ch.closed,
+            unReadMessages: ch.unReadMessages,
+            lastMessage: ch.lastMessage
+          }));
       }
-
       setReceiverList(_receiverList);
     } catch (error) {
       console.log(error)
@@ -154,21 +197,27 @@ export default function Chat() {
         _receiver = {
           _id: chatObject._id,
           receiver: chatObject.broker != null ? chatObject.broker : chatObject.investor,
-          closed: chatObject.closed
+          closed: chatObject.closed,
+          unReadMessages: chatObject.unReadMessages,
+          lastMessage: chatObject.lastMessage,
         };
       }
       if (userType == 1) {
         _receiver = {
           _id: chatObject._id,
           receiver: chatObject.broker != null ? chatObject.broker : chatObject.innovator,
-          closed: chatObject.closed
+          closed: chatObject.closed,
+          unReadMessages: chatObject.unReadMessages,
+          lastMessage: chatObject.lastMessage,
         };
       }
       if (userType == 2) {
         _receiver = {
           _id: chatObject._id,
           receiver: chatObject.innovator != null ? chatObject.innovator : chatObject.investor,
-          closed: chatObject.closed
+          closed: chatObject.closed,
+          unReadMessages: chatObject.unReadMessages,
+          lastMessage: chatObject.lastMessage,
         };
       }
 
@@ -186,7 +235,6 @@ export default function Chat() {
 
       if (getAllChatsResponse[0]._id) {
         let recList = extractReceivers(getAllChatsResponse);
-        setChatsList(recList)
         await chatClickHandler(getAllChatsResponse[0]._id)
         setSelectedChat(recList[0]);
       }
@@ -217,25 +265,24 @@ export default function Chat() {
     }
   };
 
-  const updateChatHandler = async (Id) => {
+  const rejectCloseDealHandler = async (chat) => {
     try {
-      const { data: updateChatResponse, error } = await updateChat({
-        Id,
-      });
+      chat.open=true;
+      const { data: updateChatResponse, error } = await updateChat(chat);
       if (error) return setError(error.message);
       console.log(updateChatResponse);
     } catch (error) {
       console.log(`error --> ${error}`);
     }
+  
   };
 
-  const deleteChatHandler = async (Id) => {
+  const cancelCloseDealHandler = async (messageId) => {
     try {
-      const { data: deleteChatResponse, error } = await deleteChat({
-        Id,
-      });
+      const { data: deleteMessageResponse, error } = await deleteMessage(messageId);
       if (error) return setError(error.message);
-      console.log(deleteChatResponse);
+      let updatedMessageList = messages.filter((msg) => msg._id !== messageId);
+      setMessages(updatedMessageList);
     } catch (error) {
       console.log(`error --> ${error}`);
     }
@@ -245,9 +292,9 @@ export default function Chat() {
 
     socket.emit("userOnline", user._id);
 
+    socket.emit("joinNotificationRoom", { userId: user._id });
+
     getAllChatsHandler();
-
-
 
     if (messageWindowRef.current) {
       messageWindowRef.current.scrollTop = messageWindowRef.current.scrollHeight;
@@ -316,12 +363,12 @@ export default function Chat() {
                       <Col xs={13} sm={10} md={8} lg={8} xl={8} xxl={16}>
                         <text className="f-16 b-7xx">{chat.receiver.name}</text>
                         <br />
-                        <text className="f-12 c-grey">{chat.last_message}</text>
+                        <text className="f-12 c-grey">{chat.lastMessage}</text>
                       </Col>
 
                       <Col xs={3} sm={3} md={3} lg={1} xl={3} xxl={3}>
-                        {chat.last_message_count > 0 ?
-                          <Badge color="green" count={chat.last_message_count} offset={[80, 20]} ></Badge> :
+                        {chat.unReadMessages > 0 ?
+                          <Badge color="green" count={chat.unReadMessages} offset={[80, 20]} ></Badge> :
                           <text></text>}
                       </Col>
 
@@ -391,17 +438,17 @@ export default function Chat() {
                                         </Typography>
                                       </div>
 
-                                      {message.close === true ?
+                                      {message.sender._id === user._id ?
                                         <div className="text-center">
                                           <ConfigProvider wave={{ disabled: true }}>
-                                            <Button className="deal-close-cancel-btn">
+                                            <Button className="deal-close-cancel-btn" onClick={() => cancelCloseDealHandler(message._id)}>
                                               <text className="f-18 b-5xx">Cancel</text>
                                             </Button>
                                           </ConfigProvider>
                                         </div> :
                                         <div className="text-center">
                                           <ConfigProvider wave={{ disabled: true }}>
-                                            <Button className="deal-close-btn br-right">
+                                            <Button className="deal-close-btn br-right" onClick={() => rejectCloseDealHandler(selectedChat)}>
                                               <text className="f-18 b-5xx">Reject</text>
                                             </Button>
                                           </ConfigProvider>
@@ -456,17 +503,17 @@ export default function Chat() {
                                         </Typography>
                                       </div>
 
-                                      {message.close === true ?
+                                      {message.sender._id === user._id ?
                                         <div className="text-center">
                                           <ConfigProvider wave={{ disabled: true }}>
-                                            <Button className="deal-close-cancel-btn">
+                                            <Button className="deal-close-cancel-btn" onClick={() => cancelCloseDealHandler(message._id)}>
                                               <text className="f-18 b-5xx">Cancel</text>
                                             </Button>
                                           </ConfigProvider>
                                         </div> :
                                         <div className="text-center">
                                           <ConfigProvider wave={{ disabled: true }}>
-                                            <Button className="deal-close-btn br-right">
+                                            <Button className="deal-close-btn br-right" onClick={() => rejectCloseDealHandler(selectedChat)}>
                                               <text className="f-18 b-5xx">Reject</text>
                                             </Button>
                                           </ConfigProvider>
@@ -576,12 +623,12 @@ export default function Chat() {
                         <Col xs={3} sm={3} md={3} lg={8} xl={8} xxl={16}>
                           <text className="f-16 b-7xx">{chat.receiver.name}</text>
                           <br />
-                          <text className="f-12 c-grey">{chat.last_message}</text>
+                          <text className="f-12 c-grey">{chat.lastMessage}</text>
                         </Col>
 
                         <Col xs={3} sm={3} md={3} lg={1} xl={3} xxl={3}>
-                          {chat.last_message_count > 0 ?
-                            <Badge color="green" count={chat.last_message_count} offset={[80, 20]} ></Badge> :
+                          {chat.unReadMessages > 0 ?
+                            <Badge color="green" count={chat.unReadMessages} offset={[80, 20]} ></Badge> :
                             <text></text>}
                         </Col>
 
@@ -655,17 +702,17 @@ export default function Chat() {
                                       </Typography>
                                     </div>
 
-                                    {message.close === true ?
+                                    {message.sender._id === user._id ?
                                       <div className="text-center">
                                         <ConfigProvider wave={{ disabled: true }}>
-                                          <Button className="deal-close-cancel-btn">
+                                          <Button className="deal-close-cancel-btn" onClick={() => cancelCloseDealHandler(message._id)}>
                                             <text className="f-18 b-5xx">Cancel</text>
                                           </Button>
                                         </ConfigProvider>
                                       </div> :
                                       <div className="text-center">
                                         <ConfigProvider wave={{ disabled: true }}>
-                                          <Button className="deal-close-btn br-right">
+                                          <Button className="deal-close-btn br-right" onClick={() => rejectCloseDealHandler(selectedChat)}>
                                             <text className="f-18 b-5xx">Reject</text>
                                           </Button>
                                         </ConfigProvider>
@@ -720,17 +767,17 @@ export default function Chat() {
                                       </Typography>
                                     </div>
 
-                                    {message.close === true ?
+                                    {message.sender._id === user._id ?
                                       <div className="text-center">
                                         <ConfigProvider wave={{ disabled: true }}>
-                                          <Button className="deal-close-cancel-btn">
+                                          <Button className="deal-close-cancel-btn" onClick={() => cancelCloseDealHandler(message._id)}>
                                             <text className="f-18 b-5xx">Cancel</text>
                                           </Button>
                                         </ConfigProvider>
                                       </div> :
                                       <div className="text-center">
                                         <ConfigProvider wave={{ disabled: true }}>
-                                          <Button className="deal-close-btn br-right">
+                                          <Button className="deal-close-btn br-right" onClick={() => rejectCloseDealHandler(selectedChat)}>
                                             <text className="f-18 b-5xx">Reject</text>
                                           </Button>
                                         </ConfigProvider>

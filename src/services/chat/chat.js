@@ -42,11 +42,11 @@ export const chatApi = createApi({
       },
     }),
     updateChat: build.mutation({
-      query(body) {
+      query(chat) {
         return {
-          url: `/${body.id}`,
+          url: `/${chat._id}`,
           method: "PUT",
-          body:body.chat,
+          body:chat,
         };
       },
     }),
