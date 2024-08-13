@@ -44,18 +44,17 @@ export const messageApi = createApi({
     updateMessage: build.mutation({
       query(body) {
         return {
-          url: `/${id}`,
+          url: `/${body.id}`,
           method: "PUT",
-          body,
+          body:body.data,
         };
       },
     }),
     deleteMessage: build.mutation({
-      query(body) {
+      query(Id) {
         return {
-          url: `/${id}`,
+          url: `/${Id}`,
           method: "DELETE",
-          body,
         };
       },
     }),
