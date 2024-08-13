@@ -24,10 +24,14 @@ export const paymentApi = createApi({
         };
       },
     }),
+    getStripePaymentIntent: build.query({
+      query: (packageType) => `/${packageType}/usd`,
+    }),
   }),
 });
 
 export const {
   endpoints,
   useStripePaymentIntentMutation,
+  useGetStripePaymentIntentQuery,
 } = paymentApi;
