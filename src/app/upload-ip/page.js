@@ -150,7 +150,7 @@ export default function UploadIP() {
     setData({ ...initialData, ...ip });
   };
 
-  const handleSubmit = async () => {
+  const handleSaveSubmit = async () => {
     const formData = new FormData();
     formData.append("data", JSON.stringify(data));
 
@@ -159,9 +159,9 @@ export default function UploadIP() {
     });
 
     try {
-      const { error } = ip
-        ? await updateIp(formData)
-        : await uploadIp(formData);
+      const { data } = ip
+        ? await updateIp(formData).unwrap()
+        : await uploadIp(formData).unwrap();
 
       if (error) {
         console.log("error", error);
@@ -173,18 +173,42 @@ export default function UploadIP() {
         return;
       }
 
-      refetch();
       setErrorMessage("");
-      ToastMessage({
-        message: "IP has been uploaded successfully!",
-        type: "success",
-      });
+      if (ip) {
+        ToastMessage({
+          message: "IP has been uploaded successfully!",
+          type: "success",
+        });
+        refetch();
+      } else {
+        router.replace(`/upload-ip?id=${data._id}`);
+        ToastMessage({
+          message: "IP has been uploaded successfully!",
+          type: "success",
+        });
+      }
     } catch (error) {
       console.error("Error uploading data:", error);
       setErrorMessage(
         error.shortMessage || error.message || "Error in updating IP!"
       );
       ToastMessage({ message: "Error in updating IP!", type: "error" });
+    }
+  };
+
+  const handlePublish = async () => {
+    if (ip) {
+      router.push(`/payment?type=publish&id=${ip._id}`);
+    } else {
+      ToastMessage({ message: "First save the IP!", type: "error" });
+    }
+  };
+
+  const handlePatent = async () => {
+    if (ip) {
+      router.push(`/payment?type=patent&id=${ip._id}`);
+    } else {
+      ToastMessage({ message: "First save the IP!", type: "error" });
     }
   };
 
@@ -478,7 +502,7 @@ export default function UploadIP() {
                 Cancel
               </button>
               <ButtonContained
-                onClick={handleSubmit}
+                onClick={handleSaveSubmit}
                 isLoading={isUploading || isUpdating}
                 disabled={isUploading || isUpdating}
                 className="my-3 text-2xl btn bg-customGreen hover:bg-customGreen text-white rounded-md py-6 w-40 text-[32px]"
@@ -490,11 +514,7 @@ export default function UploadIP() {
           <Grid xs={12} sm={6}>
             <div className="flex justify-end">
               <button
-                onClick={() => {
-                  router.push(
-                    `/payment?type=${isPatented ? "publish" : "patent"}`
-                  );
-                }}
+                onClick={isPatented ? handlePublish : handlePatent}
                 className={`my-3 text-2xl btn bg-customGreen hover:bg-customGreen text-white rounded-md py-6 w-${
                   isPatented ? 40 : 60
                 } text-[32px]`}

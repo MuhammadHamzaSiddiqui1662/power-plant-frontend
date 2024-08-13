@@ -85,7 +85,7 @@ export default function CheckoutForm({
             "data",
             JSON.stringify({
               _id: id,
-              status: IpStatus.InActive,
+              status: IpStatus.AppliedForPatent,
             })
           );
           await updateIp(formData);
