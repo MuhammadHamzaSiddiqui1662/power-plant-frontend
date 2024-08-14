@@ -130,6 +130,7 @@ export default function Login() {
                       placeholder="name@example.com"
                       value={data.email}
                       onChange={handleDataChange}
+                      required
                     />
                   </div>
                   <div className="mb-4">
@@ -147,6 +148,7 @@ export default function Login() {
                       placeholder="Password:"
                       value={data.password}
                       onChange={handleDataChange}
+                      required
                     />
                   </div>
                   <div className="flex justify-between mb-4">

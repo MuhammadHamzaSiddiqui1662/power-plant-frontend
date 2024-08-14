@@ -9,6 +9,7 @@ import { useRegisterMutation } from "../../services/auth/auth";
 import { useRouter } from "next/navigation";
 import ButtonContained from "../../components/ButtonContained/ButtonContained";
 import ToastMessage from "../../app/componants/Toast";
+import { UserType } from "../../types/user";
 
 const Uploader = dynamic(() => import("../../app/componants/UploadImage"));
 
@@ -18,6 +19,7 @@ const CategorySelect = dynamic(() =>
 
 export default function SignUpForm() {
   const [tabValue, setTabValue] = useState(0);
+  const [isAgreedOnTerms, setIsAgreedOnTerms] = useState(false);
   const [data, setData] = useState({
     name: "",
     phone: "",
@@ -25,6 +27,7 @@ export default function SignUpForm() {
     password: "",
     confirmPassword: "",
     address: "",
+    interests: [],
   });
   const [files, setFiles] = useState({});
 
@@ -81,6 +84,14 @@ export default function SignUpForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (data.password !== data.confirmPassword)
+      return setError("Password and Confirm Password should be same!");
+    if (data.interests.length < 3)
+      return setError("Select atleast 3 interests");
+    if (tabValue == UserType.Broker) {
+      if (!files.image) return setError("Image is required!");
+      if (!files.pdf) return setError("Identity Document is required!");
+    }
     const { confirmPassword, ...requestBody } = {
       ...data,
       userType: tabValue,
@@ -176,6 +187,7 @@ export default function SignUpForm() {
                       name="name"
                       value={data.name}
                       onChange={handleDataChange}
+                      required
                     />
                   </div>
                 </Grid>
@@ -195,6 +207,7 @@ export default function SignUpForm() {
                       name="email"
                       value={data.email}
                       onChange={handleDataChange}
+                      required
                     />
                   </div>
                 </Grid>
@@ -214,6 +227,7 @@ export default function SignUpForm() {
                       name="phone"
                       value={data.phone}
                       onChange={handleDataChange}
+                      required
                     />
                   </div>
                 </Grid>
@@ -233,6 +247,7 @@ export default function SignUpForm() {
                       name="address"
                       value={data.address}
                       onChange={handleDataChange}
+                      required
                     />
                   </div>
                 </Grid>
@@ -252,6 +267,7 @@ export default function SignUpForm() {
                       name="password"
                       value={data.password}
                       onChange={handleDataChange}
+                      required
                     />
                   </div>
                 </Grid>
@@ -271,6 +287,7 @@ export default function SignUpForm() {
                       name="confirmPassword"
                       value={data.confirmPassword}
                       onChange={handleDataChange}
+                      required
                     />
                   </div>
                 </Grid>
@@ -283,7 +300,7 @@ export default function SignUpForm() {
                       Interests:
                     </label>
                     <CategorySelect
-                      categories={data.interests || []}
+                      categories={data.interests}
                       onChange={handleCategoryChange}
                       fullWidth={true}
                     />
@@ -326,6 +343,8 @@ export default function SignUpForm() {
                   className="form-checkbox text-green-600 rounded w-4 h-4 me-2 border border-inherit"
                   type="checkbox"
                   id="RememberMe"
+                  checked={isAgreedOnTerms}
+                  onChange={() => setIsAgreedOnTerms((prev) => !prev)}
                 />
                 <label
                   className="form-check-label text-customDarkBlue"
@@ -338,7 +357,12 @@ export default function SignUpForm() {
                 <ButtonContained
                   type="submit"
                   isLoading={isLoading}
-                  disabled={isLoading}
+                  disabled={isLoading || !isAgreedOnTerms}
+                  style={
+                    isAgreedOnTerms
+                      ? { cursor: "pointer" }
+                      : { cursor: "not-allowed" }
+                  }
                 >
                   Sign Up
                 </ButtonContained>
