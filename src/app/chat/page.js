@@ -23,6 +23,7 @@ import {
 } from "../../services/message/message";
 
 import { MessageType } from "../../types/MessageType";
+import { useRouter } from "next/navigation";
 
 export default function Chat() {
   const messageWindowRef = useRef(null);
@@ -40,6 +41,7 @@ export default function Chat() {
   const [chatModalVisible, setChatModalVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [visible, setVisible] = useState(false);
+  const router = useRouter();
   const [chats, { isLoading: isGetting }] = useChatsMutation();
   const [getChatById, { isLoading: isGettingById }] = useChatMutation();
   const [updateChat, { isLoading: isUpdating }] = useUpdateChatMutation();
@@ -48,12 +50,12 @@ export default function Chat() {
   const socket = io('http://localhost:3001');
 
   socket.on('newMessage', (userId, message) => {
-    if(user._id == userId || brokerId===userId){
-    setMessages((prevMessages) => [...prevMessages, message]);
-    if (messageWindowRef.current) {
-      messageWindowRef.current.scrollTop = messageWindowRef.current.scrollHeight + 600;
+    if (user._id == userId || brokerId === userId) {
+      setMessages((prevMessages) => [...prevMessages, message]);
+      if (messageWindowRef.current) {
+        messageWindowRef.current.scrollTop = messageWindowRef.current.scrollHeight + 600;
+      }
     }
-  }
   });
 
   socket.on('messageNotification', (chat) => {
@@ -231,7 +233,7 @@ export default function Chat() {
 
   const getAllChatsHandler = async () => {
     try {
-      const { data: getAllChatsResponse, error } = await chats();
+      const { data: getAllChatsResponse, error } = await chats(userType);
 
       if (error) return setError(error.message);
 
@@ -253,6 +255,7 @@ export default function Chat() {
       if (getChatByIdResponse._id) {
         let receiver = extractReceiver(getChatByIdResponse);
         setSelectedChat(receiver);
+        router.replace(`/chat?chatId=${getChatByIdResponse._id}`);
         setBrokerId(receiver.receiver._id);
         socket.emit("joinChat", { chatId: getChatByIdResponse._id });
         socket.on('previousMessages', (msgs) => {
@@ -269,7 +272,7 @@ export default function Chat() {
 
   const rejectCloseDealHandler = async (chat) => {
     try {
-      let newChatObject={...chat, open:true}
+      let newChatObject = { ...chat, open: true }
       const { data: updateChatResponse, error } = await updateChat(chat);
       if (error) return setError(error.message);
       console.log(updateChatResponse);
@@ -344,7 +347,6 @@ export default function Chat() {
             <Col xs={23} sm={23} md={22} lg={7} xl={6} xll={6} >
 
               <h1 className="f-32 b-6xx">Messages</h1>
-              <text className="fl-r f-14 b-5xx">CHAT +</text>
 
               <div className="chat-container">
                 {receiverList.map((chat, index) => (
@@ -365,7 +367,7 @@ export default function Chat() {
                       <Col xs={13} sm={10} md={8} lg={8} xl={8} xxl={16}>
                         <text className="f-16 b-7xx">{chat.receiver.name}</text>
                         <br />
-                        <Typography.Text className="f-12 c-grey" ellipsis={{rows:1}}>{chat.lastMessage}</Typography.Text>
+                        <Typography.Text className="f-12 c-grey" ellipsis={{ rows: 1 }}>{chat.lastMessage}</Typography.Text>
                         {/* <text className="f-12 c-grey">{chat.lastMessage}</text> */}
                       </Col>
 
@@ -384,7 +386,7 @@ export default function Chat() {
 
           <Row justify={"center"}>
             <Col xs={22} md={22} lg={15} xl={13} xll={12} >
-              <Card className="">
+              <Card className="custom-border">
                 {selectedChat == null ? "Loading" :
                   <div className="pd-24">
                     <Row>
@@ -420,7 +422,7 @@ export default function Chat() {
                 }
                 <div className="divider">
                 </div>
-                {messages.length === 0 ? "Loading" :
+                {messages.length === 0 ? <div className="message-container"></div> :
                   <div className="message-container" ref={messageWindowRef}>
                     {messages.map((message, index) => (
                       <div key={index} >
@@ -599,11 +601,10 @@ export default function Chat() {
         <Row justify={"center"}>
 
           <Col xs={22} md={22} lg={6} xl={6} xll={6} >
-            <Card className="h-6xx">
+            <Card className="h-6xx custom-border">
               <div className="pd-24">
 
                 <h1 className="f-32 b-6xx">Messages</h1>
-                <text className="fl-r f-14 b-5xx">CHAT +</text>
 
                 <div className="chat-container">
                   {receiverList.map((chat, index) => (
@@ -623,8 +624,8 @@ export default function Chat() {
                         <Col xs={3} sm={3} md={3} lg={8} xl={8} xxl={16}>
                           <text className="f-16 b-7xx">{chat.receiver.name}</text>
                           <br />
-                          <Typography.Text className="f-12 c-grey" ellipsis={{rows:1}} >{chat.lastMessage}</Typography.Text>
-                        {/* //  <text className="f-12 c-grey">{chat.lastMessage}</text> */}
+                          <Typography.Text className="f-12 c-grey" ellipsis={{ rows: 1 }} >{chat.lastMessage}</Typography.Text>
+                          {/* //  <text className="f-12 c-grey">{chat.lastMessage}</text> */}
                         </Col>
 
                         <Col xs={3} sm={3} md={3} lg={1} xl={3} xxl={3}>
@@ -645,7 +646,7 @@ export default function Chat() {
           <Col xs={22} md={22} lg={1} xl={1} xll={1}></Col>
 
           <Col xs={22} md={22} lg={16} xl={16} xll={12}>
-            <Card className="h-65x">
+            <Card className="h-65x custom-border">
               {selectedChat == null ? "Loading" :
                 <div className="pd-24">
                   <Row>
@@ -682,7 +683,7 @@ export default function Chat() {
               <div className="divider">
               </div>
 
-              {messages.length === 0 ? "Loading" :
+              {messages.length === 0 ? <div className="message-container" ></div> :
                 <div className="message-container" ref={messageWindowRef}>
                   {messages.map((message, index) => (
                     <div key={index} >

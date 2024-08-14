@@ -93,7 +93,7 @@ export default function PropertiesDetail(props) {
       const { data: createChatgResponse, error } = await createChat(chat);
       if (error) return setError(error.message);
       console.log(createChatgResponse);
-      router.replace(`/chat`);
+      router.replace(`/chat?userType=${userType}`);
 
     }catch(error){
       console.log(error)

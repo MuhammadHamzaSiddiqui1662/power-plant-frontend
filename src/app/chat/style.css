@@ -6,6 +6,7 @@
 
   .chat-card{
     max-width: 100% !important;
+    border:none !important;
   }
 
   .message-container {
@@ -106,6 +107,7 @@
   }
   .chat-card{
     max-width: 100% !important;
+    border:none !important;
   }
   .message-container {
     /* margin-top: 20px;
@@ -204,6 +206,7 @@
   }
   .chat-card{
     max-width: 100% !important;
+    border:none !important;
   }
   .message-container {
     /* margin-top: 20px;
@@ -305,6 +308,7 @@
 
   .chat-card{
     max-width: 98% !important;
+    border:none !important;
   }
 
   .message-container {
@@ -404,6 +408,7 @@
 
   .chat-card{
     max-width: 95% !important;
+    border:none !important;
   }
 
   .message-container {
@@ -499,7 +504,7 @@ background-color:#6BB955 !important;
 }
 
 .h-65x {
-  height: 75vh !important;
+  height: 580px !important;
 }
 
 
@@ -607,11 +612,11 @@ background-color:#6BB955 !important;
 
 
 .chat-card:hover{
-  border-color: #6BB955 !important;
+  border: 1px solid #6BB955 !important;
 }
 
 .active{ 
-  border-color: #6BB955 !important;
+  border:1px solid #6BB955 !important;
 }
 
 .pin-button {
@@ -701,10 +706,12 @@ background-color:#6BB955 !important;
 }
 
 .divider {
-  background-color: #f0f0f0 !important;
+  background-color: #8F98A5 !important;
   height: 1px !important
 }
-
+.custom-border{
+  border-color: #8F98A5 !important;
+}
 .c-white {
   color: white;
 }
