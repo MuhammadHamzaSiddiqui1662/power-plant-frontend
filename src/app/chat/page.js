@@ -47,11 +47,13 @@ export default function Chat() {
 
   const socket = io('http://localhost:3001');
 
-  socket.on('newMessage', (message) => {
+  socket.on('newMessage', (userId, message) => {
+    if(user._id == userId || brokerId===userId){
     setMessages((prevMessages) => [...prevMessages, message]);
     if (messageWindowRef.current) {
       messageWindowRef.current.scrollTop = messageWindowRef.current.scrollHeight + 600;
     }
+  }
   });
 
   socket.on('messageNotification', (chat) => {
@@ -267,14 +269,14 @@ export default function Chat() {
 
   const rejectCloseDealHandler = async (chat) => {
     try {
-      chat.open=true;
+      let newChatObject={...chat, open:true}
       const { data: updateChatResponse, error } = await updateChat(chat);
       if (error) return setError(error.message);
       console.log(updateChatResponse);
     } catch (error) {
       console.log(`error --> ${error}`);
     }
-  
+
   };
 
   const cancelCloseDealHandler = async (messageId) => {
@@ -331,7 +333,7 @@ export default function Chat() {
         <ChatModal visible={chatModalVisible} setVisible={setChatModalVisible} />
 
         <Navbar />
-        <section className="my-28">
+        <section className="my-28 section">
 
           <Drawer
             title="Chats"
@@ -363,7 +365,8 @@ export default function Chat() {
                       <Col xs={13} sm={10} md={8} lg={8} xl={8} xxl={16}>
                         <text className="f-16 b-7xx">{chat.receiver.name}</text>
                         <br />
-                        <text className="f-12 c-grey">{chat.lastMessage}</text>
+                        <Typography.Text className="f-12 c-grey" ellipsis={{rows:1}}>{chat.lastMessage}</Typography.Text>
+                        {/* <text className="f-12 c-grey">{chat.lastMessage}</text> */}
                       </Col>
 
                       <Col xs={3} sm={3} md={3} lg={1} xl={3} xxl={3}>
@@ -381,7 +384,7 @@ export default function Chat() {
 
           <Row justify={"center"}>
             <Col xs={22} md={22} lg={15} xl={13} xll={12} >
-              <Card className="h-45x">
+              <Card className="">
                 {selectedChat == null ? "Loading" :
                   <div className="pd-24">
                     <Row>
@@ -391,8 +394,6 @@ export default function Chat() {
 
                       <Col xs={3} sm={3} md={6} lg={5} className="pd-0-15">
                         <text className="f-16 b-7xx" >{selectedChat.receiver.name}</text>
-                        <br />
-                        <text className="f-12">C#1249UoH</text>
                       </Col>
 
                       <Col xs={10} sm={10} lg={12} xl={11}></Col>
@@ -428,7 +429,7 @@ export default function Chat() {
                             <div className="pd-24">
                               {message.type === MessageType.CloseChat ?
                                 <Row justify={'end'}>
-                                  <Col xs={{ span: 9, push: 1 }}>
+                                  <Col xs={{ span: 9 }}>
                                     <Card className={'message'}>
                                       <div className="deal-close">
                                         <Typography>
@@ -470,7 +471,7 @@ export default function Chat() {
 
                                 </Row> :
                                 <Row justify={'end'}>
-                                  <Col xs={{ span: 9, push: 1 }}>
+                                  <Col xs={{ span: 9 }}>
                                     <Card className={'pd-18 message sender'}>
                                       <Typography>
                                         <Text className="c-white f-12">{message.content}</Text>
@@ -583,7 +584,6 @@ export default function Chat() {
           </FloatButton>
 
         </section>
-        <Footer />
       </>
     );
   }
@@ -595,10 +595,10 @@ export default function Chat() {
       <ChatModal visible={chatModalVisible} setVisible={setChatModalVisible} />
 
       <Navbar />
-      <section className="my-28">
+      <section className="my-28 section">
         <Row justify={"center"}>
 
-          <Col xs={22} md={22} lg={7} xl={6} xll={6} >
+          <Col xs={22} md={22} lg={6} xl={6} xll={6} >
             <Card className="h-6xx">
               <div className="pd-24">
 
@@ -618,12 +618,13 @@ export default function Chat() {
                           }
                         </Col>
 
-                        <Col xs={3} sm={3} md={3} lg={0} xl={3} xxl={2}></Col>
+                        <Col xs={3} sm={3} md={3} lg={2} xl={3} xxl={2}></Col>
 
                         <Col xs={3} sm={3} md={3} lg={8} xl={8} xxl={16}>
                           <text className="f-16 b-7xx">{chat.receiver.name}</text>
                           <br />
-                          <text className="f-12 c-grey">{chat.lastMessage}</text>
+                          <Typography.Text className="f-12 c-grey" ellipsis={{rows:1}} >{chat.lastMessage}</Typography.Text>
+                        {/* //  <text className="f-12 c-grey">{chat.lastMessage}</text> */}
                         </Col>
 
                         <Col xs={3} sm={3} md={3} lg={1} xl={3} xxl={3}>
@@ -643,7 +644,7 @@ export default function Chat() {
 
           <Col xs={22} md={22} lg={1} xl={1} xll={1}></Col>
 
-          <Col xs={22} md={22} lg={15} xl={13} xll={12}>
+          <Col xs={22} md={22} lg={16} xl={16} xll={12}>
             <Card className="h-65x">
               {selectedChat == null ? "Loading" :
                 <div className="pd-24">
@@ -654,8 +655,6 @@ export default function Chat() {
 
                     <Col xs={3} sm={3} md={6} lg={5} className="pd-0-15">
                       <text className="f-16 b-7xx" >{selectedChat.receiver.name}</text>
-                      <br />
-                      <text className="f-12">C#1249UoH</text>
                     </Col>
 
                     <Col lg={12} xl={11}></Col>
@@ -692,7 +691,7 @@ export default function Chat() {
                           <div className="pd-24">
                             {message.type === MessageType.CloseChat ?
                               <Row justify={'end'}>
-                                <Col xs={{ span: 9, push: 1 }}>
+                                <Col xs={{ span: 9 }}>
                                   <Card className={'message'}>
                                     <div className="deal-close">
                                       <Typography>
@@ -734,7 +733,7 @@ export default function Chat() {
 
                               </Row> :
                               <Row justify={'end'}>
-                                <Col xs={{ span: 9, push: 1 }}>
+                                <Col xs={{ span: 9 }}>
                                   <Card className={'pd-18 message sender'}>
                                     <Typography>
                                       <Text className="c-white f-12">{message.content}</Text>
@@ -841,7 +840,6 @@ export default function Chat() {
 
         </Row>
       </section>
-      <Footer />
     </>
   );
 }

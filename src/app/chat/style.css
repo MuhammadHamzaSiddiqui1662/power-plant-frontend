@@ -4,6 +4,21 @@
     font-size: 24px;
   }
 
+  .chat-card{
+    max-width: 100% !important;
+  }
+
+  .message-container {
+    /* margin-top: 20px; */
+    /* padding: 48px 0 !important; */
+    height: 360px;
+    /* Set height as per your design */
+    overflow-y: scroll;
+    /* Enable vertical scrolling */
+    /* padding: 10px; */
+  }
+  
+
   .chat-container {
     margin-top: 10px;
     height: 520px;
@@ -89,11 +104,23 @@
   .f-32 {
     font-size: 24px;
   }
-
+  .chat-card{
+    max-width: 100% !important;
+  }
+  .message-container {
+    /* margin-top: 20px;
+    padding: 48px 0 !important; */
+    height: 48vh;
+    /* Set height as per your design */
+    overflow-y: scroll;
+    /* Enable vertical scrolling */
+    /* padding: 10px; */
+  }
+  
   .chat-container {
-    margin-top: 10px;
+    margin-top: 5px;
     height: 520px;
-    width: 250px;
+    width: 210px;
     overflow-y: scroll;
   }
   .f-16 {
@@ -175,10 +202,23 @@
   .f-32 {
     font-size: 24px;
   }
+  .chat-card{
+    max-width: 100% !important;
+  }
+  .message-container {
+    /* margin-top: 20px;
+    padding: 48px 0 !important; */
+    height: 40vh;
+    /* Set height as per your design */
+    overflow-y: scroll;
+    /* Enable vertical scrolling */
+    /* padding: 10px; */
+  }
+  
 
   .chat-container {
     margin-top: 10px;
-    height: 520px;
+    height: 320px;
     width: 290px;
     overflow-y: scroll;
   }
@@ -246,7 +286,8 @@
 .input-message {
   border-color: white !important;
   padding: 15px 10px !important;
-  max-width: 85% !important;
+  max-width: 95% !important;
+  width: 95% !important;
   height:50px !important
 }
 .message-box {
@@ -262,9 +303,24 @@
     font-size: 32px;
   }
 
+  .chat-card{
+    max-width: 98% !important;
+  }
+
+  .message-container {
+    /* margin-top: 20px;
+    padding: 48px 0 !important; */
+    height: 360px;
+    /* Set height as per your design */
+    overflow-y: scroll;
+    /* Enable vertical scrolling */
+    /* padding: 10px; */
+  }
+  
+
   .chat-container {
     margin-top: 10px;
-    height: 520px;
+    height: 400px;
     width: 310px;
     overflow-y: scroll;
   }
@@ -328,7 +384,8 @@
 .input-message {
   border-color: white !important;
   padding: 15px 10px !important;
-  max-width: 85% !important;
+  max-width: 95% !important;
+  width: 95% !important;
   height:50px !important
 }
 .message-box {
@@ -345,6 +402,20 @@
     font-size: 32px;
   }
 
+  .chat-card{
+    max-width: 95% !important;
+  }
+
+  .message-container {
+    /* margin-top: 20px;
+    padding: 48px 0 !important; */
+    height: 360px;
+    /* Set height as per your design */
+    overflow-y: scroll;
+    /* Enable vertical scrolling */
+    /* padding: 10px; */
+  }
+  
   .chat-container {
     margin-top: 10px;
     height: 520px;
@@ -424,11 +495,11 @@ background-color:#6BB955 !important;
  }
 
  .h-6xx {
-  height: 600px !important;
+  height: 580px !important;
 }
 
 .h-65x {
-  height: 650px !important;
+  height: 75vh !important;
 }
 
 
@@ -465,7 +536,7 @@ background-color:#6BB955 !important;
 
 
 .m-40 {
-  margin: 40px 0 !important;
+  margin: 20px 0 !important;
 }
 
 .c-grey {
@@ -491,21 +562,12 @@ background-color:#6BB955 !important;
   outline: none !important;
 }
 
-.message-container {
-  margin-top: 20px;
-  padding: 48px 0 !important;
-  height: 420px;
-  /* Set height as per your design */
-  overflow-y: scroll;
-  /* Enable vertical scrolling */
-  padding: 10px;
-}
 
 .message {
   margin-bottom: 10px;
   /* padding: 8px 12px; */
   border-radius: 8px;
-  max-width: 80%;
+  max-width: 90%;
   /* Adjust as needed */
 }
 
@@ -542,6 +604,7 @@ background-color:#6BB955 !important;
   width: 560px !important;
   border-color: #6BB955 !important;
 } */
+
 
 .chat-card:hover{
   border-color: #6BB955 !important;
@@ -609,7 +672,7 @@ background-color:#6BB955 !important;
 
 
 .pd-18 {
-  padding: 18px !important;
+  padding: 8px !important;
 }
 
 .pd-lr-24 {
@@ -646,7 +709,12 @@ background-color:#6BB955 !important;
   color: white;
 }
 
-
+.section{
+   max-height: 100vh;
+   scroll-behavior: none;
+   overflow: hidden;
+   overflow-y: hidden;
+}
 
 
 
@@ -656,6 +724,7 @@ background-color:#6BB955 !important;
 
 ::-webkit-scrollbar {
   display: none;
+  scroll-behavior: none;
 }
 
 /* Hide scrollbar for IE, Edge and Firefox */
