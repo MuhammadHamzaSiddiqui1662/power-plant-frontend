@@ -112,7 +112,7 @@
   .message-container {
     /* margin-top: 20px;
     padding: 48px 0 !important; */
-    height: 48vh;
+    height: 360px;
     /* Set height as per your design */
     overflow-y: scroll;
     /* Enable vertical scrolling */
@@ -211,7 +211,7 @@
   .message-container {
     /* margin-top: 20px;
     padding: 48px 0 !important; */
-    height: 40vh;
+    height: 360px;
     /* Set height as per your design */
     overflow-y: scroll;
     /* Enable vertical scrolling */

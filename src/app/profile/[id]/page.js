@@ -48,7 +48,7 @@ export default function ViewProfile(props) {
       const { data: createChatgResponse, error } = await createChat(chat);
       if (error) return setError(error.message);
       console.log(createChatgResponse);
-      router.replace(`/chat?userType=${loginUserType}`);
+      router.replace(`/chat`);
 
     } catch (error) {
       console.log(`error --> ${error}`);
