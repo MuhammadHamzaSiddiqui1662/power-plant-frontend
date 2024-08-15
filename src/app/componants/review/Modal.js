@@ -116,7 +116,7 @@ export default function ReviewModal({ visible, setVisible, brokerId, userType, c
 
         if (closeChatResponse) {
           handleCancel();
-          router.reload('/chat');
+          router.reload(`/chat?userType=${userType}`);
         }
       }
     } catch (error) {

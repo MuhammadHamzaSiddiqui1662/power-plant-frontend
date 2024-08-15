@@ -17,9 +17,9 @@ export const chatApi = createApi({
   }),
   endpoints: (build) => ({
     chats: build.mutation({
-      query() {
+      query(userType) {
         return {
-          url: `/`,
+          url: `/?userType=${userType}`,
           method: "GET",
         };
       }

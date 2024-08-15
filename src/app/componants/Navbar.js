@@ -8,6 +8,7 @@ import MainMenu from "./MainMenu";
 import { User, Bell, MessageSquare } from "react-feather";
 import { Avatar } from "@mui/material";
 import { useSelector } from "react-redux";
+import { UserType } from "../../types/user";
 
 export default function Navbar(props) {
   const { navClass, topnavClass } = props;
@@ -15,6 +16,7 @@ export default function Navbar(props) {
   const [topNavbar, setTopNavBar] = useState(false);
   const [open, setOpen] = useState(false);
   const { accessToken } = useSelector((state) => state.auth);
+  const userType = useSelector((state) => state.auth.userType);
 
   const [mainMenuAnchorEl, setMainMenuAnchorEl] = useState(null);
   const openMainMenu = Boolean(mainMenuAnchorEl);
@@ -226,7 +228,7 @@ export default function Navbar(props) {
             {accessToken && (
               <li className="inline mb-0 me-2">
                 <Link
-                  href="/chat"
+                  href={`/chat?userType=${userType}`}
                   className="btn btn-icon bg-customGreen border-customGreen dark:border-green-600 text-white rounded-full"
                 >
                   <MessageSquare className="h-4 w-4 stroke-[3]"></MessageSquare>
