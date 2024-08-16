@@ -43,7 +43,6 @@ export default function List() {
   });
   const [filterQuery, setFilterQuery] = useState("");
   const { data } = useGetAllQuery(filterQuery);
-  const [isAgreedOnTerms, setIsAgreedOnTerms] = useState(false);
 
   const handleInputChange = (event) => {
     console.log("input change", event);
@@ -184,11 +183,7 @@ export default function List() {
                     className="btn bg-green-600 hover:bg-green-700 border-green-600 hover:border-green-700 text-white searchbtn submit-btn w-full !h-12 rounded"
                     value="Search"
                     onClick={handleSearch}
-                    style={
-                      isAgreedOnTerms
-                        ? { cursor: "pointer" }
-                        : { cursor: "pointer" }
-                    }
+                    style={{ cursor: "pointer" }}
                   />
                 </div>
               </div>
