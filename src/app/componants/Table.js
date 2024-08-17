@@ -8,6 +8,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import Link from "next/link";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -42,47 +43,42 @@ const StyledTableContainer = styled(TableContainer)({
   boxShadow: "none",
   borderRadius: "15px 15px 0px 0px",
 });
-function GeneralTable({ columns, rows }) {
+function GeneralTable({ rows }) {
   return (
     <StyledTableContainer component={Paper}>
       <Table aria-label="customized table">
         <TableHead>
           <TableRow>
-            {columns.map((column) => (
-              <StyledTableCell
-                size="small"
-                key={column.id}
-                align={column.align || "left"}
-              >
-                {column.label}
-              </StyledTableCell>
-            ))}
+            <StyledTableCell size="small" align={"center"}>
+              Brokers
+            </StyledTableCell>
+            <StyledTableCell size="small" align={"center"}>
+              IPs
+            </StyledTableCell>
+            <StyledTableCell size="small" align={"center"}>
+              View
+            </StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row, rowIndex) => (
             <StyledTableRow key={rowIndex}>
-              {columns.map((column, colIndex) => (
-                <StyledTableCell
-                  key={column.id}
-                  align={column.align || "left"}
-                  style={{ width: column.width }}
-                  className={
-                    colIndex === columns.length - 1 ? "last-column" : ""
-                  }
-                >
-                  {colIndex === columns.length - 1 ? (
-                    <a
-                      href={row[column.linking]}
-                      style={{ textDecoration: "none", color: "inherit" }}
-                    >
-                      {row[column.id]}
-                    </a>
-                  ) : (
-                    row[column.id]
-                  )}
-                </StyledTableCell>
-              ))}
+              <StyledTableCell align={"center"} style={{ width: "20%" }}>
+                {row.name}
+              </StyledTableCell>
+              <StyledTableCell align={"center"} style={{ width: "60%" }}>
+                {row.ip}
+              </StyledTableCell>
+              <StyledTableCell align={"center"} style={{ width: "20%" }}>
+                {row.id && (
+                  <Link
+                    href={`/profile/${row.id}?userType=2`}
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    Manage
+                  </Link>
+                )}
+              </StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
