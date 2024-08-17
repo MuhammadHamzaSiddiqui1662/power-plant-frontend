@@ -49,6 +49,7 @@ export default function ManageIPs() {
                 IpStatus.Published,
                 IpStatus.InActive,
                 IpStatus.AppliedForPatent,
+                IpStatus.Pending,
                 IpStatus.Draft,
               ].map((label, index) => (
                 <Tab

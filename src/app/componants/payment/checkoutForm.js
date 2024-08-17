@@ -98,12 +98,12 @@ export default function CheckoutForm({
             "data",
             JSON.stringify({
               _id: id,
-              status: IpStatus.Published,
+              status: IpStatus.Pending,
             })
           );
           await updateIp(formData);
           ToastMessage({
-            message: "IP published successfully!",
+            message: "IP submited for Approval!",
             type: "success",
           });
           router.push(`/profile`);

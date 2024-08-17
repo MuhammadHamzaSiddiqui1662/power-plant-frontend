@@ -515,11 +515,9 @@ export default function UploadIP() {
             <div className="flex justify-end">
               <button
                 onClick={isPatented ? handlePublish : handlePatent}
-                className={`my-3 text-2xl btn bg-customGreen hover:bg-customGreen text-white rounded-md py-6 w-${
-                  isPatented ? 40 : 60
-                } text-[32px]`}
+                className={`my-3 text-2xl btn bg-customGreen hover:bg-customGreen text-white rounded-md py-6 w-60 text-[32px]`}
               >
-                {isPatented ? "Publish" : "Apply Patent"}
+                {isPatented ? "Apply to Publish" : "Apply Patent"}
               </button>
             </div>
           </Grid>
