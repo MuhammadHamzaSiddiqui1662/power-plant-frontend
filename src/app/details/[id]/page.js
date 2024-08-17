@@ -10,6 +10,8 @@ import { useGetIpQuery } from "../../../services/ip/ip";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { useCreateChatMutation } from "../../../services/chat/chat";
+import { getChatObject } from "../../../utils";
+import { UserType } from "../../../types/user";
 const Navbar = dynamic(() => import("../../componants/Navbar"));
 const Switcher = dynamic(() => import("../../componants/Switcher"));
 const Footer = dynamic(() => import("../../componants/Footer"));
@@ -70,33 +72,17 @@ export default function PropertiesDetail(props) {
     setValue(newValue);
   };
 
-  const getChatObject = (chat, _id, _type) => {
-    if (_type == 0) {
-      chat.innovator = _id;
-    }
-    else if (_type == 1) {
-      chat.investor = _id;
-    }
-    else if (_type == 2) {
-      chat.broker = _id;
-    }
-    return chat;
-  }
-
   const handleContact = async () => {
-    try{
-      let chat = {}
-      let innovatorUserType=1;
-      getChatObject(chat, ipDetails.userId._id, innovatorUserType);
-      getChatObject(chat, user._id, userType)
+    try {
+      let chat = {};
+      getChatObject(chat, ipDetails.userId._id, UserType.Innovator);
+      getChatObject(chat, user._id, userType);
 
       const { data: createChatgResponse, error } = await createChat(chat);
       if (error) return setError(error.message);
       console.log(createChatgResponse);
-      router.replace(`/chat`);
-
-    }catch(error){
-      console.log(error)
+    } catch (error) {
+      console.log(error);
     }
   };
 

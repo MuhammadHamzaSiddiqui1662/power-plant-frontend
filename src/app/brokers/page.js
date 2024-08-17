@@ -12,6 +12,7 @@ import { Grid } from "@mui/material";
 import { useGetBrokersQuery } from "../../services/user/user";
 import { FormControl, OutlinedInput } from "@mui/material";
 import { useGetAllQuery, useGetIpQuery } from "../../services/ip/ip";
+import ButtonContained from "../../components/ButtonContained/ButtonContained";
 
 const calculateRating = (reviews) =>
   reviews.reduce(
@@ -78,7 +79,8 @@ export default function Welcome() {
     }));
   };
 
-  const handleSearch = () => {
+  const handleSearch = (e) => {
+    e.preventDefault();
     console.log(filterQuery);
     setFilterQuery(generateFilterQuery(filters));
   };
@@ -98,112 +100,32 @@ export default function Welcome() {
 
       <div className="container relative z-1">
         <div className="grid grid-cols-1">
-          <form className="py-6 lg:px-24 bg-white dark:bg-slate-900">
+          <form
+            className="py-6 lg:px-24 bg-white dark:bg-slate-900"
+            onSubmit={handleSearch}
+          >
             <div className="registration-form text-dark text-start pb-8">
-              <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 lg:gap-0 gap-6">
-                <div>
-                  <label className="form-label text-slate-900 dark:text-white font-medium">
-                    Search : <span className="text-red-600">*</span>
-                  </label>
-                  <div className="filter-search-form relative filter-border mt-2 px-2 py-3">
-                    {/* <Unicons.UilSearch className="icons" width={18} />
-                    <input
-                      name="name"
-                      type="text"
-                      id="job-keyword"
-                      className="form-input filter-input-box bg-gray-50 dark:bg-slate-800 border-0"
-                      placeholder="Search your Keywords"
-                    /> */}
-                    <FormControl size="small" fullWidth={true}>
-                      <OutlinedInput
-                        placeholder="Search your Keywords"
-                        name="search"
-                        value={filters.search}
-                        onChange={handleInputChange}
-                      />
-                    </FormControl>
-                  </div>
-                </div>
-
-                <div>
+              <div className="flex lg:gap-0 gap-6">
+                <div className="flex-auto w-100">
                   <label
                     htmlFor="buy-properties"
                     className="form-label text-slate-900 dark:text-white font-medium"
                   >
                     Select Categories:
                   </label>
-                  <div className="filter-search-form relative filter-border mt-2 px-2 py-3">
+                  <div className="filter-search-form relative mt-2 px-2 py-3 flex gap-2">
                     <CategorySelect
                       categories={filters.categories}
                       onChange={handleCategoryChange}
                       fullWidth={true}
                     />
+                    <ButtonContained type="submit" size="small">
+                      Search
+                    </ButtonContained>
                   </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="buy-min-price"
-                    className="form-label text-slate-900 dark:text-white font-medium"
-                  >
-                    Min Price :
-                  </label>
-                  <div className="filter-search-form relative filter-border mt-2 px-2 py-3">
-                    {/* <Unicons.UilUsdCircle className="icons" width={18} />
-                    <Select
-                      className="form-input filter-input-box bg-gray-50 dark:bg-slate-800 border-0"
-                      options={minPrice}
-                    /> */}
-                    <FormControl size="small" fullWidth>
-                      <OutlinedInput
-                        type="number"
-                        placeholder="Min Price"
-                        name="min"
-                        value={filters.min}
-                        onChange={handleInputChange}
-                      />
-                    </FormControl>
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="buy-max-price"
-                    className="form-label text-slate-900 dark:text-white font-medium"
-                  >
-                    Max Price :
-                  </label>
-                  <div className="filter-search-form relative mt-2 px-2 py-3">
-                    {/* <Unicons.UilUsdCircle className="icons" width={18} />
-                    <Select
-                      className="form-input filter-input-box bg-gray-50 dark:bg-slate-800 border-0"
-                      options={maxPrice}
-                    /> */}
-                    <FormControl size="small" fullWidth>
-                      <OutlinedInput
-                        type="number"
-                        placeholder="Max Price"
-                        name="max"
-                        value={filters.max}
-                        onChange={handleInputChange}
-                      />
-                    </FormControl>
-                  </div>
-                </div>
-
-                <div className="lg:mt-6">
-                  <input
-                    id="search-buy"
-                    name="search"
-                    className="btn bg-green-600 hover:bg-green-700 border-green-600 hover:border-green-700 text-white searchbtn submit-btn w-full !h-12 rounded"
-                    value="Search"
-                    onClick={handleSearch}
-                  />
                 </div>
               </div>
             </div>
-
-            <hr />
           </form>
         </div>
       </div>

@@ -21,6 +21,9 @@ import {
   useUpdateUserMutation,
 } from "../../services/user/user";
 
+const transformIntoRowObjects = (interests) =>
+  interests.map((interest) => ({ interest }));
+
 const initialData = {
   name: "",
   email: "",
@@ -286,7 +289,10 @@ export default function Profile() {
                 <p className="text-2xl text-customDarkBlue mb-3">
                   Upload Certificates (Upto 6 certificates per interest):
                 </p>
-                <ManageCertificates columns={columns2} rows={rows2} />
+                <ManageCertificates
+                  columns={columns2}
+                  rows={transformIntoRowObjects(data.interests)}
+                />
               </div>
             </Grid>
           )}

@@ -5,12 +5,14 @@ import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
 import { useRouter } from "next/navigation";
 import * as React from "react";
-import { useDispatch } from "react-redux";
-import { logout } from "../../lib/features/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, setUserType } from "../../lib/features/authSlice";
+import { UserType } from "../../types/user";
 
 const MainMenu = ({ onClose, ...props }) => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const userType = useSelector((state) => state.auth.userType);
   return (
     <Menu
       anchorOrigin={{
@@ -40,11 +42,38 @@ const MainMenu = ({ onClose, ...props }) => {
             onClose();
           }}
         >
-          {/* <ListItemIcon>
-            <Box component={"img"} src={SupportIcon} />
-          </ListItemIcon> */}
           <ListItemText>My Profile</ListItemText>
         </MenuItem>
+        {userType !== UserType.Innvestor && (
+          <MenuItem
+            onClick={async () => {
+              await dispatch(setUserType(UserType.Innvestor));
+              onClose();
+            }}
+          >
+            <ListItemText>Switch To Innvestor</ListItemText>
+          </MenuItem>
+        )}
+        {userType !== UserType.Broker && (
+          <MenuItem
+            onClick={async () => {
+              await dispatch(setUserType(UserType.Broker));
+              onClose();
+            }}
+          >
+            <ListItemText>Switch To Broker</ListItemText>
+          </MenuItem>
+        )}
+        {userType !== UserType.Innovator && (
+          <MenuItem
+            onClick={async () => {
+              await dispatch(setUserType(UserType.Innovator));
+              onClose();
+            }}
+          >
+            <ListItemText>Switch To Innovator</ListItemText>
+          </MenuItem>
+        )}
         <MenuItem
           onClick={async () => {
             await dispatch(logout());
@@ -52,9 +81,6 @@ const MainMenu = ({ onClose, ...props }) => {
             onClose();
           }}
         >
-          {/* <ListItemIcon>
-            <Box component={"img"} src={LockIcon} />
-          </ListItemIcon> */}
           <ListItemText>Logout</ListItemText>
         </MenuItem>
       </MenuList>

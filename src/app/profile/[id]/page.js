@@ -15,6 +15,7 @@ import { useSearchParams } from "next/navigation";
 import { useGetAllQuery } from "../../../services/ip/ip";
 import { useCreateChatMutation } from "../../../services/chat/chat";
 import { useRouter } from "next/navigation";
+import { useGetMyBrokersQuery } from "../../../services/hiring/hiring";
 
 export default function ViewProfile(props) {
   const loginUser = useSelector((state) => state.auth.user);
@@ -24,36 +25,36 @@ export default function ViewProfile(props) {
     useSelector((state) => state.auth.userType);
   const { data: user } = useGetUserQuery(props?.params?.id);
   const { data: ips } = useGetAllQuery(`?userId=${props?.params?.id}`);
+  const { data: myBrokers } = useGetMyBrokersQuery();
   const [createChat, { isLoading: isCreating }] = useCreateChatMutation();
   const router = useRouter();
 
   const getChatObject = (chat, _user, _type) => {
     if (_type == 0) {
       chat.innovator = _user._id;
-    }
-    else if (_type == 1) {
+    } else if (_type == 1) {
       chat.investor = _user._id;
-    }
-    else if (_type == 2) {
+    } else if (_type == 2) {
       chat.broker = _user._id;
     }
     return chat;
-  }
+  };
 
-  const CreateChatHandler = async () => {
+  const createChatHandler = async () => {
     try {
-      let chat = {}
+      let chat = {};
       getChatObject(chat, loginUser, loginUserType);
-      getChatObject(chat, user, userType)
+      getChatObject(chat, user, userType);
       const { data: createChatgResponse, error } = await createChat(chat);
       if (error) return setError(error.message);
       console.log(createChatgResponse);
       router.replace(`/chat`);
-
     } catch (error) {
       console.log(`error --> ${error}`);
     }
   };
+
+  const unHireHandler = async () => {};
 
   return (
     <>
@@ -66,10 +67,10 @@ export default function ViewProfile(props) {
                 {userType == 0
                   ? "Innovator"
                   : userType == 1
-                    ? "Investor"
-                    : userType === 2
-                      ? "Broker"
-                      : ""}{" "}
+                  ? "Investor"
+                  : userType === 2
+                  ? "Broker"
+                  : ""}{" "}
                 Profile
               </p>
             </div>
@@ -195,10 +196,23 @@ export default function ViewProfile(props) {
                     <button
                       type="submit"
                       className="my-3 text-2xl btn bg-customGreen hover:bg-customGreen text-white rounded-md py-6 w-60 text-[32px]"
-                      onClick={CreateChatHandler}
-                      
+                      onClick={
+                        myBrokers &&
+                        myBrokers.length > 0 &&
+                        myBrokers.some(
+                          ({ broker }) => broker._id === props?.params?.id
+                        )
+                          ? unHireHandler
+                          : createChatHandler
+                      }
                     >
-                      Hire / Contact
+                      {myBrokers &&
+                      myBrokers.length > 0 &&
+                      myBrokers.some(
+                        ({ broker }) => broker._id === props?.params?.id
+                      )
+                        ? "Un Hire"
+                        : "Hire / Contact"}
                     </button>
                   </div>
                 </Grid>
