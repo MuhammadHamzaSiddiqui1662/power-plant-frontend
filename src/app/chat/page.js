@@ -354,7 +354,7 @@ export default function Chat() {
                   <Card key={chat._id} className={`m-40 chat-card ${chatClickedIndex === chat._id ? "active" : ""}`} onClick={() => chatClickHandler(chat._id)}>
                     <Row className="pd-12">
                       <Col xs={3} sm={3} md={3} lg={5} xl={2} xxl={1} >
-                        {chat.receiver.online === true ?
+                        {chat.receiver != null && chat.receiver.online === true ?
                           <Badge status="success" dot offset={[-5, 45]} className="pd-5">
                             <Avatar src={chat.receiver.imageUrl} shape="circle" className="h-5x w-5x"></Avatar>
                           </Badge> :
@@ -611,7 +611,7 @@ export default function Chat() {
                     <Card key={chat._id} className={`m-40 chat-card ${chatClickedIndex === chat._id ? "active" : ""}`} onClick={() => chatClickHandler(chat._id)}>
                       <Row className="pd-12">
                         <Col xs={3} sm={3} md={3} lg={5} xl={2} xxl={1} >
-                          {chat.receiver.online === true ?
+                          {chat.receiver != null && chat.receiver.online === true ?
                             <Badge status="success" dot offset={[-5, 45]} className="pd-5">
                               <Avatar src={chat.receiver.imageUrl} shape="circle" className="h-5x w-5x"></Avatar>
                             </Badge> :
