@@ -58,6 +58,7 @@ const MainMenu = ({ onClose, ...props }) => {
           <MenuItem
             onClick={async () => {
               await dispatch(setUserType(UserType.Broker));
+              router.push("/investors");
               onClose();
             }}
           >
