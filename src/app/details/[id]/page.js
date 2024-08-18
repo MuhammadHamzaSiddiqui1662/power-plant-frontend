@@ -63,6 +63,16 @@ export default function PropertiesDetail(props) {
         : 0,
     [ipDetails]
   );
+  const sections = useMemo(
+    () =>
+      ipDetails && ipDetails.sections
+        ? [
+            { title: "Abstract", content: ipDetails.abstract },
+            ...ipDetails.sections,
+          ]
+        : [],
+    [ipDetails]
+  );
   const [createChat, { isLoading: isCreating }] = useCreateChatMutation();
 
   console.log("ipDetails", ipDetails);
@@ -135,26 +145,39 @@ export default function PropertiesDetail(props) {
                         />
                       </li>
                     ))}
+                  {ipDetails.patentNumber ? (
+                    <>
+                      <li className="flex items-center mt-2 mr-4">
+                        <Chip
+                          variant="outlined"
+                          className=" xs:text-[24px] lg:text-[16px] text-customGrayColor border"
+                          label={`Patent# ${ipDetails.patentNumber}`}
+                        />
+                      </li>
 
-                  <li className="flex items-center mt-2 mr-4">
-                    <Chip
-                      variant="outlined"
-                      className=" xs:text-[24px] lg:text-[16px] text-customGrayColor border"
-                      label={`Patent# ${ipDetails.patentNumber}`}
-                    />
-                  </li>
-
-                  <li className="flex items-center mt-2 mr-4">
-                    <Chip
-                      variant="outlined"
-                      className=" xs:text-[24px] lg:text-[16px] text-customGrayColor border"
-                      label={`Patent# ${ipDetails.publishedDate}`}
-                    />
-                  </li>
+                      <li className="flex items-center mt-2 mr-4">
+                        <Chip
+                          variant="outlined"
+                          className=" xs:text-[24px] lg:text-[16px] text-customGrayColor border"
+                          label={`Published On ${ipDetails.publishedDate}`}
+                        />
+                      </li>
+                    </>
+                  ) : (
+                    <li className="flex items-center mt-2 mr-4">
+                      <Chip
+                        variant="outlined"
+                        className=" xs:text-[24px] lg:text-[16px] text-customGrayColor border"
+                        label={`Not Patented`}
+                      />
+                    </li>
+                  )}
                 </ul>
 
                 <div className="mt-6">
-                  <p className="text-customGrayColor ">{ipDetails.abstract}</p>
+                  <p className="text-customGrayColor ">
+                    {ipDetails.description}
+                  </p>
                 </div>
               </div>
 
@@ -181,9 +204,10 @@ export default function PropertiesDetail(props) {
                         <div className="flex justify-between items-center mt-2">
                           <Rating
                             name="read-only"
-                            value={4.5}
+                            value={innovatorsRating}
                             readOnly
                             size="large"
+                            precision={0.1}
                           />
                         </div>
                       ) : (
@@ -192,14 +216,6 @@ export default function PropertiesDetail(props) {
                         </p>
                       )}
                     </div>
-                  </div>
-                  <div className="mt-4 mb-8 sm:hidden block">
-                    <Link
-                      href="/payment"
-                      className="mb-4 btn border border-customDarkBlue text-customDarkBlue hover:text-white hover:bg-green-600 hover:border-green-500 rounded-md mt-auto transition duration-300"
-                    >
-                      Buy Now
-                    </Link>
                   </div>
                 </div>
               </div>
@@ -261,9 +277,8 @@ export default function PropertiesDetail(props) {
                     aria-label="basic tabs example"
                     variant="fullWidth"
                   >
-                    {ipDetails.sections &&
-                      ipDetails.sections.length &&
-                      ipDetails.sections.map((section, index) => {
+                    {sections.length &&
+                      sections.map((section, index) => {
                         return (
                           <Tab
                             key={index}
@@ -278,10 +293,8 @@ export default function PropertiesDetail(props) {
                       })}
                   </Tabs>
                 </Box>
-
-                {ipDetails.sections &&
-                  ipDetails.sections.length &&
-                  ipDetails.sections.map((section, index) => {
+                {sections.length &&
+                  sections.map((section, index) => {
                     return (
                       <CustomTabPanel value={value} index={index}>
                         <p className="mb-5">{section.content}</p>
@@ -289,28 +302,32 @@ export default function PropertiesDetail(props) {
                     );
                   })}
               </Box>
-              <div className="mt-4 mb-8 flex justify-center">
-                <button
-                  type="submit"
-                  className={`mb-4 btn bg-customDarkBlue hover:bg-customDarkBlue border border-customDarkBlue border-customDarkBlue-500 text-white rounded-md w-60 text-[32px] transition duration-300`}
-                  onClick={handleContact}
-                >
-                  Contact
-                </button>
-              </div>
-              {userType !== 2 && (
+              {ipDetails.userId !== user._id && (
                 <>
-                  <h3 className="text-3xl text-center">
-                    Not an expert, hire a broker instead.
-                  </h3>
                   <div className="mt-4 mb-8 flex justify-center">
-                    <Link
-                      href={`/brokers`}
-                      className="mb-4 btn border bg-customGreen text-white rounded-md mt-auto transition duration-300 w-60"
+                    <button
+                      type="submit"
+                      className={`mb-4 btn bg-customDarkBlue hover:bg-customDarkBlue border border-customDarkBlue border-customDarkBlue-500 text-white rounded-md w-60 text-[32px] transition duration-300`}
+                      onClick={handleContact}
                     >
-                      Hire a Broker
-                    </Link>
+                      Contact
+                    </button>
                   </div>
+                  {userType !== 2 && (
+                    <>
+                      <h3 className="text-3xl text-center">
+                        Not an expert, hire a broker instead.
+                      </h3>
+                      <div className="mt-4 mb-8 flex justify-center">
+                        <Link
+                          href={`/brokers`}
+                          className="mb-4 btn border bg-customGreen text-white rounded-md mt-auto transition duration-300 w-60"
+                        >
+                          Hire a Broker
+                        </Link>
+                      </div>
+                    </>
+                  )}
                 </>
               )}
             </div>
