@@ -1,35 +1,34 @@
 /* Mobile Screen (Both Small Medium Size) */
-@media  (min-width:480px) and (max-width: 768px)  {
+@media (min-width: 480px) and (max-width: 768px) {
   .f-32 {
     font-size: 24px;
   }
 
-  .chat-card{
+  .chat-card {
     max-width: 100% !important;
-    border:none !important;
+    border: 1px solid transparent !important;
+    cursor: pointer;
   }
 
   .message-container {
     /* margin-top: 20px; */
     /* padding: 48px 0 !important; */
-    height: 360px;
+    height: 100%;
     /* Set height as per your design */
     overflow-y: scroll;
     /* Enable vertical scrolling */
     /* padding: 10px; */
   }
-  
 
   .chat-container {
     margin-top: 10px;
     height: 520px;
-    width: 320px;
     overflow-y: scroll;
   }
   .f-16 {
     font-size: 12px;
-  }  
-  .f-12{
+  }
+  .f-12 {
     font-size: 10px;
   }
 
@@ -40,7 +39,7 @@
   .h-4x {
     height: 35px !important;
   }
-  
+
   .w-5x {
     width: 40px !important;
   }
@@ -50,19 +49,19 @@
   }
 
   .pd-0-15 {
-    padding: 0 25px !important
+    padding: 0 25px !important;
   }
 
   .close-deal-btn {
     padding: 16px 30px !important;
-    border-radius: 10px !important
+    border-radius: 10px !important;
   }
 
   .f-42 {
     font-size: 24px;
   }
 
-  .f-9{
+  .f-9 {
     font-size: 11px;
   }
   .f-18 {
@@ -86,49 +85,49 @@
     border: none !important;
     box-shadow: none !important;
   }
-  
-.input-message {
-  border-color: white !important;
-  padding: 15px 10px !important;
-  max-width: 85% !important;
-  height:50px !important
-}
-.message-box {
-  width: 100% !important;
-  border: 1px solid #6BB955 !important;
-  border-radius: 8px !important;
-}
- }
 
- /* Tablets (Potrait Mode) */
- @media  (min-width:769px) and (max-width: 1024px)  {
+  .input-message {
+    border-color: white !important;
+    padding: 15px 10px !important;
+    max-width: 85% !important;
+    height: 50px !important;
+  }
+  .message-box {
+    width: 100% !important;
+    border: 1px solid #6bb955 !important;
+    border-radius: 8px !important;
+  }
+}
+
+/* Tablets (Potrait Mode) */
+@media (min-width: 769px) and (max-width: 1024px) {
   .f-32 {
     font-size: 24px;
   }
-  .chat-card{
+  .chat-card {
     max-width: 100% !important;
-    border:none !important;
+    border: 1px solid transparent !important;
+    cursor: pointer;
   }
   .message-container {
     /* margin-top: 20px;
     padding: 48px 0 !important; */
-    height: 360px;
+    height: 100%;
     /* Set height as per your design */
     overflow-y: scroll;
     /* Enable vertical scrolling */
     /* padding: 10px; */
   }
-  
+
   .chat-container {
     margin-top: 5px;
     height: 520px;
-    width: 210px;
     overflow-y: scroll;
   }
   .f-16 {
     font-size: 12px;
-  }  
-  .f-12{
+  }
+  .f-12 {
     font-size: 10px;
   }
 
@@ -139,7 +138,7 @@
   .h-4x {
     height: 35px !important;
   }
-  
+
   .w-5x {
     width: 40px !important;
   }
@@ -149,19 +148,19 @@
   }
 
   .pd-0-15 {
-    padding: 0 25px !important
+    padding: 0 25px !important;
   }
 
   .close-deal-btn {
     padding: 16px 30px !important;
-    border-radius: 10px !important
+    border-radius: 10px !important;
   }
 
   .f-42 {
     font-size: 22px;
   }
 
-  .f-9{
+  .f-9 {
     font-size: 9px;
   }
   .f-18 {
@@ -185,50 +184,49 @@
     border: none !important;
     box-shadow: none !important;
   }
-  
-.input-message {
-  border-color: white !important;
-  padding: 15px 10px !important;
-  max-width: 85% !important;
-  height:50px !important
-}
-.message-box {
-  width: 100% !important;
-  border: 1px solid #6BB955 !important;
-  border-radius: 8px !important;
-}
- }
 
- /* Tablets (landscape Mode) */
- @media  (min-width:1025px) and (max-width: 1366px)  {
+  .input-message {
+    border-color: white !important;
+    padding: 15px 10px !important;
+    max-width: 85% !important;
+    height: 50px !important;
+  }
+  .message-box {
+    width: 100% !important;
+    border: 1px solid #6bb955 !important;
+    border-radius: 8px !important;
+  }
+}
+
+/* Tablets (landscape Mode) */
+@media (min-width: 1025px) and (max-width: 1366px) {
   .f-32 {
     font-size: 24px;
   }
-  .chat-card{
+  .chat-card {
     max-width: 100% !important;
-    border:none !important;
+    border: 1px solid transparent !important;
+    cursor: pointer;
   }
   .message-container {
     /* margin-top: 20px;
     padding: 48px 0 !important; */
-    height: 360px;
+    height: 100%;
     /* Set height as per your design */
     overflow-y: scroll;
     /* Enable vertical scrolling */
     /* padding: 10px; */
   }
-  
 
   .chat-container {
     margin-top: 10px;
-    height: 320px;
-    width: 290px;
+    height: 100%;
     overflow-y: scroll;
   }
   .f-16 {
     font-size: 12px;
   }
-  .f-12{
+  .f-12 {
     font-size: 10px;
   }
 
@@ -239,7 +237,7 @@
   .h-4x {
     height: 35px !important;
   }
-  
+
   .w-5x {
     width: 40px !important;
   }
@@ -249,19 +247,19 @@
   }
 
   .pd-0-15 {
-    padding: 0 25px !important
+    padding: 0 25px !important;
   }
 
   .close-deal-btn {
     padding: 16px 30px !important;
-    border-radius: 10px !important
+    border-radius: 10px !important;
   }
 
   .f-42 {
     font-size: 22px;
   }
 
-  .f-9{
+  .f-9 {
     font-size: 9px;
   }
   .f-18 {
@@ -285,47 +283,46 @@
     border: none !important;
     box-shadow: none !important;
   }
-  
-.input-message {
-  border-color: white !important;
-  padding: 15px 10px !important;
-  max-width: 95% !important;
-  width: 95% !important;
-  height:50px !important
-}
-.message-box {
-  width: 100% !important;
-  border: 1px solid #6BB955 !important;
-  border-radius: 8px !important;
-}
- }
 
- /* Desktops (Standard) */
- @media  (min-width:1367px) and (max-width: 1920px)  {
+  .input-message {
+    border-color: white !important;
+    padding: 15px 10px !important;
+    max-width: 95% !important;
+    width: 95% !important;
+    height: 50px !important;
+  }
+  .message-box {
+    width: 100% !important;
+    border: 1px solid #6bb955 !important;
+    border-radius: 8px !important;
+  }
+}
+
+/* Desktops (Standard) */
+@media (min-width: 1367px) and (max-width: 1920px) {
   .f-32 {
     font-size: 32px;
   }
 
-  .chat-card{
+  .chat-card {
     max-width: 98% !important;
-    border:none !important;
+    border: 1px solid transparent !important;
+    cursor: pointer;
   }
 
   .message-container {
     /* margin-top: 20px;
     padding: 48px 0 !important; */
-    height: 360px;
+    height: 100%;
     /* Set height as per your design */
     overflow-y: scroll;
     /* Enable vertical scrolling */
     /* padding: 10px; */
   }
-  
 
   .chat-container {
     margin-top: 10px;
     height: 400px;
-    width: 310px;
     overflow-y: scroll;
   }
 
@@ -340,28 +337,28 @@
   .h-4x {
     height: 40px !important;
   }
-  
+
   .w-5x {
     width: 50px !important;
   }
-  
+
   .w-4x {
     width: 40px !important;
   }
 
   .pd-0-15 {
-    padding: 0 15px !important
+    padding: 0 15px !important;
   }
   .close-deal-btn {
     padding: 22px 45px !important;
-    border-radius: 10px !important
+    border-radius: 10px !important;
   }
   .f-42 {
     font-size: 32px;
   }
-.f-9{
-  font-size: 10px;
-}
+  .f-9 {
+    font-size: 10px;
+  }
 
   .f-18 {
     font-size: 18px;
@@ -384,54 +381,53 @@
     border: none !important;
     box-shadow: none !important;
   }
-  
-.input-message {
-  border-color: white !important;
-  padding: 15px 10px !important;
-  max-width: 95% !important;
-  width: 95% !important;
-  height:50px !important
-}
-.message-box {
-  width: 100% !important;
-  border: 1px solid #6BB955 !important;
-  border-radius: 8px !important;
-}
- }
 
+  .input-message {
+    border-color: white !important;
+    padding: 15px 10px !important;
+    max-width: 95% !important;
+    width: 95% !important;
+    height: 50px !important;
+  }
+  .message-box {
+    width: 100% !important;
+    border: 1px solid #6bb955 !important;
+    border-radius: 8px !important;
+  }
+}
 
- /* Desktops (Extra Large) */
- @media  (min-width:1921px)  {
+/* Desktops (Extra Large) */
+@media (min-width: 1921px) {
   .f-32 {
     font-size: 32px;
   }
 
-  .chat-card{
+  .chat-card {
     max-width: 95% !important;
-    border:none !important;
+    border: 1px solid transparent !important;
+    cursor: pointer;
   }
 
   .message-container {
     /* margin-top: 20px;
     padding: 48px 0 !important; */
-    height: 360px;
+    height: 100%;
     /* Set height as per your design */
     overflow-y: scroll;
     /* Enable vertical scrolling */
     /* padding: 10px; */
   }
-  
+
   .chat-container {
     margin-top: 10px;
     height: 520px;
-    width: 590px;
     overflow-y: scroll;
   }
 
   .f-16 {
     font-size: 16px;
   }
-  
+
   .h-5x {
     height: 50px !important;
   }
@@ -439,21 +435,21 @@
   .h-4x {
     height: 40px !important;
   }
-  
+
   .w-5x {
     width: 50px !important;
   }
-  
+
   .w-4x {
     width: 40px !important;
   }
 
   .pd-0-15 {
-    padding: 0 15px !important
+    padding: 0 15px !important;
   }
   .close-deal-btn {
     padding: 22px 45px !important;
-    border-radius: 10px !important
+    border-radius: 10px !important;
   }
   .f-42 {
     font-size: 42px;
@@ -480,26 +476,25 @@
     box-shadow: none !important;
   }
 
-  
-.input-message {
-  border-color: white !important;
-  padding: 15px 10px !important;
-  max-width: 95% !important;
-  width: 95% !important;
-  height:50px !important
+  .input-message {
+    border-color: white !important;
+    padding: 15px 10px !important;
+    max-width: 95% !important;
+    width: 95% !important;
+    height: 50px !important;
+  }
+  .message-box {
+    width: 100% !important;
+    border: 1px solid #6bb955 !important;
+    border-radius: 8px !important;
+  }
 }
-.message-box {
-  width: 100% !important;
-  border: 1px solid #6BB955 !important;
-  border-radius: 8px !important;
+
+.chat-button {
+  background-color: #6bb955 !important;
 }
- }
 
- .chat-button{
-background-color:#6BB955 !important;
- }
-
- .h-6xx {
+.h-6xx {
   height: 580px !important;
 }
 
@@ -507,12 +502,9 @@ background-color:#6BB955 !important;
   height: 580px !important;
 }
 
-
 .f-14 {
   font-size: 14px;
 }
-
-
 
 .b-6xx {
   font-weight: 600;
@@ -538,8 +530,6 @@ background-color:#6BB955 !important;
   padding: 5px;
 }
 
-
-
 .m-40 {
   margin: 20px 0 !important;
 }
@@ -551,7 +541,7 @@ background-color:#6BB955 !important;
 .send-btn {
   padding: 8px 8px !important;
   margin: 10px 10px 10px 15px !important;
-  background-color: #6BB955 !important;
+  background-color: #6bb955 !important;
   border-radius: 10px !important;
 }
 
@@ -563,10 +553,9 @@ background-color:#6BB955 !important;
 .send-btn-image:hover,
 .send-btn-image:active,
 .send-btn-image:focus {
-  border-color: #6BB955 !important;
+  border-color: #6bb955 !important;
   outline: none !important;
 }
-
 
 .message {
   margin-bottom: 10px;
@@ -577,7 +566,7 @@ background-color:#6BB955 !important;
 }
 
 .sender {
-  background-color: #6BB955 !important;
+  background-color: #6bb955 !important;
   /* Light color for sender */
 
   align-self: flex-end;
@@ -585,15 +574,12 @@ background-color:#6BB955 !important;
 }
 
 .deal-close {
-  background-color: #6BB955 !important;
+  background-color: #6bb955 !important;
   border-radius: 8px 8px 0 0;
-  border-color: #6BB955 !important;
+  border-color: #6bb955 !important;
   text-align: center !important;
   padding: 15px 0 !important;
 }
-
-
-
 
 .deal-close-btn:hover,
 .deal-close-cancel-btn:hover {
@@ -602,21 +588,18 @@ background-color:#6BB955 !important;
   /* Example hover border color */
 }
 
-
-
 /* .chat-card {
   height:100px !important;
   width: 560px !important;
   border-color: #6BB955 !important;
 } */
 
-
-.chat-card:hover{
-  border: 1px solid #6BB955 !important;
+.chat-card:hover {
+  border: 1px solid #6bb955 !important;
 }
 
-.active{ 
-  border:1px solid #6BB955 !important;
+.active {
+  border: 1px solid #6bb955 !important;
 }
 
 .pin-button {
@@ -638,34 +621,24 @@ background-color:#6BB955 !important;
 .file-pin-image {
   color: white !important;
   height: 20px !important;
-  width: 15px !important
+  width: 15px !important;
 }
 
 .br-right {
   border-right: 1px solid #d9d9d9 !important;
 }
 
-
-
-
-
-
-
-
 .m-0-20 {
   margin: 0 20px !important;
 }
 
-
-
 .receiver {
-  background-color: #FFFFFF;
-  border-color: #6BB955 !important;
+  background-color: #ffffff;
+  border-color: #6bb955 !important;
   /* White for receiver */
   align-self: flex-end;
   text-align: left;
 }
-
 
 .ant-card .ant-card-body {
   padding: 0px 0px !important;
@@ -674,7 +647,6 @@ background-color:#6BB955 !important;
 .pd-24 {
   padding: 24px !important;
 }
-
 
 .pd-18 {
   padding: 8px !important;
@@ -689,41 +661,40 @@ background-color:#6BB955 !important;
 }
 
 .customGreen {
-  background-color: #6BB955;
+  background-color: #6bb955;
 }
 
-
-
 .deal-close {
-  background-color: #6BB955 !important;
+  background-color: #6bb955 !important;
   text-align: center !important;
   padding: 15px 0 !important;
 }
 
 .i-btn {
-  background-color: #6BB955 !important;
+  background-color: #6bb955 !important;
   margin: 8px 60px !important;
 }
 
 .divider {
-  background-color: #8F98A5 !important;
-  height: 1px !important
+  background-color: #8f98a5 !important;
+  height: 1px !important;
 }
-.custom-border{
-  border-color: #8F98A5 !important;
+.custom-border {
+  border-color: #8f98a5 !important;
 }
 .c-white {
   color: white;
 }
 
-.section{
-   max-height: 100vh;
-   scroll-behavior: none;
-   overflow: hidden;
-   overflow-y: hidden;
+.section {
+  height: 100vh;
+  max-height: 100vh;
+  padding-top: 8rem;
+  padding-bottom: 2rem;
+  scroll-behavior: none;
+  overflow: hidden;
+  overflow-y: hidden;
 }
-
-
 
 .text-center {
   text-align: center;
