@@ -51,7 +51,7 @@ export default function BrokerCard({
               className="text-customDarkBlue mt-2"
               style={{ fontSize: "18px", color: "#808b96" }}
             >
-              {interests[0]}
+              {interests && interests[0]}
             </p>
             <Stack spacing={1} marginTop={2}>
               <Rating name="ratings" precision={0.1} value={ratings} readOnly />
