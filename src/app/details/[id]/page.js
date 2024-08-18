@@ -302,34 +302,35 @@ export default function PropertiesDetail(props) {
                     );
                   })}
               </Box>
-              {ipDetails.userId !== user._id && (
-                <>
-                  <div className="mt-4 mb-8 flex justify-center">
-                    <button
-                      type="submit"
-                      className={`mb-4 btn bg-customDarkBlue hover:bg-customDarkBlue border border-customDarkBlue border-customDarkBlue-500 text-white rounded-md w-60 text-[32px] transition duration-300`}
-                      onClick={handleContact}
-                    >
-                      Contact
-                    </button>
-                  </div>
-                  {userType !== 2 && (
-                    <>
-                      <h3 className="text-3xl text-center">
-                        Not an expert, hire a broker instead.
-                      </h3>
-                      <div className="mt-4 mb-8 flex justify-center">
-                        <Link
-                          href={`/brokers`}
-                          className="mb-4 btn border bg-customGreen text-white rounded-md mt-auto transition duration-300 w-60"
-                        >
-                          Hire a Broker
-                        </Link>
-                      </div>
-                    </>
-                  )}
-                </>
-              )}
+              {ipDetails.userId !== user._id &&
+                userType !== UserType.Innovator && (
+                  <>
+                    <div className="mt-4 mb-8 flex justify-center">
+                      <button
+                        type="submit"
+                        className={`mb-4 btn bg-customDarkBlue hover:bg-customDarkBlue border border-customDarkBlue border-customDarkBlue-500 text-white rounded-md w-60 text-[32px] transition duration-300`}
+                        onClick={handleContact}
+                      >
+                        Contact
+                      </button>
+                    </div>
+                    {userType !== 2 && (
+                      <>
+                        <h3 className="text-3xl text-center">
+                          Not an expert, hire a broker instead.
+                        </h3>
+                        <div className="mt-4 mb-8 flex justify-center">
+                          <Link
+                            href={`/brokers`}
+                            className="mb-4 btn border bg-customGreen text-white rounded-md mt-auto transition duration-300 w-60"
+                          >
+                            Hire a Broker
+                          </Link>
+                        </div>
+                      </>
+                    )}
+                  </>
+                )}
             </div>
           </div>
         </section>
