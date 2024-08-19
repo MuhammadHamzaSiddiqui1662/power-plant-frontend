@@ -37,17 +37,18 @@ export default function MyInvestorsPreview() {
               <p className="text-base sm:text-sm md:text-lg lg:text-lg xl:text-2xl 2xl:text-2xl name w-full">
                 {investor.investor.name}
               </p>
-              {investor.investor._id === currentInvestor._id && (
-                <p
-                  className="leading-3 text-[12px] px-2 py-1 border rounded"
-                  style={{
-                    color: "#6BB955",
-                    borderColor: "#6BB955",
-                  }}
-                >
-                  Current
-                </p>
-              )}
+              {currentInvestor &&
+                investor.investor._id === currentInvestor._id && (
+                  <p
+                    className="leading-3 text-[12px] px-2 py-1 border rounded"
+                    style={{
+                      color: "#6BB955",
+                      borderColor: "#6BB955",
+                    }}
+                  >
+                    Current
+                  </p>
+                )}
             </div>
           ))
         ) : (
