@@ -36,6 +36,7 @@ import { useDeleteMessageMutation } from "../../services/message/message";
 import { MessageType } from "../../types/MessageType";
 import { useRouter } from "next/navigation";
 import { Box } from "@mui/material";
+import { BACKEND_SOCKET_URL } from "../../config/constants";
 
 export default function Chat() {
   const messageWindowRef = useRef(null);
@@ -59,7 +60,7 @@ export default function Chat() {
   const [updateChat, { isLoading: isUpdating }] = useUpdateChatMutation();
   const [deleteMessage, { isLoading: isDeleting }] = useDeleteMessageMutation();
 
-  const socket = io("http://localhost:3001");
+  const socket = io(BACKEND_SOCKET_URL);
 
   socket.on("newMessage", (userId, message) => {
     if (user._id == userId || brokerId === userId) {
@@ -255,7 +256,7 @@ export default function Chat() {
 
       if (error) return setError(error.message);
 
-      if (getAllChatsResponse[0]._id) {
+      if (getAllChatsResponse[0]?._id) {
         let recList = extractReceivers(getAllChatsResponse);
         await chatClickHandler(getAllChatsResponse[0]._id);
         setSelectedChat(recList[0]);
