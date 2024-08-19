@@ -156,14 +156,14 @@ export default function Welcome() {
                     </div>
                   </div>
                   {userType == UserType.Innvestor && <MyBrokersPreview />}
-                  {userType == UserType.Broker && <MyBrokersPreview />}
+                  {userType == UserType.Broker && <MyInvestorsPreview />}
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
         </section>
       </div>
-    <Footer />
+      <Footer />
     </>
   );
 }
