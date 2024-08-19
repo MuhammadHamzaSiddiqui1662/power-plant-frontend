@@ -19,11 +19,18 @@ const authPersistConfig = {
   storage,
 };
 
-// Persist configuration for auth slice
+// Persist configuration for ip slice
 const ipPersistConfig = {
   key: "ip",
   storage,
   whitelist: ["currentIp"],
+};
+
+// Persist configuration for hiring slice
+const hiringPersistConfig = {
+  key: "hiring",
+  storage,
+  whitelist: ["currentInvestor"],
 };
 
 const rootReducer = combineReducers({
@@ -32,7 +39,7 @@ const rootReducer = combineReducers({
   [ipApi.reducerPath]: ipApi.reducer,
   ip: persistReducer(ipPersistConfig, ipReducer),
   [hiringApi.reducerPath]: hiringApi.reducer,
-  hiring: hiringReducer,
+  hiring: persistReducer(hiringPersistConfig, hiringReducer),
   [userApi.reducerPath]: userApi.reducer,
   [chatApi.reducerPath]: chatApi.reducer,
   [messageApi.reducerPath]: messageApi.reducer,
@@ -56,7 +63,7 @@ export const makeStore = () => {
         .concat(chatApi.middleware)
         .concat(messageApi.middleware)
         .concat(packageApi.middleware)
-        .concat(paymentApi.middleware)
+        .concat(paymentApi.middleware),
   });
 
   const persistor = persistStore(store);
