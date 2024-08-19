@@ -29,9 +29,15 @@ const generateFilterQuery = (interests = []) => {
 export default function Welcome() {
   const router = useRouter();
   const { user, userType } = useSelector((state) => state.auth);
-  const { data: ips } = useGetAllQuery(generateFilterQuery(user?.interests));
+  const { currentInvestor } = useSelector((state) => state.hiring);
+  const { data: ips } = useGetAllQuery(
+    generateFilterQuery(
+      userType === UserType.Broker && currentInvestor
+        ? currentInvestor?.intersts
+        : user?.interests
+    )
+  );
 
-  console.log(user);
   return (
     <>
       <Navbar navClass="navbar-white" />
@@ -79,7 +85,13 @@ export default function Welcome() {
                   ))
                 ) : (
                   <div>
-                    <p>No IPs matches your interest.</p>
+                    <p>
+                      No IPs matches{" "}
+                      {userType === UserType.Broker && currentInvestor
+                        ? "current investor's"
+                        : "your"}{" "}
+                      interest.
+                    </p>
                     <p>
                       Visit{" "}
                       <Link
@@ -131,30 +143,55 @@ export default function Welcome() {
                       <Progress value={100} />
                     </div>
                   </div>
-                  <div className="avatar-div mb-5">
-                    <div className="flex items-center justify-between avatar-text">
-                      <p className="mx-2 text-2xl sm:text-2xl name">Interest</p>
-                      <div
-                        className="flex flex-col cursor-pointer"
-                        onClick={() => router.push("/profile")}
-                      >
-                        <p className="btn btn-icon bg-white dark:bg-customGreen shadow dark:shadow-gray-700 rounded-full text-slate-100 dark:text-customGreen focus:text-customGreen dark:focus:text-red-600 hover:text-customGreen dark:hover:text-customGreen">
-                          <i className="mdi mdi-lead-pencil mdi-18px text-customDarkBlue"></i>
+                  {userType === UserType.Broker && currentInvestor ? (
+                    <div className="avatar-div mb-5">
+                      <div className="flex items-center justify-between avatar-text">
+                        <p className="mx-2 text-2xl sm:text-2xl name">
+                          Investor's Interest
                         </p>
                       </div>
+                      <div className="mt-3">
+                        {currentInvestor &&
+                        currentInvestor.interests &&
+                        currentInvestor.interests.length > 0 ? (
+                          currentInvestor.interests?.map((elem, i) => (
+                            <p key={i} className="mx-2">
+                              {elem}
+                            </p>
+                          ))
+                        ) : (
+                          <p className="mx-2">No interest selected yet.</p>
+                        )}
+                      </div>
                     </div>
-                    <div className="mt-3">
-                      {user && user.interests && user.interests.length > 0 ? (
-                        user.interests?.map((elem, i) => (
-                          <p key={i} className="mx-2">
-                            {elem}
+                  ) : (
+                    <div className="avatar-div mb-5">
+                      <div className="flex items-center justify-between avatar-text">
+                        <p className="mx-2 text-2xl sm:text-2xl name">
+                          Your Interests
+                        </p>
+                        <div
+                          className="flex flex-col cursor-pointer"
+                          onClick={() => router.push("/profile")}
+                        >
+                          <p className="btn btn-icon bg-white dark:bg-customGreen shadow dark:shadow-gray-700 rounded-full text-slate-100 dark:text-customGreen focus:text-customGreen dark:focus:text-red-600 hover:text-customGreen dark:hover:text-customGreen">
+                            <i className="mdi mdi-lead-pencil mdi-18px text-customDarkBlue"></i>
                           </p>
-                        ))
-                      ) : (
-                        <p className="mx-2">No interest selected yet.</p>
-                      )}
+                        </div>
+                      </div>
+                      <div className="mt-3">
+                        {user && user.interests && user.interests.length > 0 ? (
+                          user.interests?.map((elem, i) => (
+                            <p key={i} className="mx-2">
+                              {elem}
+                            </p>
+                          ))
+                        ) : (
+                          <p className="mx-2">No interest selected yet.</p>
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  )}
                   {userType == UserType.Innvestor && <MyBrokersPreview />}
                   {userType == UserType.Broker && <MyInvestorsPreview />}
                 </Grid>
