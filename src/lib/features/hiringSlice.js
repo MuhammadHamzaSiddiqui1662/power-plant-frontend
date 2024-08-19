@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { hiringApi } from "../../services/hiring/hiring";
+import { logout } from "./authSlice";
 
 const initialState = {
   hirings: [],
@@ -35,6 +36,9 @@ const hiringSlice = createSlice({
         state.myInvestors = payload;
       }
     );
+    builder.addMatcher(logout, (state) => {
+      state.currentInvestor = {};
+    });
   },
 });
 
