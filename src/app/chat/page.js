@@ -34,9 +34,10 @@ import {
 import { useDeleteMessageMutation } from "../../services/message/message";
 
 import { MessageType } from "../../types/MessageType";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Box } from "@mui/material";
 import { BACKEND_SOCKET_URL } from "../../config/constants";
+import ToastMessage from "../componants/Toast";
 
 export default function Chat() {
   const messageWindowRef = useRef(null);
@@ -48,6 +49,7 @@ export default function Chat() {
   const userType = useSelector((state) => state.auth.userType);
   const [message, setMessage] = useState("");
   const [brokerId, setBrokerId] = useState("");
+  const chatId = useSearchParams().get("chatId");
   const [selectedChat, setSelectedChat] = useState(null);
   const [chatClickedIndex, setChatClickedIndex] = useState(0);
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
@@ -59,6 +61,7 @@ export default function Chat() {
   const [getChatById, { isLoading: isGettingById }] = useChatMutation();
   const [updateChat, { isLoading: isUpdating }] = useUpdateChatMutation();
   const [deleteMessage, { isLoading: isDeleting }] = useDeleteMessageMutation();
+  console.log("selectedChat", selectedChat);
 
   const socket = io(BACKEND_SOCKET_URL);
 
@@ -258,8 +261,12 @@ export default function Chat() {
 
       if (getAllChatsResponse[0]?._id) {
         let recList = extractReceivers(getAllChatsResponse);
-        await chatClickHandler(getAllChatsResponse[0]._id);
-        setSelectedChat(recList[0]);
+        if (chatId) {
+          await chatClickHandler(
+            getAllChatsResponse.find((res) => res._id == chatId)._id
+          );
+          setSelectedChat(recList.find((res) => res._id == chatId));
+        }
       }
     } catch (error) {
       console.log(`error --> ${error}`);
@@ -287,6 +294,18 @@ export default function Chat() {
           userId: user._id,
         });
       }
+    } catch (error) {
+      console.log(`error --> ${error}`);
+    }
+  };
+
+  const acceptCloseDealHandler = async (chatId, review) => {
+    try {
+      console.log(chatId, review);
+      socket.emit("closeDeal", {
+        chatId,
+        review,
+      });
     } catch (error) {
       console.log(`error --> ${error}`);
     }
@@ -336,6 +355,11 @@ export default function Chat() {
 
     socket.on("messageSeen", ({ messageId, userId, seenAt }) => {
       console.log(`Message ${messageId} seen by user ${userId} at ${seenAt}`);
+    });
+
+    socket.on("dealClosed", () => {
+      console.log(`Deal Closed`);
+      ToastMessage({ message: "Deal Closed!", type: "success" });
     });
 
     return () => {
@@ -770,6 +794,7 @@ export default function Chat() {
       <ReviewModal
         visible={reviewModalVisible}
         setVisible={setReviewModalVisible}
+        acceptCloseDealHandler={acceptCloseDealHandler}
         brokerId={brokerId}
         userType={userType}
         chat={selectedChat}

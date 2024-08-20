@@ -16,9 +16,9 @@
 }
 
 .review-card {
-  height: 500px !important;
   width: 650px !important;
   border: none !important;
+  padding: 16px;
 }
 
 .f-24 {
@@ -26,19 +26,19 @@
 }
 
 .f-18 {
-  font-size: 18px
+  font-size: 18px;
 }
 
 .f-16 {
-  font-size: 16px
+  font-size: 16px;
 }
 
 .b-7xx {
-  font-weight: 700
+  font-weight: 700;
 }
 
 .b-5xx {
-  font-weight: 500
+  font-weight: 500;
 }
 
 .pd-10 {
@@ -54,7 +54,7 @@
 }
 
 .c-green {
-  background-color: #6BB955 !important
+  background-color: #6bb955 !important;
 }
 
 .input-area {
@@ -75,14 +75,14 @@
 }
 
 .checkbox-deal .ant-checkbox-checked .ant-checkbox-inner {
-  background-color: #6BB955 !important;
-  border-color: #6BB955 !important;
+  background-color: #6bb955 !important;
+  border-color: #6bb955 !important;
 }
 
 .checkbox-deal:hover .ant-checkbox:hover .ant-checkbox-inner:hover,
 .checkbox-deal:focus .ant-checkbox:focus .ant-checkbox-inner:focus {
-  background-color: #6BB955 !important;
-  border-color: #6BB955 !important;
+  background-color: #6bb955 !important;
+  border-color: #6bb955 !important;
 }
 
 .checkbox-deal .ant-checkbox-inner::after {
