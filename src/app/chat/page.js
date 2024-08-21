@@ -61,13 +61,19 @@ export default function Chat() {
   const [getChatById, { isLoading: isGettingById }] = useChatMutation();
   const [updateChat, { isLoading: isUpdating }] = useUpdateChatMutation();
   const [deleteMessage, { isLoading: isDeleting }] = useDeleteMessageMutation();
-  console.log("selectedChat", selectedChat);
 
   const socket = io(BACKEND_SOCKET_URL);
 
   socket.on("newMessage", (userId, message) => {
     if (user._id == userId || brokerId === userId) {
       setMessages((prevMessages) => [...prevMessages, message]);
+    }
+  });
+
+  socket.on("messageRemoved", (userId, messageId) => {
+    if (brokerId === userId) {
+      let updatedMessageList = messages.filter((msg) => msg._id !== messageId);
+      setMessages(updatedMessageList);
     }
   });
 
@@ -124,10 +130,6 @@ export default function Chat() {
     });
   };
 
-  const handleOpenChatModal = () => {
-    setChatModalVisible(true);
-  };
-
   const closeDealMessageHandler = () => {
     try {
       if (selectedChat._id != "") {
@@ -156,6 +158,7 @@ export default function Chat() {
   const sendMessageHandler = (e) => {
     try {
       e.preventDefault();
+      console.log(selectedChat._id)
       if (selectedChat._id != "") {
         socket.emit("sendMessage", {
           chatId: selectedChat._id,
@@ -328,8 +331,18 @@ export default function Chat() {
         messageId
       );
       if (error) return setError(error.message);
+
+      socket.emit("deleteMessage", {
+        chatId: selectedChat._id,
+        senderId: user._id,
+        type: MessageType.CloseChat,
+        receiverId: selectedChat.receiver._id,
+        messageId: messageId
+      });
+      
       let updatedMessageList = messages.filter((msg) => msg._id !== messageId);
       setMessages(updatedMessageList);
+
     } catch (error) {
       console.log(`error --> ${error}`);
     }
@@ -363,6 +376,7 @@ export default function Chat() {
     });
 
     return () => {
+      socket.emit("userOffline", user._id);
       socket.disconnect();
       window.removeEventListener("resize", handleResize);
     };
@@ -405,15 +419,14 @@ export default function Chat() {
                 {receiverList.map((chat, index) => (
                   <Card
                     key={chat._id}
-                    className={`m-40 chat-card ${
-                      chatClickedIndex === chat._id ? "active" : ""
-                    }`}
+                    className={`m-40 chat-card ${chatClickedIndex === chat._id ? "active" : ""
+                      }`}
                     onClick={() => chatClickHandler(chat._id)}
                   >
                     <Row className="pd-12">
                       <Col xs={3} sm={3} md={3} lg={5} xl={2} xxl={1}>
                         {chat.receiver != null &&
-                        chat.receiver.online === true ? (
+                          chat.receiver.online === true ? (
                           <Badge
                             status="success"
                             dot
@@ -820,15 +833,14 @@ export default function Chat() {
                 {receiverList.map((chat, index) => (
                   <Card
                     key={chat._id}
-                    className={`chat-card ${
-                      chatClickedIndex === chat._id ? "active" : ""
-                    }`}
+                    className={`chat-card ${chatClickedIndex === chat._id ? "active" : ""
+                      }`}
                     onClick={() => chatClickHandler(chat._id)}
                   >
                     <Row className="pd-12">
                       <Col xs={3} sm={3} md={3} lg={5} xl={2} xxl={1}>
                         {chat.receiver != null &&
-                        chat.receiver.online === true ? (
+                          chat.receiver.online === true ? (
                           <Badge
                             status="success"
                             dot
@@ -1150,7 +1162,6 @@ export default function Chat() {
               <Box
                 className="message-box flex"
                 component={"form"}
-                onSubmit={sendMessageHandler}
               >
                 <Input
                   disabled={
@@ -1183,7 +1194,7 @@ export default function Chat() {
                     }
                     type="submit"
                     className="send-btn"
-                    // onClick={sendMessageHandler}
+                    onClick={sendMessageHandler}
                   >
                     <img
                       className="send-btn-image"
