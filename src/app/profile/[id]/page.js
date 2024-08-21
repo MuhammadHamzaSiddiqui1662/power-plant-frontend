@@ -1,7 +1,7 @@
 "use client";
-import { Chip, Grid } from "@mui/material";
+import { Chip, Grid, Stack } from "@mui/material";
 import dynamic from "next/dynamic";
-import React from "react";
+import React, { useMemo } from "react";
 
 const Navbar = dynamic(() => import("../../componants/Navbar"));
 const Switcher = dynamic(() => import("../../componants/Switcher"));
@@ -9,6 +9,7 @@ const Footer = dynamic(() => import("../../componants/Footer"));
 
 import "./style.css";
 import Card from "../../componants/Card";
+import ReviewCard from "../../componants/review/Card";
 import { useGetUserQuery } from "../../../services/user/user";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "next/navigation";
@@ -16,6 +17,7 @@ import { useGetAllQuery } from "../../../services/ip/ip";
 import { useCreateChatMutation } from "../../../services/chat/chat";
 import { useRouter } from "next/navigation";
 import { useGetMyBrokersQuery } from "../../../services/hiring/hiring";
+import { UserType } from "../../../types/user";
 
 export default function ViewProfile(props) {
   const loginUser = useSelector((state) => state.auth.user);
@@ -28,6 +30,18 @@ export default function ViewProfile(props) {
   const { data: myBrokers } = useGetMyBrokersQuery();
   const [createChat, { isLoading: isCreating }] = useCreateChatMutation();
   const router = useRouter();
+
+  const reviews = useMemo(() => {
+    if (user) {
+      return userType == UserType.Broker
+        ? user.reviewsAsBroker || []
+        : userType == UserType.Innovator
+        ? user.reviewsAsInnovator || []
+        : userType == UserType.Innvestor
+        ? user.reviewsAsInvestor || []
+        : [];
+    } else return [];
+  }, [user, userType]);
 
   const getChatObject = (chat, _user, _type) => {
     if (_type == 0) {
@@ -86,9 +100,11 @@ export default function ViewProfile(props) {
             <p className="text-customDarkBlue text-3xl font-medium">
               {user?.name}
             </p>
-            <p className="text-customGrayColor text-xl font-medium">
-              {user?.interests[0]}
-            </p>
+            {user?.interests && user?.interests.length > 0 && (
+              <p className="text-customGrayColor text-xl font-medium">
+                {user?.interests[0]}
+              </p>
+            )}
             <p className="text-customGrayColor mt-2 mb-4 font-medium">
               {user?.about}
             </p>
@@ -162,6 +178,29 @@ export default function ViewProfile(props) {
                   {user?.dealsInProgress || 0}
                 </p>
               </Grid>
+              <Grid item xs={12} className="p-1">
+                <p className="text-customDarkBlue text-3xl mt-7 font-medium">
+                  Reviews
+                </p>
+              </Grid>
+              {reviews.length > 0 ? (
+                <Stack
+                  direction={"row"}
+                  gap={2}
+                  width={"100%"}
+                  overflow={"auto"}
+                >
+                  {reviews.map((review) => (
+                    <ReviewCard review={review} />
+                  ))}
+                </Stack>
+              ) : (
+                <Grid item xs={12}>
+                  <div className="py-2">
+                    <p>No Reviews.</p>
+                  </div>
+                </Grid>
+              )}
               {userType == 0 && (
                 <Grid item xs={12}>
                   <p className="text-customDarkBlue text-3xl font-medium mt-6">
