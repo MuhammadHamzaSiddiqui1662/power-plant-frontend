@@ -158,7 +158,7 @@ export default function Chat() {
   const sendMessageHandler = (e) => {
     try {
       e.preventDefault();
-      console.log(selectedChat._id)
+      console.log(selectedChat._id);
       if (selectedChat._id != "") {
         socket.emit("sendMessage", {
           chatId: selectedChat._id,
@@ -337,12 +337,11 @@ export default function Chat() {
         senderId: user._id,
         type: MessageType.CloseChat,
         receiverId: selectedChat.receiver._id,
-        messageId: messageId
+        messageId: messageId,
       });
-      
+
       let updatedMessageList = messages.filter((msg) => msg._id !== messageId);
       setMessages(updatedMessageList);
-
     } catch (error) {
       console.log(`error --> ${error}`);
     }
@@ -419,14 +418,15 @@ export default function Chat() {
                 {receiverList.map((chat, index) => (
                   <Card
                     key={chat._id}
-                    className={`m-40 chat-card ${chatClickedIndex === chat._id ? "active" : ""
-                      }`}
+                    className={`m-40 chat-card ${
+                      chatClickedIndex === chat._id ? "active" : ""
+                    }`}
                     onClick={() => chatClickHandler(chat._id)}
                   >
                     <Row className="pd-12">
                       <Col xs={3} sm={3} md={3} lg={5} xl={2} xxl={1}>
                         {chat.receiver != null &&
-                          chat.receiver.online === true ? (
+                        chat.receiver.online === true ? (
                           <Badge
                             status="success"
                             dot
@@ -833,29 +833,27 @@ export default function Chat() {
                 {receiverList.map((chat, index) => (
                   <Card
                     key={chat._id}
-                    className={`chat-card ${chatClickedIndex === chat._id ? "active" : ""
-                      }`}
+                    className={`chat-card ${
+                      chatClickedIndex === chat._id ? "active" : ""
+                    }`}
                     onClick={() => chatClickHandler(chat._id)}
                   >
                     <Row className="pd-12">
                       <Col xs={3} sm={3} md={3} lg={5} xl={2} xxl={1}>
                         {chat.receiver != null &&
-                          chat.receiver.online === true ? (
-                          <Badge
-                            status="success"
-                            dot
-                            offset={[-5, 45]}
-                            className="pd-5"
-                          >
+                        chat.receiver.online === true ? (
+                          <Badge status="success" dot offset={[-6, 36]}>
                             <Avatar
-                              src={chat.receiver.imageUrl}
+                              // src={chat.receiver.imageUrl}
+                              src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
                               shape="circle"
                               className="h-5x w-5x"
                             ></Avatar>
                           </Badge>
                         ) : (
                           <Avatar
-                            src={chat.receiver.imageUrl}
+                            // src={chat.receiver.imageUrl}
+                            src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
                             shape="circle"
                             className="h-5x w-5x"
                           >
@@ -911,7 +909,8 @@ export default function Chat() {
                   <Col xs={{ span: 1 }}>
                     <Avatar
                       className="h-4x w-4x"
-                      src={selectedChat.receiver.imageUrl}
+                      // src={selectedChat.receiver.imageUrl}
+                      src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
                       shape="circle"
                     />
                   </Col>
@@ -1159,10 +1158,7 @@ export default function Chat() {
             )}
 
             <div className="pd-24 mt-1x">
-              <Box
-                className="message-box flex"
-                component={"form"}
-              >
+              <Box className="message-box flex" component={"form"}>
                 <Input
                   disabled={
                     selectedChat != null && selectedChat.closed ? true : false
@@ -1182,7 +1178,7 @@ export default function Chat() {
                   >
                     <img
                       className="file-pin-image"
-                      src="images/payment/filePin.png"
+                      src="/images/payment/filePin.png"
                     />
                   </Button>
                 </ConfigProvider>
@@ -1198,7 +1194,7 @@ export default function Chat() {
                   >
                     <img
                       className="send-btn-image"
-                      src="images/payment/sendbtn.png"
+                      src="/images/payment/sendbtn.png"
                     />
                   </Button>
                 </ConfigProvider>
