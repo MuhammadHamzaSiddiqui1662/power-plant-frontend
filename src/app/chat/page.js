@@ -159,7 +159,6 @@ export default function Chat() {
   const sendMessageHandler = (e) => {
     try {
       e.preventDefault();
-      console.log(selectedChat._id);
       if (selectedChat._id != "") {
         socket.emit("sendMessage", {
           chatId: selectedChat._id,
@@ -177,7 +176,6 @@ export default function Chat() {
 
   const extractReceivers = (chats) => {
     let _receiverList = [];
-    console.log("chats", chats);
     try {
       if (userType == 0) {
         _receiverList = chats.map((ch) => ({
@@ -306,7 +304,6 @@ export default function Chat() {
 
   const acceptCloseDealHandler = async (chatId, review) => {
     try {
-      console.log(chatId, review);
       socket.emit("closeDeal", {
         chatId,
         review,
@@ -869,7 +866,6 @@ export default function Chat() {
                       <Col xs={3} sm={3} md={3} lg={8} xl={8} xxl={16}>
                         <text className="f-16 b-7xx">{chat.receiver.name}</text>
                         <br />
-                        {/* {console.log("chat", chat)} */}
                         <Typography.Text
                           className="f-12 c-grey"
                           ellipsis={{ rows: 1 }}
