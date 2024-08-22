@@ -1034,7 +1034,8 @@ export default function Chat() {
 
                               <Col xs={{ span: 1 }}>
                                 <Avatar
-                                  src={message.sender.imageUrl}
+                                  // src={message.sender.imageUrl}
+                                  src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
                                   shape="circle"
                                 />
                               </Col>
@@ -1056,7 +1057,8 @@ export default function Chat() {
 
                               <Col xs={{ span: 1 }}>
                                 <Avatar
-                                  src={message.sender.imageUrl}
+                                  // src={message.sender.imageUrl}
+                                  src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
                                   shape="circle"
                                 />
                               </Col>
@@ -1069,7 +1071,8 @@ export default function Chat() {
                             <Row justify={"start"}>
                               <Col xs={{ span: 1 }} className="m-0-20">
                                 <Avatar
-                                  src={message.sender.imageUrl}
+                                  // src={message.sender.imageUrl}
+                                  src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
                                   shape="circle"
                                 />
                               </Col>
@@ -1139,7 +1142,8 @@ export default function Chat() {
                             <Row justify={"start"}>
                               <Col xs={{ span: 1 }} className="m-0-20">
                                 <Avatar
-                                  src={message.sender.imageUrl}
+                                  // src={message.sender.imageUrl}
+                                  src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
                                   shape="circle"
                                 />
                               </Col>
@@ -1177,25 +1181,9 @@ export default function Chat() {
                     }
                     value={message}
                     onChange={handleMessageChange}
-                    className="input-message border-none"
+                    className="input-message border-none focus:shadow-none"
                     placeholder="Type your messages here"
                   ></Input>
-
-                  <ConfigProvider wave={{ disabled: true }}>
-                    <Button
-                      className="pin-button"
-                      disabled={
-                        selectedChat != null && selectedChat.closed
-                          ? true
-                          : false
-                      }
-                    >
-                      <img
-                        className="file-pin-image"
-                        src="/images/payment/filePin.png"
-                      />
-                    </Button>
-                  </ConfigProvider>
 
                   <ConfigProvider wave={{ disabled: true }}>
                     <button
