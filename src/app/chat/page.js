@@ -1193,11 +1193,9 @@ export default function Chat() {
                     className="send-btn"
                     onClick={sendMessageHandler}
                   >
-                    <Image
+                    <img
                       className="send-btn-image"
-                      src="/images/payment/sendbtn.png"
-                      width={16}
-                      height={16}
+                      src="/images/payment/sendBtn.png"
                     />
                   </Button>
                 </ConfigProvider>
