@@ -38,6 +38,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Box } from "@mui/material";
 import { BACKEND_SOCKET_URL } from "../../config/constants";
 import ToastMessage from "../componants/Toast";
+import Image from "next/image";
 
 export default function Chat() {
   const messageWindowRef = useRef(null);
@@ -1192,9 +1193,11 @@ export default function Chat() {
                     className="send-btn"
                     onClick={sendMessageHandler}
                   >
-                    <img
+                    <Image
                       className="send-btn-image"
                       src="/images/payment/sendbtn.png"
+                      width={16}
+                      height={16}
                     />
                   </Button>
                 </ConfigProvider>
