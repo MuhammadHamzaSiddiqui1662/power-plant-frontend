@@ -93,7 +93,7 @@ export default function Chat() {
     });
   });
 
-  socket.on("messageSeen", (chat) => {
+  socket.on("messagesSeen", (chat) => {
     setReceiverList((prevChats) => {
       return prevChats.map((c) => {
         if (c._id === chat._id) {
@@ -290,11 +290,12 @@ export default function Chat() {
         socket.on("previousMessages", (msgs) => {
           setMessages(msgs);
           unseenMessageIds = msgs.filter((m) => !m.seen).map((m) => m._id);
-        });
-
-        socket.emit("messageSeen", {
-          messageId: unseenMessageIds,
-          userId: user._id,
+          unseenMessageIds.forEach((id) =>
+            socket.emit("messageSeen", {
+              messageId: id,
+              userId: user._id,
+            })
+          );
         });
       }
     } catch (error) {
@@ -1197,7 +1198,7 @@ export default function Chat() {
                   </ConfigProvider>
 
                   <ConfigProvider wave={{ disabled: true }}>
-                    <Button
+                    <button
                       disabled={
                         selectedChat != null && selectedChat.closed
                           ? true
@@ -1205,13 +1206,12 @@ export default function Chat() {
                       }
                       type="submit"
                       className="send-btn"
-                      onClick={sendMessageHandler}
                     >
                       <img
                         className="send-btn-image"
                         src="/images/payment/sendBtn.png"
                       />
-                    </Button>
+                    </button>
                   </ConfigProvider>
                 </Box>
               </div>
