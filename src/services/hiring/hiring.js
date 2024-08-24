@@ -4,7 +4,7 @@ import { BACKEND_URL } from "../../config/constants";
 export const hiringApi = createApi({
   reducerPath: "hiringApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: `${BACKEND_URL}/hirings`,
+    baseUrl: `${BACKEND_URL}/chats`,
     prepareHeaders: (headers, { getState }) => {
       // By default, if we have a token in the store, let's use that for authenticated requests
       const token = getState().auth.accessToken;
@@ -15,8 +15,8 @@ export const hiringApi = createApi({
     },
   }),
   endpoints: (build) => ({
-    getAllHirings: build.query({
-      query: () => `/`,
+    getHiringDetails: build.query({
+      query: (query) => `/hiring-details${query}`,
     }),
     getMyBrokers: build.query({
       query: () => `/brokers`,
@@ -28,7 +28,7 @@ export const hiringApi = createApi({
 });
 
 export const {
-  useGetAllHiringsQuery,
   useGetMyBrokersQuery,
   useGetMyInvestorsQuery,
+  useGetHiringDetailsQuery,
 } = hiringApi;

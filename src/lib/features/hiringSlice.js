@@ -3,9 +3,9 @@ import { hiringApi } from "../../services/hiring/hiring";
 import { logout } from "./authSlice";
 
 const initialState = {
-  hirings: [],
   myBrokers: [],
   myInvestors: [],
+  hiringDetails: {},
   currentInvestor: {},
 };
 
@@ -19,9 +19,9 @@ const hiringSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addMatcher(
-      hiringApi.endpoints.getAllHirings.matchFulfilled,
+      hiringApi.endpoints.getHiringDetails.matchFulfilled,
       (state, { payload }) => {
-        state.hirings = payload;
+        state.hiringDetails = payload;
       }
     );
     builder.addMatcher(

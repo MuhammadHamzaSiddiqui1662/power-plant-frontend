@@ -73,6 +73,7 @@ function GeneralTable({ rows }) {
                 {row.id && (
                   <Link
                     href={`/profile/${row.id}?userType=2`}
+                    onClick={row.handleClick}
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
                     Manage

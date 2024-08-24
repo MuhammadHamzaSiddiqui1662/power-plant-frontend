@@ -16,18 +16,21 @@ import { useSearchParams } from "next/navigation";
 import { useGetAllQuery } from "../../../services/ip/ip";
 import { useCreateChatMutation } from "../../../services/chat/chat";
 import { useRouter } from "next/navigation";
-import { useGetMyBrokersQuery } from "../../../services/hiring/hiring";
+import { useGetHiringDetailsQuery } from "../../../services/hiring/hiring";
 import { UserType } from "../../../types/user";
 
 export default function ViewProfile(props) {
   const loginUser = useSelector((state) => state.auth.user);
   const loginUserType = useSelector((state) => state.auth.userType);
+  const selectedIp = useSelector((state) => state.ip.currentIp);
   const userType =
     useSearchParams().get("userType") ||
     useSelector((state) => state.auth.userType);
   const { data: user } = useGetUserQuery(props?.params?.id);
   const { data: ips } = useGetAllQuery(`?userId=${props?.params?.id}`);
-  const { data: myBrokers } = useGetMyBrokersQuery();
+  const { data: hiringDetails } = useGetHiringDetailsQuery(
+    `?investor=${loginUser._id}&broker=${props?.params?.id}&ip=${selectedIp._id}`
+  );
   const [createChat, { isLoading: isCreating }] = useCreateChatMutation();
   const router = useRouter();
 
@@ -59,16 +62,18 @@ export default function ViewProfile(props) {
       let chat = {};
       getChatObject(chat, loginUser, loginUserType);
       getChatObject(chat, user, userType);
-      const { data: createChatgResponse, error } = await createChat(chat);
+      chat.ip = selectedIp._id;
+      const { data: createChatResponse, error } = await createChat(chat);
       if (error) return setError(error.message);
-      console.log(createChatgResponse);
-      router.replace(`/chat`);
+      router.replace(`/chat?chatId=${createChatResponse._id}`);
     } catch (error) {
       console.log(`error --> ${error}`);
     }
   };
 
-  const unHireHandler = async () => {};
+  const unHireHandler = async () => {
+    router.push(`/chat?chatId=${hiringDetails._id}`);
+  };
 
   return (
     <>
@@ -236,22 +241,10 @@ export default function ViewProfile(props) {
                       type="submit"
                       className="my-3 text-2xl btn bg-customGreen hover:bg-customGreen text-white rounded-md py-6 w-60 text-[32px]"
                       onClick={
-                        myBrokers &&
-                        myBrokers.length > 0 &&
-                        myBrokers.some(
-                          ({ broker }) => broker._id === props?.params?.id
-                        )
-                          ? unHireHandler
-                          : createChatHandler
+                        hiringDetails ? unHireHandler : createChatHandler
                       }
                     >
-                      {myBrokers &&
-                      myBrokers.length > 0 &&
-                      myBrokers.some(
-                        ({ broker }) => broker._id === props?.params?.id
-                      )
-                        ? "Un Hire"
-                        : "Hire / Contact"}
+                      {hiringDetails ? "Un Hire" : "Hire / Contact"}
                     </button>
                   </div>
                 </Grid>

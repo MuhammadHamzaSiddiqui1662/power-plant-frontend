@@ -6,9 +6,10 @@ import Image from "next/image";
 
 import { Box, Chip, Grid, Rating, Tab, Tabs } from "@mui/material";
 import PropTypes from "prop-types";
+import { setCurrentIp } from "../../../lib/features/ipSlice";
 import { useGetIpQuery } from "../../../services/ip/ip";
 import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useCreateChatMutation } from "../../../services/chat/chat";
 import { getChatObject } from "../../../utils";
 import { UserType } from "../../../types/user";
@@ -53,6 +54,7 @@ function a11yProps(index) {
 
 export default function PropertiesDetail(props) {
   const router = useRouter();
+  const dispatch = useDispatch();
   const { user, userType, accessToken } = useSelector((state) => state.auth);
   const [value, setValue] = useState(0);
   const { data: ipDetails, isLoading } = useGetIpQuery(props?.params?.id);
@@ -87,10 +89,10 @@ export default function PropertiesDetail(props) {
       let chat = {};
       getChatObject(chat, ipDetails.userId._id, UserType.Innovator);
       getChatObject(chat, user._id, userType);
-
-      const { data: createChatgResponse, error } = await createChat(chat);
+      chat.ip = props.params.id;
+      const { data: createChatResponse, error } = await createChat(chat);
       if (error) return setError(error.message);
-      console.log(createChatgResponse);
+      router.replace(`/chat?chatId=${createChatResponse._id}`);
     } catch (error) {
       console.log(error);
     }
@@ -323,6 +325,7 @@ export default function PropertiesDetail(props) {
                           <Link
                             href={`/brokers`}
                             className="mb-4 btn border bg-customGreen text-white rounded-md mt-auto transition duration-300 w-60"
+                            onClick={() => dispatch(setCurrentIp(ipDetails))}
                           >
                             Hire a Broker
                           </Link>
