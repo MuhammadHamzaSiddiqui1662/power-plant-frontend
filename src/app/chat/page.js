@@ -830,7 +830,7 @@ export default function Chat() {
               <h1 className="f-32 b-6xx">Messages</h1>
 
               <div className="chat-container h-full flex flex-col gap-2">
-                {receiverList.map((chat, index) => (
+                {receiverList.map((chat) => (
                   <Card
                     key={chat._id}
                     className={`chat-card ${
@@ -962,12 +962,10 @@ export default function Chat() {
                 </Row>
               </div>
               <div className="divider"></div>
-              {messages.length === 0 ? (
-                <div className="message-container"></div>
-              ) : (
-                <div className="message-container" ref={messageWindowRef}>
-                  {messages.map((message, index) => (
-                    <div key={index}>
+              <div className="message-container" ref={messageWindowRef}>
+                {messages.length > 0 &&
+                  messages.map((message) => (
+                    <div key={message._id}>
                       {message.sender._id === user._id ? (
                         <div className="pd-24">
                           {message.type === MessageType.CloseChat ? (
@@ -1166,8 +1164,7 @@ export default function Chat() {
                       )}
                     </div>
                   ))}
-                </div>
-              )}
+              </div>
 
               <div className="pd-24 mt-1x">
                 <Box
