@@ -140,7 +140,10 @@ export default function Welcome() {
                   <BrokerCard
                     id={element._id}
                     name={element.name}
-                    imgSrc={element.imageUrl}
+                    imgSrc={
+                      "https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ" ||
+                      element.imageUrl
+                    }
                     interests={element.interests}
                     ratings={calculateRating(element.reviewsAsBorker)}
                     dealsInProgress={element.dealsInProgress}
