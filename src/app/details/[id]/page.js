@@ -56,6 +56,7 @@ export default function PropertiesDetail(props) {
   const router = useRouter();
   const dispatch = useDispatch();
   const { user, userType, accessToken } = useSelector((state) => state.auth);
+  const { currentIp } = useSelector((state) => state.ip);
   const [value, setValue] = useState(0);
   const { data: ipDetails, isLoading } = useGetIpQuery(props?.params?.id);
   const innovatorsRating = useMemo(
@@ -100,7 +101,7 @@ export default function PropertiesDetail(props) {
 
   useEffect(() => {
     if (!accessToken) router.replace("/auth-login");
-    else if (user && !user.subscriber)
+    else if (user && !user.subscriber && props?.params?.id !== currentIp._id)
       router.replace("/payment?type=subscribe");
   }, [user, accessToken]);
 
