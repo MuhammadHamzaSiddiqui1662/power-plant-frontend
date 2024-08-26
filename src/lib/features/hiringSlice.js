@@ -18,6 +18,9 @@ const hiringSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(logout, (state) => {
+      state.currentInvestor = {};
+    });
     builder.addMatcher(
       hiringApi.endpoints.getHiringDetails.matchFulfilled,
       (state, { payload }) => {
@@ -36,9 +39,6 @@ const hiringSlice = createSlice({
         state.myInvestors = payload;
       }
     );
-    builder.addMatcher(logout, (state) => {
-      state.currentInvestor = {};
-    });
   },
 });
 
