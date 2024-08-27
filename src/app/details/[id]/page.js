@@ -69,9 +69,9 @@ export default function PropertiesDetail(props) {
     () =>
       ipDetails && ipDetails.sections
         ? [
-            { title: "Abstract", content: ipDetails.abstract },
-            ...ipDetails.sections,
-          ]
+          { title: "Abstract", content: ipDetails.abstract },
+          ...ipDetails.sections,
+        ]
         : [],
     [ipDetails]
   );

@@ -15,10 +15,7 @@ import {
   FloatButton,
 } from "antd";
 const { Title, Paragraph, Text } = Typography;
-import Link from "next/link";
-import dynamic from "next/dynamic";
 import Navbar from "../componants/Navbar";
-import Footer from "../componants/Footer";
 import ReviewModal from "../componants/review/Modal";
 import ChatModal from "../componants/chat/Modal";
 import io from "socket.io-client";
@@ -38,11 +35,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Box } from "@mui/material";
 import { BACKEND_SOCKET_URL } from "../../config/constants";
 import ToastMessage from "../componants/Toast";
-import Image from "next/image";
 
 export default function Chat() {
   const messageWindowRef = useRef(null);
-  const messageRef = useRef([]);
   const [messages, setMessages] = useState([]);
   const [chatsList, setChatsList] = useState([]);
   const [receiverList, setReceiverList] = useState([]);
@@ -50,13 +45,16 @@ export default function Chat() {
   const userType = useSelector((state) => state.auth.userType);
   const [message, setMessage] = useState("");
   const [brokerId, setBrokerId] = useState("");
+  const [brokerType, setBrokerType] = useState(0);
   const chatId = useSearchParams().get("chatId");
+  const isUnhire = useSearchParams().get("unhire");
   const [selectedChat, setSelectedChat] = useState(null);
   const [chatClickedIndex, setChatClickedIndex] = useState(0);
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
   const [chatModalVisible, setChatModalVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [isReviewBtnClicked, setIsReviewBtnClicked] = useState(false);
   const router = useRouter();
   const [chats, { isLoading: isGetting }] = useChatsMutation();
   const [getChatById, { isLoading: isGettingById }] = useChatMutation();
@@ -67,6 +65,7 @@ export default function Chat() {
 
   socket.on("newMessage", (userId, message) => {
     if (user._id == userId || brokerId === userId) {
+      console.log("newMessage" + " " + message.content)
       setMessages((prevMessages) => [...prevMessages, message]);
     }
   });
@@ -123,12 +122,22 @@ export default function Chat() {
     setReviewModalVisible(true);
   };
 
+  const ReviewButtonHandler = () => {
+    setIsReviewBtnClicked(true);
+    setReviewModalVisible(true);
+  };
+
   const formatTime = (utcTime) => {
     const date = new Date(utcTime);
     return date.toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
     });
+  };
+
+  const refresh = () => {
+    router.refresh();
+    window.location.reload();
   };
 
   const closeDealMessageHandler = () => {
@@ -145,6 +154,21 @@ export default function Chat() {
       console.log(`error --> ${error}`);
     }
   };
+
+  const sendReviewMessageHandler = (chatId, senderId, receiverId) => {
+    try {
+      if (chatId != "") {
+        socket.emit("sendMessage", {
+          chatId: chatId,
+          senderId: senderId,
+          type: MessageType.ReviewChat,
+          receiverId: receiverId,
+        });
+      }
+    } catch (error) {
+      console.log(`error --> ${error}`);
+    }
+  }
 
   const handleMessageChange = (e) => {
     e.preventDefault();
@@ -184,6 +208,9 @@ export default function Chat() {
           closed: ch.closed,
           unReadMessages: ch.unReadMessages,
           lastMessage: ch.lastMessage,
+          open: ch.open,
+          reviewed: ch.reviewed,
+          ip: ch.ip
         }));
       }
       if (userType == 1) {
@@ -193,6 +220,9 @@ export default function Chat() {
           closed: ch.closed,
           unReadMessages: ch.unReadMessages,
           lastMessage: ch.lastMessage,
+          open: ch.open,
+          reviewed: ch.reviewed,
+          ip: ch.ip
         }));
       }
       if (userType == 2) {
@@ -202,6 +232,9 @@ export default function Chat() {
           closed: ch.closed,
           unReadMessages: ch.unReadMessages,
           lastMessage: ch.lastMessage,
+          open: ch.open,
+          reviewed: ch.reviewed,
+          ip: ch.ip
         }));
       }
       setReceiverList(_receiverList);
@@ -216,6 +249,7 @@ export default function Chat() {
       let _receiver = {};
 
       if (userType == 0) {
+        setBrokerType(chatObject.broker != null ? 2 : 1)
         _receiver = {
           _id: chatObject._id,
           receiver:
@@ -223,9 +257,13 @@ export default function Chat() {
           closed: chatObject.closed,
           unReadMessages: chatObject.unReadMessages,
           lastMessage: chatObject.lastMessage,
+          open: chatObject.open,
+          reviewed: chatObject.reviewed,
+          ip: chatObject.ip
         };
       }
       if (userType == 1) {
+        setBrokerType(chatObject.broker != null ? 2 : 0)
         _receiver = {
           _id: chatObject._id,
           receiver:
@@ -235,9 +273,13 @@ export default function Chat() {
           closed: chatObject.closed,
           unReadMessages: chatObject.unReadMessages,
           lastMessage: chatObject.lastMessage,
+          open: chatObject.open,
+          reviewed: chatObject.reviewed,
+          ip: chatObject.ip
         };
       }
       if (userType == 2) {
+        setBrokerType(chatObject.innovator != null ? 0 : 1)
         _receiver = {
           _id: chatObject._id,
           receiver:
@@ -247,6 +289,9 @@ export default function Chat() {
           closed: chatObject.closed,
           unReadMessages: chatObject.unReadMessages,
           lastMessage: chatObject.lastMessage,
+          open: chatObject.open,
+          reviewed: chatObject.reviewed,
+          ip: chatObject.ip
         };
       }
 
@@ -285,6 +330,7 @@ export default function Chat() {
         let receiver = extractReceiver(getChatByIdResponse);
         setSelectedChat(receiver);
         router.replace(`/chat?chatId=${getChatByIdResponse._id}`);
+        console.log(receiver.receiver._id)
         setBrokerId(receiver.receiver._id);
         socket.emit("joinChat", { chatId: getChatByIdResponse._id });
         socket.on("previousMessages", (msgs) => {
@@ -303,21 +349,24 @@ export default function Chat() {
     }
   };
 
-  const acceptCloseDealHandler = async (chatId, review) => {
+  const getChatDetails = async (Id) => {
+    let receiver = null;
     try {
-      socket.emit("closeDeal", {
-        chatId,
-        review,
-      });
+      const { data: getChatByIdResponse, error } = await getChatById(Id);
+      if (error) return setError(error.message);
+      if (getChatByIdResponse._id) {
+        receiver = extractReceiver(getChatByIdResponse);
+      }
     } catch (error) {
       console.log(`error --> ${error}`);
     }
+    return receiver;
   };
 
   const rejectCloseDealHandler = async (chat) => {
     try {
       let newChatObject = { ...chat, open: true };
-      const { data: updateChatResponse, error } = await updateChat(chat);
+      const { data: updateChatResponse, error } = await updateChat(newChatObject);
       if (error) return setError(error.message);
       console.log(updateChatResponse);
     } catch (error) {
@@ -348,11 +397,27 @@ export default function Chat() {
   };
 
   useEffect(() => {
-    socket.emit("userOnline", user._id);
 
+    socket.emit("userOnline", user._id);
     socket.emit("joinNotificationRoom", { userId: user._id });
 
     getAllChatsHandler();
+
+    if (isUnhire === 'true') {
+      getChatDetails(chatId).then((res) => {
+        if (res != null) {
+          socket.emit("sendMessage", {
+            chatId: res._id,
+            senderId: user._id,
+            type: MessageType.CloseChat,
+            receiverId: res.receiver._id,
+          });
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
+
+    }
 
     const handleResize = () => {
       if (window.innerWidth <= 768) {
@@ -369,7 +434,7 @@ export default function Chat() {
       console.log(`Message ${messageId} seen by user ${userId} at ${seenAt}`);
     });
 
-    socket.on("dealClosed", () => {
+    socket.on("dealClosed", async () => {
       console.log(`Deal Closed`);
       ToastMessage({ message: "Deal Closed!", type: "success" });
     });
@@ -379,6 +444,7 @@ export default function Chat() {
       socket.disconnect();
       window.removeEventListener("resize", handleResize);
     };
+
   }, []);
 
   useLayoutEffect(() => {
@@ -393,18 +459,17 @@ export default function Chat() {
         <ReviewModal
           visible={reviewModalVisible}
           setVisible={setReviewModalVisible}
+          sendReviewMessage={sendReviewMessageHandler}
           brokerId={brokerId}
-          userType={userType}
+          userType={brokerType}
+          isReviewBtnClicked={isReviewBtnClicked}
           chat={selectedChat}
-        />
-
-        <ChatModal
-          visible={chatModalVisible}
-          setVisible={setChatModalVisible}
+          refresh={refresh}
         />
 
         <Navbar />
         <section className="py-28 section">
+
           <Drawer
             title="Chats"
             placement="left"
@@ -418,15 +483,14 @@ export default function Chat() {
                 {receiverList.map((chat, index) => (
                   <Card
                     key={chat._id}
-                    className={`m-40 chat-card ${
-                      chatClickedIndex === chat._id ? "active" : ""
-                    }`}
+                    className={`m-40 chat-card ${chatClickedIndex === chat._id ? "active" : ""
+                      }`}
                     onClick={() => chatClickHandler(chat._id)}
                   >
                     <Row className="pd-12">
                       <Col xs={3} sm={3} md={3} lg={5} xl={2} xxl={1}>
                         {chat.receiver != null &&
-                        chat.receiver.online === true ? (
+                          chat.receiver.online === true ? (
                           <Badge
                             status="success"
                             dot
@@ -485,280 +549,436 @@ export default function Chat() {
           <Row justify={"center"}>
             <Col xs={22} md={22} lg={15} xl={13} xll={12}>
               <Card className="custom-border">
-                {selectedChat == null ? (
-                  "Loading"
-                ) : (
-                  <div className="pd-24">
-                    <Row>
-                      <Col xs={{ span: 1 }}>
-                        <Avatar
-                          className="h-4x w-4x"
-                          src={selectedChat.receiver.imageUrl}
-                          shape="circle"
-                        />
-                      </Col>
+                {
+                  selectedChat == null ?
+                    (
+                      "Loading"
+                    ) :
+                    (
+                      <div className="pd-24">
+                        <Row>
+                          <Col xs={{ span: 1 }}>
+                            <Avatar
+                              className="h-4x w-4x"
+                              src={selectedChat.receiver.imageUrl}
+                              shape="circle"
+                            />
+                          </Col>
 
-                      <Col xs={3} sm={3} md={6} lg={5} className="pd-0-15">
-                        <text className="f-16 b-7xx">
-                          {selectedChat.receiver.name}
-                        </text>
-                      </Col>
+                          <Col xs={3} sm={3} md={6} lg={5} className="pd-0-15">
+                            <text className="f-16 b-7xx">
+                              {selectedChat.receiver.name}
+                            </text>
+                            <br />
+                            <Typography.Text className="f-16 b-7xx" ellipsis={{ row: 1 }}>
+                              {selectedChat.ip.name}
+                            </Typography.Text>
+                          </Col>
 
-                      <Col xs={10} sm={10} lg={12} xl={11}></Col>
+                          <Col xs={10} sm={10} lg={12} xl={11}></Col>
 
-                      <Col xs={3} sm={3} md={3} lg={2} xl={3} xxl={3}>
-                        <Button
-                          disabled={
-                            selectedChat != null && selectedChat.closed
-                              ? true
-                              : false
-                          }
-                          className="close-deal-btn"
-                          onClick={closeDealMessageHandler}
-                        >
-                          <img src="images/payment/closeDeal.png" />
-                          <text className="f-16 b-6xx"> Close Deal</text>
-                        </Button>
-                      </Col>
+                          <Col xs={3} sm={3} md={3} lg={2} xl={3} xxl={3}>
+                            <Button
+                              disabled={
+                                selectedChat != null && selectedChat.closed
+                                  ? true
+                                  : false
+                              }
+                              className="close-deal-btn"
+                              onClick={closeDealMessageHandler}
+                            >
+                              <img src="images/payment/closeDeal.png" />
+                              <text className="f-16 b-6xx"> Close Deal</text>
+                            </Button>
+                          </Col>
 
-                      <Col lg={1} xl={1}></Col>
+                          <Col lg={1} xl={1}></Col>
 
-                      <Col xs={3} sm={3} md={3} lg={2} xl={1} xxl={1}>
-                        <Button
-                          className="i-btn"
-                          type="success"
-                          shape="circle"
-                          size="small"
-                        >
-                          <text className="c-white">i</text>
-                        </Button>
-                      </Col>
-                    </Row>
-                  </div>
-                )}
-                <div className="divider"></div>
-                {messages.length === 0 ? (
-                  <div className="message-container"></div>
-                ) : (
-                  <div className="message-container" ref={messageWindowRef}>
-                    {messages.map((message, index) => (
-                      <div key={index}>
-                        {message.sender._id === user._id ? (
-                          <div className="pd-24">
-                            {message.type === MessageType.CloseChat ? (
-                              <Row justify={"end"}>
-                                <Col xs={{ span: 9 }}>
-                                  <Card className={"message"}>
-                                    <div className="deal-close">
-                                      <Typography>
-                                        <Text className="c-white f-9">{`${message.sender.name} has sent you Deal Close offer:`}</Text>
-                                        <br />
-                                        <Text className="c-white f-42 b-7xx">
-                                          DEAL CLOSE
-                                        </Text>
-                                      </Typography>
-                                    </div>
-
-                                    {message.sender._id === user._id ? (
-                                      <div className="text-center">
-                                        <ConfigProvider
-                                          wave={{ disabled: true }}
-                                        >
-                                          <Button
-                                            className="deal-close-cancel-btn"
-                                            onClick={() =>
-                                              cancelCloseDealHandler(
-                                                message._id
-                                              )
-                                            }
-                                          >
-                                            <text className="f-18 b-5xx">
-                                              Cancel
-                                            </text>
-                                          </Button>
-                                        </ConfigProvider>
-                                      </div>
-                                    ) : (
-                                      <div className="text-center">
-                                        <ConfigProvider
-                                          wave={{ disabled: true }}
-                                        >
-                                          <Button
-                                            className="deal-close-btn br-right"
-                                            onClick={() =>
-                                              rejectCloseDealHandler(
-                                                selectedChat
-                                              )
-                                            }
-                                          >
-                                            <text className="f-18 b-5xx">
-                                              Reject
-                                            </text>
-                                          </Button>
-                                        </ConfigProvider>
-
-                                        <ConfigProvider
-                                          wave={{ disabled: true }}
-                                        >
-                                          <Button
-                                            className="deal-close-btn"
-                                            onClick={handleOpenReviewModal}
-                                          >
-                                            <text className="f-18 b-5xx">
-                                              Accept
-                                            </text>
-                                          </Button>
-                                        </ConfigProvider>
-                                      </div>
-                                    )}
-                                  </Card>
-                                  <text className="fl-r f-9 m-0-80">
-                                    {formatTime(message.createdAt)}
-                                  </text>
-                                </Col>
-
-                                <Col xs={{ span: 1 }}>
-                                  <Avatar
-                                    src={message.sender.imageUrl}
-                                    shape="circle"
-                                  />
-                                </Col>
-                              </Row>
-                            ) : (
-                              <Row justify={"end"}>
-                                <Col xs={{ span: 9 }}>
-                                  <Card className={"pd-18 message sender"}>
-                                    <Typography>
-                                      <Text className="c-white f-12">
-                                        {message.content}
-                                      </Text>
-                                    </Typography>
-                                  </Card>
-                                  <text className="fl-r f-9 m-0-80">
-                                    {formatTime(message.createdAt)}
-                                  </text>
-                                </Col>
-
-                                <Col xs={{ span: 1 }}>
-                                  <Avatar
-                                    src={message.sender.imageUrl}
-                                    shape="circle"
-                                  />
-                                </Col>
-                              </Row>
-                            )}
-                          </div>
-                        ) : (
-                          <div className="pd-24">
-                            {message.type === MessageType.CloseChat ? (
-                              <Row justify={"start"}>
-                                <Col xs={{ span: 1 }} className="m-0-20">
-                                  <Avatar
-                                    src={message.sender.imageUrl}
-                                    shape="circle"
-                                  />
-                                </Col>
-
-                                <Col xs={{ span: 9 }}>
-                                  <Card className={"message"}>
-                                    <div className="deal-close">
-                                      <Typography>
-                                        <Text className="c-white f-9">{`${message.sender.name} has sent you Deal Close offer:`}</Text>
-                                        <br />
-                                        <Text className="f-42 b-7xx c-white">
-                                          DEAL CLOSE
-                                        </Text>
-                                      </Typography>
-                                    </div>
-
-                                    {message.sender._id === user._id ? (
-                                      <div className="text-center">
-                                        <ConfigProvider
-                                          wave={{ disabled: true }}
-                                        >
-                                          <Button
-                                            className="deal-close-cancel-btn"
-                                            onClick={() =>
-                                              cancelCloseDealHandler(
-                                                message._id
-                                              )
-                                            }
-                                          >
-                                            <text className="f-18 b-5xx">
-                                              Cancel
-                                            </text>
-                                          </Button>
-                                        </ConfigProvider>
-                                      </div>
-                                    ) : (
-                                      <div className="text-center">
-                                        <ConfigProvider
-                                          wave={{ disabled: true }}
-                                        >
-                                          <Button
-                                            className="deal-close-btn br-right"
-                                            onClick={() =>
-                                              rejectCloseDealHandler(
-                                                selectedChat
-                                              )
-                                            }
-                                          >
-                                            <text className="f-18 b-5xx">
-                                              Reject
-                                            </text>
-                                          </Button>
-                                        </ConfigProvider>
-
-                                        <ConfigProvider
-                                          wave={{ disabled: true }}
-                                        >
-                                          <Button
-                                            className="deal-close-btn"
-                                            onClick={handleOpenReviewModal}
-                                          >
-                                            <text className="f-18 b-5xx">
-                                              Accept
-                                            </text>
-                                          </Button>
-                                        </ConfigProvider>
-                                      </div>
-                                    )}
-                                  </Card>
-
-                                  <text className="f-9">
-                                    {formatTime(message.createdAt)}
-                                  </text>
-                                </Col>
-                              </Row>
-                            ) : (
-                              <Row justify={"start"}>
-                                <Col xs={{ span: 1 }} className="m-0-20">
-                                  <Avatar
-                                    src={message.sender.imageUrl}
-                                    shape="circle"
-                                  />
-                                </Col>
-
-                                <Col xs={{ span: 9 }}>
-                                  <Card className={"pd-18 message receiver"}>
-                                    <Typography>
-                                      <Text className="f-12">
-                                        {message.content}
-                                      </Text>
-                                    </Typography>
-                                  </Card>
-                                  <text className="f-9">
-                                    {formatTime(message.createdAt)}
-                                  </text>
-                                </Col>
-                              </Row>
-                            )}
-                          </div>
-                        )}
+                          <Col xs={3} sm={3} md={3} lg={2} xl={1} xxl={1}>
+                            <Button
+                              className="i-btn"
+                              type="success"
+                              shape="circle"
+                              size="small"
+                            >
+                              <text className="c-white">i</text>
+                            </Button>
+                          </Col>
+                        </Row>
                       </div>
-                    ))}
-                  </div>
-                )}
+                    )
+                }
+                <div className="divider"></div>
+                {
+                  messages.length === 0 ?
+                    (
+                      <div className="message-container"></div>
+                    ) :
+                    (
+                      <div className="message-container" ref={messageWindowRef}>
+                        {
+                          messages.map((message, index) =>
+                          (
+                            <div key={index}>
+                              {
+                                message.sender._id === user._id ?
+                                  (
+                                    <div className="pd-24">
+                                      {
+                                        message.type === MessageType.CloseChat ?
+                                          (
+                                            <Row justify={"end"}>
+                                              <Col xs={{ span: 9 }}>
+                                                <Card className={"message"}>
+                                                  <div className="deal-close">
+                                                    <Typography>
+                                                      <Text className="c-white f-9">{`${message.sender.name} has sent you Deal Close offer:`}</Text>
+                                                      <br />
+                                                      <Text className="c-white f-42 b-7xx">
+                                                        DEAL CLOSE
+                                                      </Text>
+                                                    </Typography>
+                                                  </div>
+
+                                                  {
+                                                    message.sender._id === user._id ?
+                                                      (
+                                                        <div className="text-center">
+                                                          <ConfigProvider
+                                                            wave={{ disabled: true }}
+                                                          >
+                                                            <Button
+                                                              className="deal-close-cancel-btn"
+                                                              onClick={() =>
+                                                                cancelCloseDealHandler(
+                                                                  message._id
+                                                                )
+                                                              }
+                                                              disabled={selectedChat.closed ? true : false}
+                                                            >
+                                                              <text className="f-18 b-5xx">
+                                                                Cancel
+                                                              </text>
+                                                            </Button>
+                                                          </ConfigProvider>
+                                                        </div>
+                                                      ) :
+                                                      (
+                                                        <div className="text-center">
+                                                          <ConfigProvider
+                                                            wave={{ disabled: true }}
+                                                          >
+                                                            <Button
+                                                              className="deal-close-btn br-right"
+                                                              onClick={() =>
+                                                                rejectCloseDealHandler(
+                                                                  selectedChat
+                                                                )
+                                                              }
+                                                            >
+                                                              <text className="f-18 b-5xx">
+                                                                Reject
+                                                              </text>
+                                                            </Button>
+                                                          </ConfigProvider>
+
+                                                          <ConfigProvider
+                                                            wave={{ disabled: true }}
+                                                          >
+                                                            <Button
+                                                              className="deal-close-btn"
+                                                              disabled={selectedChat.reviewed || selectedChat.closed}
+                                                              onClick={handleOpenReviewModal}
+                                                            >
+                                                              <text className="f-18 b-5xx">
+                                                                Accept
+                                                              </text>
+                                                            </Button>
+                                                          </ConfigProvider>
+                                                        </div>
+                                                      )
+                                                  }
+                                                </Card>
+                                                <text className="fl-r f-9 m-0-80">
+                                                  {formatTime(message.createdAt)}
+                                                </text>
+                                              </Col>
+                                              <Col xs={{ span: 1 }}>
+                                                <Avatar
+                                                  src={message.sender.imageUrl}
+                                                  shape="circle"
+                                                />
+                                              </Col>
+                                            </Row>
+                                          ) :
+                                          (
+                                            <div>
+                                              {
+                                                message.type === MessageType.ReviewChat ? (
+                                                  <Row justify={"end"}>
+                                                    <Col xs={{ span: 9 }}>
+                                                      <Card className={"message"}>
+                                                        <div className="deal-close">
+                                                          <Typography>
+                                                            <Text className="c-white f-9">{`${message.sender.name} has sent you Deal Close offer:`}</Text>
+                                                            <br />
+                                                            <Text className="f-42 b-7xx c-white">
+                                                              DEAL CLOSE
+                                                            </Text>
+                                                          </Typography>
+                                                        </div>
+                                                        <div className="text-center">
+                                                          <ConfigProvider
+                                                            wave={{ disabled: true }}
+                                                          >
+                                                            <Button
+                                                              className="deal-close-cancel-btn"
+                                                              disabled={message.sender._id === user._id || selectedChat.closed ? true : false}
+                                                              onClick={ReviewButtonHandler}
+                                                            >
+                                                              <text className="f-18 b-5xx">
+                                                                Review
+                                                              </text>
+                                                            </Button>
+                                                          </ConfigProvider>
+                                                        </div>
+                                                      </Card>
+                                                      <text className="f-9">
+                                                        {formatTime(message.createdAt)}
+                                                      </text>
+                                                    </Col>
+                                                    <Col xs={{ span: 1 }} className="m-0-20">
+                                                      <Avatar
+                                                        // src={message.sender.imageUrl}
+                                                        // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
+                                                        shape="circle"
+                                                      />
+                                                    </Col>
+                                                  </Row>
+                                                ) : (
+                                                  <Row justify={"end"}>
+                                                    <Col xs={{ span: 9 }}>
+                                                      <Card className={"pd-18 message sender"}>
+                                                        <Typography>
+                                                          <Text className="c-white f-12">
+                                                            {message.content}
+                                                          </Text>
+                                                        </Typography>
+                                                      </Card>
+                                                      <text className="fl-r f-9 m-0-80">
+                                                        {formatTime(message.createdAt)}
+                                                      </text>
+                                                    </Col>
+
+                                                    <Col xs={{ span: 1 }}>
+                                                      <Avatar
+                                                        src={message.sender.imageUrl}
+                                                        shape="circle"
+                                                      />
+                                                    </Col>
+                                                  </Row>
+                                                )
+                                              }
+                                            </div>
+                                          )
+                                      }
+                                    </div>
+                                  ) :
+                                  (
+                                    <div className="pd-24">
+                                      {
+                                        message.type === MessageType.CloseChat ?
+                                          (
+                                            <Row justify={"start"}>
+                                              <Col xs={{ span: 1 }} className="m-0-20">
+                                                <Avatar
+                                                  src={message.sender.imageUrl}
+                                                  shape="circle"
+                                                />
+                                              </Col>
+
+                                              <Col xs={{ span: 9 }}>
+                                                <Card className={"message"}>
+                                                  <div className="deal-close">
+                                                    <Typography>
+                                                      <Text className="c-white f-9">{`${message.sender.name} has sent you Deal Close offer:`}</Text>
+                                                      <br />
+                                                      <Text className="f-42 b-7xx c-white">
+                                                        DEAL CLOSE
+                                                      </Text>
+                                                    </Typography>
+                                                  </div>
+
+                                                  {
+                                                    message.sender._id === user._id ?
+                                                      (
+                                                        <div className="text-center">
+                                                          <ConfigProvider
+                                                            wave={{ disabled: true }}
+                                                          >
+                                                            <Button
+                                                              className="deal-close-cancel-btn"
+                                                              onClick={() =>
+                                                                cancelCloseDealHandler(
+                                                                  message._id
+                                                                )
+                                                              }
+                                                              disabled={selectedChat.closed ? true : false}
+                                                            >
+                                                              <text className="f-18 b-5xx">
+                                                                Cancel
+                                                              </text>
+                                                            </Button>
+                                                          </ConfigProvider>
+                                                        </div>
+                                                      ) :
+                                                      (
+                                                        <div className="text-center">
+                                                          {
+                                                            message.type === MessageType.ReviewChat ?
+                                                              (
+                                                                <ConfigProvider
+                                                                  wave={{ disabled: true }}
+                                                                >
+                                                                  <Button
+                                                                    className="deal-close-cancel-btn"
+                                                                    disabled={message.sender._id === user._id || selectedChat.closed ? true : false}
+                                                                    onClick={ReviewButtonHandler}
+                                                                  >
+                                                                    <text className="f-18 b-5xx">
+                                                                      Review
+                                                                    </text>
+                                                                  </Button>
+                                                                </ConfigProvider>
+                                                              ) :
+                                                              (
+                                                                <>
+                                                                  <ConfigProvider
+                                                                    wave={{ disabled: true }}
+                                                                  >
+                                                                    <Button
+                                                                      className="deal-close-btn br-right"
+                                                                      onClick={() =>
+                                                                        rejectCloseDealHandler(
+                                                                          selectedChat
+                                                                        )
+                                                                      }
+                                                                    >
+                                                                      <text className="f-18 b-5xx">
+                                                                        Reject
+                                                                      </text>
+                                                                    </Button>
+                                                                  </ConfigProvider>
+
+                                                                  <ConfigProvider
+                                                                    wave={{ disabled: true }}
+                                                                  >
+                                                                    <Button
+                                                                      className="deal-close-btn"
+                                                                      disabled={selectedChat.reviewed || selectedChat.closed}
+                                                                      onClick={handleOpenReviewModal}
+                                                                    >
+                                                                      <text className="f-18 b-5xx">
+                                                                        Accept
+                                                                      </text>
+                                                                    </Button>
+                                                                  </ConfigProvider>
+                                                                </>
+                                                              )
+                                                          }
+                                                        </div>
+                                                      )
+                                                  }
+                                                </Card>
+
+                                                <text className="f-9">
+                                                  {formatTime(message.createdAt)}
+                                                </text>
+                                              </Col>
+                                            </Row>
+                                          ) :
+                                          (
+                                            <div>
+                                              {
+                                                message.type === MessageType.ReviewChat ?
+                                                  (
+                                                    <Row justify={"start"}>
+                                                      <Col xs={{ span: 1 }} className="m-0-20">
+                                                        <Avatar
+                                                          // src={message.sender.imageUrl}
+                                                          // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
+                                                          shape="circle"
+                                                        />
+                                                      </Col>
+                                                      <Col xs={{ span: 9 }}>
+                                                        <Card className={"message"}>
+                                                          <div className="deal-close">
+                                                            <Typography>
+                                                              <Text className="c-white f-9">{`${message.sender.name} has sent you Deal Close offer:`}</Text>
+                                                              <br />
+                                                              <Text className="f-42 b-7xx c-white">
+                                                                DEAL CLOSE
+                                                              </Text>
+                                                            </Typography>
+                                                          </div>
+                                                          <div className="text-center">
+                                                            <ConfigProvider
+                                                              wave={{ disabled: true }}
+                                                            >
+                                                              <Button
+                                                                className="deal-close-cancel-btn"
+                                                                disabled={message.sender._id === user._id || selectedChat.closed ? true : false}
+                                                                onClick={ReviewButtonHandler}
+                                                              >
+                                                                <text className="f-18 b-5xx">
+                                                                  Review
+                                                                </text>
+                                                              </Button>
+                                                            </ConfigProvider>
+                                                          </div>
+                                                        </Card>
+                                                        <text className="f-9">
+                                                          {formatTime(message.createdAt)}
+                                                        </text>
+                                                      </Col>
+                                                    </Row>
+                                                  ) : (
+                                                    <Row justify={"start"}>
+                                                      <Col xs={{ span: 1 }} className="m-0-20">
+                                                        <Avatar
+                                                          src={message.sender.imageUrl}
+                                                          shape="circle"
+                                                        />
+                                                      </Col>
+
+                                                      <Col xs={{ span: 9 }}>
+                                                        <Card className={"pd-18 message receiver"}>
+                                                          <Typography>
+                                                            <Text className="f-12">
+                                                              {message.content}
+                                                            </Text>
+                                                          </Typography>
+                                                        </Card>
+                                                        <text className="f-9">
+                                                          {formatTime(message.createdAt)}
+                                                        </text>
+                                                      </Col>
+                                                    </Row>
+                                                  )
+                                              }
+                                            </div>
+                                          )
+                                      }
+                                    </div>
+                                  )
+                              }
+                            </div>
+                          ))
+                        }
+                      </div>
+                    )
+                }
+
                 <div className="pd-24 mt-1x">
                   <Space.Compact className="message-box">
                     <Input
@@ -807,13 +1027,13 @@ export default function Chat() {
       <ReviewModal
         visible={reviewModalVisible}
         setVisible={setReviewModalVisible}
-        acceptCloseDealHandler={acceptCloseDealHandler}
+        sendReviewMessage={sendReviewMessageHandler}
         brokerId={brokerId}
-        userType={userType}
+        userType={brokerType}
+        isReviewBtnClicked={isReviewBtnClicked}
         chat={selectedChat}
+        refresh={refresh}
       />
-
-      <ChatModal visible={chatModalVisible} setVisible={setChatModalVisible} />
 
       <Navbar />
       <section className="section">
@@ -830,383 +1050,553 @@ export default function Chat() {
               <h1 className="f-32 b-6xx">Messages</h1>
 
               <div className="chat-container h-full flex flex-col gap-2">
-                {receiverList.map((chat, index) => (
-                  <Card
-                    key={chat._id}
-                    className={`chat-card ${
-                      chatClickedIndex === chat._id ? "active" : ""
-                    }`}
-                    onClick={() => chatClickHandler(chat._id)}
-                  >
-                    <Row className="pd-12">
-                      <Col xs={3} sm={3} md={3} lg={5} xl={2} xxl={1}>
-                        {chat.receiver != null &&
-                        chat.receiver.online === true ? (
-                          <Badge status="success" dot offset={[-6, 36]}>
+                {
+                  receiverList.map((chat, index) =>
+                  (
+                    <Card
+                      key={chat._id}
+                      className={`chat-card ${chatClickedIndex === chat._id ? "active" : ""
+                        }`}
+                      onClick={() => chatClickHandler(chat._id)}
+                    >
+                      <Row className="pd-12">
+                        <Col xs={3} sm={3} md={3} lg={5} xl={2} xxl={1}>
+                          {chat.receiver != null &&
+                            chat.receiver.online === true ? (
+                            <Badge status="success" dot offset={[-6, 36]}>
+                              <Avatar
+                                // src={chat.receiver.imageUrl}
+                                // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
+                                shape="circle"
+                                className="h-5x w-5x"
+                              ></Avatar>
+                            </Badge>
+                          ) : (
                             <Avatar
                               // src={chat.receiver.imageUrl}
-                              src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
+                              // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
                               shape="circle"
                               className="h-5x w-5x"
-                            ></Avatar>
-                          </Badge>
-                        ) : (
-                          <Avatar
-                            // src={chat.receiver.imageUrl}
-                            src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
-                            shape="circle"
-                            className="h-5x w-5x"
+                            >
+                              {" "}
+                            </Avatar>
+                          )}
+                        </Col>
+
+                        <Col xs={3} sm={3} md={3} lg={2} xl={3} xxl={2}></Col>
+
+                        <Col xs={3} sm={3} md={3} lg={8} xl={8} xxl={16}>
+                          <text className="f-16 b-7xx">{chat.receiver.name}</text>
+                          <br />
+                          <Typography.Text
+                            className="f-12 c-grey"
+                            ellipsis={{ rows: 1 }}
                           >
-                            {" "}
-                          </Avatar>
-                        )}
-                      </Col>
+                            {chat.lastMessage}
+                          </Typography.Text>
+                          {/* //  <text className="f-12 c-grey">{chat.lastMessage}</text> */}
+                        </Col>
 
-                      <Col xs={3} sm={3} md={3} lg={2} xl={3} xxl={2}></Col>
-
-                      <Col xs={3} sm={3} md={3} lg={8} xl={8} xxl={16}>
-                        <text className="f-16 b-7xx">{chat.receiver.name}</text>
-                        <br />
-                        <Typography.Text
-                          className="f-12 c-grey"
-                          ellipsis={{ rows: 1 }}
-                        >
-                          {chat.lastMessage}
-                        </Typography.Text>
-                        {/* //  <text className="f-12 c-grey">{chat.lastMessage}</text> */}
-                      </Col>
-
-                      <Col xs={3} sm={3} md={3} lg={1} xl={3} xxl={3}>
-                        {chat.unReadMessages > 0 ? (
-                          <Badge
-                            color="green"
-                            count={chat.unReadMessages}
-                            offset={[80, 20]}
-                          ></Badge>
-                        ) : (
-                          <text></text>
-                        )}
-                      </Col>
-                    </Row>
-                  </Card>
-                ))}
+                        <Col xs={3} sm={3} md={3} lg={1} xl={3} xxl={3}>
+                          {chat.unReadMessages > 0 ? (
+                            <Badge
+                              color="green"
+                              count={chat.unReadMessages}
+                              offset={[80, 20]}
+                            ></Badge>
+                          ) : (
+                            <text></text>
+                          )}
+                        </Col>
+                      </Row>
+                    </Card>
+                  )
+                  )
+                }
               </div>
             </div>
           </Col>
-          {selectedChat == null ? (
-            <Col
-              xs={22}
-              md={22}
-              lg={16}
-              xl={16}
-              xll={12}
-              className="h-full border custom-border rounded-2xl flex items-center justify-center"
-            >
-              <Title className="text-slate-400">Select Any Chat</Title>
-            </Col>
-          ) : (
-            <Col
-              xs={22}
-              md={22}
-              lg={16}
-              xl={16}
-              xll={12}
-              className="h-full border custom-border rounded-2xl flex flex-col"
-            >
-              <div className="pd-24">
-                <Row>
-                  <Col xs={{ span: 1 }}>
-                    <Avatar
-                      className="h-4x w-4x"
-                      // src={selectedChat.receiver.imageUrl}
-                      src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
-                      shape="circle"
-                    />
-                  </Col>
-
-                  <Col xs={3} sm={3} md={6} lg={5} className="pd-0-15">
-                    <text className="f-16 b-7xx">
-                      {selectedChat.receiver.name}
-                    </text>
-                  </Col>
-
-                  <Col lg={12} xl={11}></Col>
-
-                  <Col xs={3} sm={3} md={3} lg={2} xl={3} xxl={3}>
-                    <Button
-                      disabled={
-                        selectedChat != null && selectedChat.closed
-                          ? true
-                          : false
-                      }
-                      className="close-deal-btn"
-                      onClick={closeDealMessageHandler}
-                    >
-                      <img src="images/payment/closeDeal.png" />
-                      <text className="f-16 b-6xx"> Close Deal</text>
-                    </Button>
-                  </Col>
-
-                  <Col lg={1} xl={1}></Col>
-
-                  <Col xs={3} sm={3} md={3} lg={2} xl={1} xxl={1}>
-                    <Button
-                      className="i-btn"
-                      type="success"
-                      shape="circle"
-                      size="small"
-                    >
-                      <text className="c-white">i</text>
-                    </Button>
-                  </Col>
-                </Row>
-              </div>
-              <div className="divider"></div>
-              {messages.length === 0 ? (
-                <div className="message-container"></div>
-              ) : (
-                <div className="message-container" ref={messageWindowRef}>
-                  {messages.map((message, index) => (
-                    <div key={index}>
-                      {message.sender._id === user._id ? (
-                        <div className="pd-24">
-                          {message.type === MessageType.CloseChat ? (
-                            <Row justify={"end"}>
-                              <Col xs={{ span: 9 }}>
-                                <Card className={"message"}>
-                                  <div className="deal-close">
-                                    <Typography>
-                                      <Text className="c-white f-9">{`${message.sender.name} has sent you Deal Close offer:`}</Text>
-                                      <br />
-                                      <Text className="c-white f-42 b-7xx">
-                                        DEAL CLOSE
-                                      </Text>
-                                    </Typography>
-                                  </div>
-
-                                  {message.sender._id === user._id ? (
-                                    <div className="text-center">
-                                      <ConfigProvider wave={{ disabled: true }}>
-                                        <Button
-                                          className="deal-close-cancel-btn"
-                                          onClick={() =>
-                                            cancelCloseDealHandler(message._id)
-                                          }
-                                        >
-                                          <text className="f-18 b-5xx">
-                                            Cancel
-                                          </text>
-                                        </Button>
-                                      </ConfigProvider>
-                                    </div>
-                                  ) : (
-                                    <div className="text-center">
-                                      <ConfigProvider wave={{ disabled: true }}>
-                                        <Button
-                                          className="deal-close-btn br-right"
-                                          onClick={() =>
-                                            rejectCloseDealHandler(selectedChat)
-                                          }
-                                        >
-                                          <text className="f-18 b-5xx">
-                                            Reject
-                                          </text>
-                                        </Button>
-                                      </ConfigProvider>
-
-                                      <ConfigProvider wave={{ disabled: true }}>
-                                        <Button
-                                          className="deal-close-btn"
-                                          onClick={handleOpenReviewModal}
-                                        >
-                                          <text className="f-18 b-5xx">
-                                            Accept
-                                          </text>
-                                        </Button>
-                                      </ConfigProvider>
-                                    </div>
-                                  )}
-                                </Card>
-                                <text className="fl-r f-9 m-0-80">
-                                  {formatTime(message.createdAt)}
-                                </text>
-                              </Col>
-
-                              <Col xs={{ span: 1 }}>
-                                <Avatar
-                                  // src={message.sender.imageUrl}
-                                  src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
-                                  shape="circle"
-                                />
-                              </Col>
-                            </Row>
-                          ) : (
-                            <Row justify={"end"}>
-                              <Col xs={{ span: 9 }}>
-                                <Card className={"pd-18 message sender"}>
-                                  <Typography>
-                                    <Text className="c-white f-12">
-                                      {message.content}
-                                    </Text>
-                                  </Typography>
-                                </Card>
-                                <text className="fl-r f-9 m-0-80">
-                                  {formatTime(message.createdAt)}
-                                </text>
-                              </Col>
-
-                              <Col xs={{ span: 1 }}>
-                                <Avatar
-                                  // src={message.sender.imageUrl}
-                                  src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
-                                  shape="circle"
-                                />
-                              </Col>
-                            </Row>
-                          )}
-                        </div>
-                      ) : (
-                        <div className="pd-24">
-                          {message.type === MessageType.CloseChat ? (
-                            <Row justify={"start"}>
-                              <Col xs={{ span: 1 }} className="m-0-20">
-                                <Avatar
-                                  // src={message.sender.imageUrl}
-                                  src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
-                                  shape="circle"
-                                />
-                              </Col>
-
-                              <Col xs={{ span: 9 }}>
-                                <Card className={"message"}>
-                                  <div className="deal-close">
-                                    <Typography>
-                                      <Text className="c-white f-9">{`${message.sender.name} has sent you Deal Close offer:`}</Text>
-                                      <br />
-                                      <Text className="f-42 b-7xx c-white">
-                                        DEAL CLOSE
-                                      </Text>
-                                    </Typography>
-                                  </div>
-
-                                  {message.sender._id === user._id ? (
-                                    <div className="text-center">
-                                      <ConfigProvider wave={{ disabled: true }}>
-                                        <Button
-                                          className="deal-close-cancel-btn"
-                                          onClick={() =>
-                                            cancelCloseDealHandler(message._id)
-                                          }
-                                        >
-                                          <text className="f-18 b-5xx">
-                                            Cancel
-                                          </text>
-                                        </Button>
-                                      </ConfigProvider>
-                                    </div>
-                                  ) : (
-                                    <div className="text-center">
-                                      <ConfigProvider wave={{ disabled: true }}>
-                                        <Button
-                                          className="deal-close-btn br-right"
-                                          onClick={() =>
-                                            rejectCloseDealHandler(selectedChat)
-                                          }
-                                        >
-                                          <text className="f-18 b-5xx">
-                                            Reject
-                                          </text>
-                                        </Button>
-                                      </ConfigProvider>
-
-                                      <ConfigProvider wave={{ disabled: true }}>
-                                        <Button
-                                          className="deal-close-btn"
-                                          onClick={handleOpenReviewModal}
-                                        >
-                                          <text className="f-18 b-5xx">
-                                            Accept
-                                          </text>
-                                        </Button>
-                                      </ConfigProvider>
-                                    </div>
-                                  )}
-                                </Card>
-
-                                <text className="f-9">
-                                  {formatTime(message.createdAt)}
-                                </text>
-                              </Col>
-                            </Row>
-                          ) : (
-                            <Row justify={"start"}>
-                              <Col xs={{ span: 1 }} className="m-0-20">
-                                <Avatar
-                                  // src={message.sender.imageUrl}
-                                  src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
-                                  shape="circle"
-                                />
-                              </Col>
-
-                              <Col xs={{ span: 9 }}>
-                                <Card className={"pd-18 message receiver"}>
-                                  <Typography>
-                                    <Text className="f-12">
-                                      {message.content}
-                                    </Text>
-                                  </Typography>
-                                </Card>
-                                <text className="f-9">
-                                  {formatTime(message.createdAt)}
-                                </text>
-                              </Col>
-                            </Row>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              <div className="pd-24 mt-1x">
-                <Box
-                  className="message-box flex"
-                  component={"form"}
-                  onSubmit={sendMessageHandler}
-                >
-                  <Input
-                    disabled={
-                      selectedChat != null && selectedChat.closed ? true : false
-                    }
-                    value={message}
-                    onChange={handleMessageChange}
-                    className="input-message border-none focus:shadow-none"
-                    placeholder="Type your messages here"
-                  ></Input>
-
-                  <ConfigProvider wave={{ disabled: true }}>
-                    <button
-                      disabled={
-                        selectedChat != null && selectedChat.closed
-                          ? true
-                          : false
-                      }
-                      type="submit"
-                      className="send-btn"
-                    >
-                      <img
-                        className="send-btn-image"
-                        src="/images/payment/sendBtn.png"
+          {selectedChat == null ?
+            (
+              <Col
+                xs={22}
+                md={22}
+                lg={16}
+                xl={16}
+                xll={12}
+                className="h-full border custom-border rounded-2xl flex items-center justify-center"
+              >
+                <Title className="text-slate-400">Select Any Chat</Title>
+              </Col>
+            ) :
+            (
+              <Col
+                xs={22}
+                md={22}
+                lg={16}
+                xl={16}
+                xll={12}
+                className="h-full border custom-border rounded-2xl flex flex-col"
+              >
+                <div className="pd-24">
+                  <Row>
+                    <Col xs={{ span: 1 }}>
+                      <Avatar
+                        className="h-4x w-4x"
+                        // src={selectedChat.receiver.imageUrl}
+                        // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
+                        shape="circle"
                       />
-                    </button>
-                  </ConfigProvider>
-                </Box>
-              </div>
-            </Col>
-          )}
+                    </Col>
+
+                    <Col xs={3} sm={3} md={6} lg={5} className="pd-0-15">
+                      <text className="f-16 b-7xx">
+                        {selectedChat.receiver.name}
+                      </text>
+                      <br />
+                      <Typography.Text className="f-16 b-7xx" ellipsis={{ rows: 1 }} >
+                        {selectedChat.ip.name}
+                      </Typography.Text>
+                    </Col>
+
+                    <Col lg={12} xl={11}></Col>
+
+                    <Col xs={3} sm={3} md={3} lg={2} xl={3} xxl={3}>
+                      <Button
+                        disabled={
+                          selectedChat != null && selectedChat.closed
+                            ? true
+                            : false
+                        }
+                        className="close-deal-btn"
+                        onClick={closeDealMessageHandler}
+                      >
+                        <img src="images/payment/closeDeal.png" />
+                        <text className="f-16 b-6xx"> Close Deal</text>
+                      </Button>
+                    </Col>
+
+                    <Col lg={1} xl={1}></Col>
+
+                    <Col xs={3} sm={3} md={3} lg={2} xl={1} xxl={1}>
+                      <Button
+                        className="i-btn"
+                        type="success"
+                        shape="circle"
+                        size="small"
+                      >
+                        <text className="c-white">i</text>
+                      </Button>
+                    </Col>
+                  </Row>
+                </div>
+                <div className="divider"></div>
+                {
+                  messages.length === 0 ?
+                    (
+                      <div className="message-container"></div>
+                    ) :
+                    (
+                      <div className="message-container" ref={messageWindowRef}>
+                        {
+                          messages.map((message, index) =>
+                          (
+                            <div key={index}>
+                              {
+                                message.sender._id === user._id ?
+                                  (
+                                    <div className="pd-24">
+                                      {
+                                        message.type === MessageType.CloseChat ?
+                                          (
+                                            <Row justify={"end"}>
+
+                                              <Col xs={{ span: 9 }}>
+                                                <Card className={"message"}>
+                                                  <div className="deal-close">
+                                                    <Typography>
+                                                      <Text className="c-white f-9">{`${message.sender.name} has sent you Deal Close offer:`}</Text>
+                                                      <br />
+                                                      <Text className="c-white f-42 b-7xx">
+                                                        DEAL CLOSE
+                                                      </Text>
+                                                    </Typography>
+                                                  </div>
+                                                  {
+                                                    message.sender._id === user._id ?
+                                                      (
+                                                        <div className="text-center">
+                                                          <ConfigProvider wave={{ disabled: true }}>
+                                                            <Button
+                                                              className="deal-close-cancel-btn"
+                                                              onClick={() =>
+                                                                cancelCloseDealHandler(message._id)
+                                                              }
+                                                              disabled={selectedChat.closed ? true : false}
+                                                            >
+                                                              <text className="f-18 b-5xx">
+                                                                Cancel
+                                                              </text>
+                                                            </Button>
+                                                          </ConfigProvider>
+                                                        </div>
+                                                      ) :
+                                                      (
+                                                        <div className="text-center">
+                                                          {
+                                                            message.type === MessageType.ReviewChat ?
+                                                              (
+                                                                <ConfigProvider
+                                                                  wave={{ disabled: true }}
+                                                                >
+                                                                  <Button
+                                                                    className="deal-close-btn br-right"
+                                                                    disabled={message.sender._id === user._id || selectedChat.closed ? true : false}
+
+
+                                                                    onClick={ReviewButtonHandler}
+                                                                  >
+                                                                    <text className="f-18 b-5xx">
+                                                                      Review
+                                                                    </text>
+                                                                  </Button>
+                                                                </ConfigProvider>
+                                                              ) :
+                                                              (
+                                                                <>
+                                                                  <ConfigProvider wave={{ disabled: true }}>
+                                                                    <Button
+                                                                      className="deal-close-btn br-right"
+                                                                      disabled={selectedChat.reviewed || selectedChat.closed}
+                                                                      onClick={() =>
+                                                                        rejectCloseDealHandler(selectedChat)
+                                                                      }
+                                                                    >
+                                                                      <text className="f-18 b-5xx">
+                                                                        Reject
+                                                                      </text>
+                                                                    </Button>
+                                                                  </ConfigProvider>
+
+                                                                  <ConfigProvider wave={{ disabled: true }}>
+                                                                    <Button
+                                                                      className="deal-close-btn"
+                                                                      disabled={selectedChat.reviewed || selectedChat.closed}
+                                                                      onClick={handleOpenReviewModal}
+                                                                    >
+                                                                      <text className="f-18 b-5xx">
+                                                                        Accept
+                                                                      </text>
+                                                                    </Button>
+                                                                  </ConfigProvider>
+                                                                </>
+                                                              )
+                                                          }
+                                                        </div>
+                                                      )
+                                                  }
+                                                </Card>
+                                                <text className="fl-r f-9 m-0-80">
+                                                  {formatTime(message.createdAt)}
+                                                </text>
+                                              </Col>
+
+                                              <Col xs={{ span: 1 }}>
+                                                <Avatar
+                                                  // src={message.sender.imageUrl}
+                                                  // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
+                                                  shape="circle"
+                                                />
+                                              </Col>
+                                            </Row>
+                                          ) :
+                                          (
+                                            <div>
+                                              {
+                                                message.type === MessageType.ReviewChat ?
+                                                  (
+                                                    <Row justify={"end"}>
+                                                      <Col xs={{ span: 9 }}>
+                                                        <Card className={"message"}>
+                                                          <div className="deal-close">
+                                                            <Typography>
+                                                              <Text className="c-white f-9">{`${message.sender.name} has sent you Deal Close offer:`}</Text>
+                                                              <br />
+                                                              <Text className="f-42 b-7xx c-white">
+                                                                DEAL CLOSE
+                                                              </Text>
+                                                            </Typography>
+                                                          </div>
+                                                          <div className="text-center">
+                                                            <ConfigProvider
+                                                              wave={{ disabled: true }}
+                                                            >
+                                                              <Button
+                                                                className="deal-close-cancel-btn"
+                                                                disabled={message.sender._id === user._id || selectedChat.closed ? true : false}
+                                                                onClick={ReviewButtonHandler}
+                                                              >
+                                                                <text className="f-18 b-5xx">
+                                                                  Review
+                                                                </text>
+                                                              </Button>
+                                                            </ConfigProvider>
+                                                          </div>
+                                                        </Card>
+                                                        <text className="f-9">
+                                                          {formatTime(message.createdAt)}
+                                                        </text>
+                                                      </Col>
+                                                      <Col xs={{ span: 1 }} className="m-0-20">
+                                                        <Avatar
+                                                          // src={message.sender.imageUrl}
+                                                          // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
+                                                          shape="circle"
+                                                        />
+                                                      </Col>
+                                                    </Row>
+                                                  ) :
+                                                  (
+                                                    <Row justify={"end"}>
+                                                      <Col xs={{ span: 9 }}>
+                                                        <Card className={"pd-18 message sender"}>
+                                                          <Typography>
+                                                            <Text className="c-white f-12">
+                                                              {message.content}
+                                                            </Text>
+                                                          </Typography>
+                                                        </Card>
+                                                        <text className="fl-r f-9 m-0-80">
+                                                          {formatTime(message.createdAt)}
+                                                        </text>
+                                                      </Col>
+
+                                                      <Col xs={{ span: 1 }}>
+                                                        <Avatar
+                                                          // src={message.sender.imageUrl}
+                                                          // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
+                                                          shape="circle"
+                                                        />
+                                                      </Col>
+                                                    </Row>
+                                                  )
+                                              }
+                                            </div>
+                                          )
+                                      }
+                                    </div>
+                                  ) :
+                                  (
+                                    <div className="pd-24">
+                                      {
+                                        message.type === MessageType.CloseChat ?
+                                          (
+                                            <Row justify={"start"}>
+                                              <Col xs={{ span: 1 }} className="m-0-20">
+                                                <Avatar
+                                                  // src={message.sender.imageUrl}
+                                                  // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
+                                                  shape="circle"
+                                                />
+                                              </Col>
+                                              <Col xs={{ span: 9 }}>
+                                                <Card className={"message"}>
+                                                  <div className="deal-close">
+                                                    <Typography>
+                                                      <Text className="c-white f-9">{`${message.sender.name} has sent you Deal Close offer:`}</Text>
+                                                      <br />
+                                                      <Text className="f-42 b-7xx c-white">
+                                                        DEAL CLOSE
+                                                      </Text>
+                                                    </Typography>
+                                                  </div>
+
+                                                  {
+                                                    message.sender._id === user._id ?
+                                                      (
+                                                        <div className="text-center">
+                                                          <ConfigProvider wave={{ disabled: true }}>
+                                                            <Button
+                                                              className="deal-close-cancel-btn"
+                                                              onClick={() =>
+                                                                cancelCloseDealHandler(message._id)
+                                                              }
+                                                              disabled={selectedChat.closed ? true : false}
+                                                            >
+                                                              <text className="f-18 b-5xx">
+                                                                Cancel
+                                                              </text>
+                                                            </Button>
+                                                          </ConfigProvider>
+                                                        </div>
+                                                      ) :
+                                                      (
+                                                        <div className="text-center">
+                                                          <>
+                                                            <ConfigProvider wave={{ disabled: true }}>
+                                                              <Button
+                                                                className="deal-close-btn br-right"
+                                                                disabled={selectedChat.reviewed || selectedChat.closed}
+                                                                onClick={() =>
+                                                                  rejectCloseDealHandler(selectedChat)
+                                                                }
+                                                              >
+                                                                <text className="f-18 b-5xx">
+                                                                  Reject
+                                                                </text>
+                                                              </Button>
+                                                            </ConfigProvider>
+
+                                                            <ConfigProvider wave={{ disabled: true }}>
+                                                              <Button
+                                                                className="deal-close-btn"
+                                                                disabled={selectedChat.reviewed || selectedChat.closed}
+                                                                onClick={handleOpenReviewModal}
+                                                              >
+                                                                <text className="f-18 b-5xx">
+                                                                  Accept
+                                                                </text>
+                                                              </Button>
+                                                            </ConfigProvider>
+                                                          </>
+                                                        </div>
+                                                      )
+                                                  }
+                                                </Card>
+
+                                                <text className="f-9">
+                                                  {formatTime(message.createdAt)}
+                                                </text>
+                                              </Col>
+                                            </Row>
+                                          ) :
+                                          (
+                                            <div>
+                                              {
+                                                message.type === MessageType.ReviewChat ?
+                                                  (
+                                                    <>
+                                                      <Row justify={"start"}>
+                                                        <Col xs={{ span: 1 }} className="m-0-20">
+                                                          <Avatar
+                                                            // src={message.sender.imageUrl}
+                                                            // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
+                                                            shape="circle"
+                                                          />
+                                                        </Col>
+                                                        <Col xs={{ span: 9 }}>
+                                                          <Card className={"message"}>
+                                                            <div className="deal-close">
+                                                              <Typography>
+                                                                <Text className="c-white f-9">{`${message.sender.name} has sent you Deal Close offer:`}</Text>
+                                                                <br />
+                                                                <Text className="f-42 b-7xx c-white">
+                                                                  DEAL CLOSE
+                                                                </Text>
+                                                              </Typography>
+                                                            </div>
+                                                            <div className="text-center">
+                                                              <ConfigProvider
+                                                                wave={{ disabled: true }}
+                                                              >
+                                                                <Button
+                                                                  className="deal-close-cancel-btn"
+                                                                  disabled={message.sender._id === user._id || selectedChat.closed ? true : false}
+                                                                  onClick={ReviewButtonHandler}
+                                                                >
+                                                                  <text className="f-18 b-5xx">
+                                                                    Review
+                                                                  </text>
+                                                                </Button>
+                                                              </ConfigProvider>
+                                                            </div>
+                                                          </Card>
+                                                          <text className="f-9">
+                                                            {formatTime(message.createdAt)}
+                                                          </text>
+                                                        </Col>
+                                                      </Row>
+                                                    </>
+                                                  ) :
+                                                  (
+                                                    <>
+                                                      <Row justify={"start"}>
+                                                        <Col xs={{ span: 1 }} className="m-0-20">
+                                                          <Avatar
+                                                            // src={message.sender.imageUrl}
+                                                            // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
+                                                            shape="circle"
+                                                          />
+                                                        </Col>
+
+                                                        <Col xs={{ span: 9 }}>
+                                                          <Card className={"pd-18 message receiver"}>
+                                                            <Typography>
+                                                              <Text className="f-12">
+                                                                {message.content}
+                                                              </Text>
+                                                            </Typography>
+                                                          </Card>
+                                                          <text className="f-9">
+                                                            {formatTime(message.createdAt)}
+                                                          </text>
+                                                        </Col>
+                                                      </Row>
+                                                    </>
+                                                  )
+                                              }
+                                            </div>
+                                          )
+                                      }
+                                    </div>
+                                  )
+                              }
+                            </div>
+                          ))
+                        }
+                      </div>
+                    )
+                }
+
+                <div className="pd-24 mt-1x">
+                  <Box
+                    className="message-box flex"
+                    component={"form"}
+                    onSubmit={sendMessageHandler}
+                  >
+                    <Input
+                      disabled={
+                        selectedChat != null && selectedChat.closed ? true : false
+                      }
+                      value={message}
+                      onChange={handleMessageChange}
+                      className="input-message border-none focus:shadow-none"
+                      placeholder="Type your messages here"
+                    ></Input>
+
+                    <ConfigProvider wave={{ disabled: true }}>
+                      <button
+                        disabled={
+                          selectedChat != null && selectedChat.closed
+                            ? true
+                            : false
+                        }
+                        type="submit"
+                        className="send-btn"
+                      >
+                        <img
+                          className="send-btn-image"
+                          src="/images/payment/sendBtn.png"
+                        />
+                      </button>
+                    </ConfigProvider>
+                  </Box>
+                </div>
+              </Col>
+            )
+          }
         </Row>
-      </section>
+      </section >
     </>
   );
 }

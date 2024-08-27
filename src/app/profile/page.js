@@ -119,6 +119,7 @@ export default function Profile() {
       ToastMessage({ message: "Failed to update data!", type: "error" });
     }
   };
+  
 
   return (
     <>

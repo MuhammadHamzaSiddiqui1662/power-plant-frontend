@@ -26,7 +26,7 @@ export const userApi = createApi({
     addReview: build.mutation({
       query(body) {
         return {
-          url: `/${body.id}/${body.reviewType}/reviews`,
+          url: `/${body.userId}/${body.reviewType}/reviews`,
           method: "POST",
           body:body.data,
         };

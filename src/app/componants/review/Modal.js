@@ -21,14 +21,19 @@ import { useUpdateChatMutation } from "../../../services/chat/chat";
 import { Router } from "next/router";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
+import { EventEmitter } from "events";
+const emitter = new EventEmitter();
+
 
 export default function ReviewModal({
   visible,
   setVisible,
+  sendReviewMessage,
   brokerId,
   userType,
+  isReviewBtnClicked,
   chat,
-  acceptCloseDealHandler,
+  refresh
 }) {
   const [successFullCheck, setSuccessFullCheck] = useState(false);
   const [description, setDescription] = useState("");
@@ -95,6 +100,7 @@ export default function ReviewModal({
 
   const addReviewHandler = async () => {
     try {
+
       let reviewType = getReviewType(userType);
 
       let review = {
@@ -111,11 +117,25 @@ export default function ReviewModal({
           userId: user._id,
         },
       };
-
-      acceptCloseDealHandler(chat._id, review);
+      const { data: addReviewResponse, error } = await addReview(review);
+      if (error) return setError(error.message);
+      if (addReviewResponse.message) {
+        if(isReviewBtnClicked){
+          let newChatObject = { ...chat, closed: true };
+          const { data: updateChatResponse, error } = await updateChat(newChatObject);
+          if (error) return setError(error.message);
+          console.log(updateChatResponse)
+          refresh();
+        }
+        else{
+        let newChatObject = { ...chat, reviewed: true };
+        const { data: updateChatResponse, error } = await updateChat(newChatObject);
+        if (error) return setError(error.message);
+        sendReviewMessage(updateChatResponse._id, user._id, brokerId, );
+        }
+      }
 
       handleCancel();
-      router.reload(`/chat`);
     } catch (error) {
       console.log(`error --> ${error}`);
     }
