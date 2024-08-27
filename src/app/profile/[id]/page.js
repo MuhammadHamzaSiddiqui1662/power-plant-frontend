@@ -18,6 +18,8 @@ import { useCreateChatMutation } from "../../../services/chat/chat";
 import { useRouter } from "next/navigation";
 import { useGetHiringDetailsQuery } from "../../../services/hiring/hiring";
 import { UserType } from "../../../types/user";
+import { useFireServerNotificationMutation } from "../../../services/notification/notification";
+import { message } from "antd";
 
 export default function ViewProfile(props) {
   const loginUser = useSelector((state) => state.auth.user);
@@ -32,6 +34,8 @@ export default function ViewProfile(props) {
     `?investor=${loginUser._id}&broker=${props?.params?.id}&ip=${selectedIp._id}`
   );
   const [createChat, { isLoading: isCreating }] = useCreateChatMutation();
+  const [fireServerNotification, { isLoading: isNotifiying }] =
+    useFireServerNotificationMutation();
   const router = useRouter();
 
   const reviews = useMemo(() => {
@@ -65,6 +69,12 @@ export default function ViewProfile(props) {
       chat.ip = selectedIp._id;
       const { data: createChatResponse, error } = await createChat(chat);
       if (error) return setError(error.message);
+      await fireServerNotification({
+        message: `You have been hired by ${loginUser.name}. See chat`,
+        imageUrl: loginUser.imageUrl,
+        link: `/chat?chatId=${createChatResponse._id}`,
+        userId: props?.params?.id,
+      });
       router.replace(`/chat?chatId=${createChatResponse._id}`);
     } catch (error) {
       console.log(`error --> ${error}`);
