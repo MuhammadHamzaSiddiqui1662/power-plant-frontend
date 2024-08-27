@@ -17,6 +17,8 @@ export default function Card({
   isEdit = false,
 }) {
   const { user } = useSelector((state) => state.auth);
+  const currentIp = useSelector((state) => state.ip.currentIp);
+
   return (
     <>
       <div
@@ -49,7 +51,7 @@ export default function Card({
           <div className="pb-3">
             <Link
               href={
-                user && user.subscriber
+                (user && user.subscriber) || id === currentIp._id
                   ? `/details/${id}`
                   : "/payment?type=subscribe"
               }

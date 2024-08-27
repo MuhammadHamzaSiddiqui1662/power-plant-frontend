@@ -17,6 +17,7 @@ export default function Welcome() {
   const dispatch = useDispatch();
   const router = useRouter();
   const { user, accessToken } = useSelector((state) => state.auth);
+  const { currentInvestor } = useSelector((state) => state.hiring);
   const { data: investors } = useGetMyInvestorsQuery();
 
   const handleSelectInvestor = (hiring) => {
@@ -69,6 +70,7 @@ export default function Welcome() {
                     imgSrc={
                       "/images/client/01.jpg" || investor.investor.imageUrl
                     }
+                    current={investor.investor._id === currentInvestor._id}
                     onClick={() => handleSelectInvestor(investor)}
                   />
                 </Grid>
