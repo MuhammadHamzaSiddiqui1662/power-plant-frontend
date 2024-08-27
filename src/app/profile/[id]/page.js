@@ -2,10 +2,10 @@
 import { Chip, Grid, Stack } from "@mui/material";
 import dynamic from "next/dynamic";
 import React, { useMemo } from "react";
-
 const Navbar = dynamic(() => import("../../componants/Navbar"));
 const Switcher = dynamic(() => import("../../componants/Switcher"));
 const Footer = dynamic(() => import("../../componants/Footer"));
+
 
 import "./style.css";
 import Card from "../../componants/Card";
@@ -37,7 +37,7 @@ export default function ViewProfile(props) {
   const [fireServerNotification, { isLoading: isNotifiying }] =
     useFireServerNotificationMutation();
   const router = useRouter();
-
+  
   const reviews = useMemo(() => {
     if (user) {
       return userType == UserType.Broker
@@ -82,7 +82,9 @@ export default function ViewProfile(props) {
   };
 
   const unHireHandler = async () => {
-    router.push(`/chat?chatId=${hiringDetails._id}`);
+    let chatId = hiringDetails._id
+    router.push(`/chat?chatId=${chatId}&unhire=${true}`)
+
   };
 
   return (

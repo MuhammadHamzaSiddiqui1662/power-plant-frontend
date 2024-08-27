@@ -700,6 +700,10 @@
   text-align: center;
 }
 
+.ant-btn-default:disabled{
+  background-color: white;
+}
+
 ::-webkit-scrollbar {
   display: none;
   scroll-behavior: none;
