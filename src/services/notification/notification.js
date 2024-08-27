@@ -18,7 +18,19 @@ export const notificationApi = createApi({
     getAllNotifications: build.query({
       query: () => `/`,
     }),
+    fireServerNotification: build.mutation({
+      query(body) {
+        return {
+          url: `/`,
+          method: "POST",
+          body,
+        };
+      },
+    }),
   }),
 });
 
-export const { useGetAllNotificationsQuery } = notificationApi;
+export const {
+  useGetAllNotificationsQuery,
+  useFireServerNotificationMutation,
+} = notificationApi;
