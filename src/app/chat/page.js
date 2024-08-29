@@ -487,6 +487,8 @@ export default function Chat() {
 
               <div className="chat-container">
                 {receiverList.map((chat, index) => (
+				<Badge.Ribbon text={chat.userType} color="purple">
+					
                   <Card
                     key={chat._id}
                     className={`m-40 chat-card ${chatClickedIndex === chat._id ? "active" : ""
@@ -524,8 +526,7 @@ export default function Chat() {
 
                       <Col xs={13} sm={10} md={8} lg={8} xl={8} xxl={16}>
                         <text className="f-16 b-7xx">{chat.receiver.name}</text>
-						<Badge.Ribbon text={chat.userType} color="purple">
-						</Badge.Ribbon>
+						
                         <br />
                         <Typography.Text
                           className="f-12 c-grey"
@@ -549,6 +550,7 @@ export default function Chat() {
                       </Col>
                     </Row>
                   </Card>
+				  	</Badge.Ribbon>
                 ))}
               </div>
             </Col>
@@ -1061,6 +1063,8 @@ export default function Chat() {
                 {
                   receiverList.map((chat, index) =>
                   (
+				    <Badge.Ribbon text={chat.userType} color="purple">
+							
                     <Card
                       key={chat._id}
                       className={`chat-card ${chatClickedIndex === chat._id ? "active" : ""
@@ -1095,8 +1099,7 @@ export default function Chat() {
 
                         <Col xs={3} sm={3} md={3} lg={8} xl={8} xxl={16}>
                           <text className="f-16 b-7xx">{chat.receiver.name}</text>
-						   <Badge.Ribbon text={chat.userType} color="purple">
-							</Badge.Ribbon>
+						 
                           <br />
                           <Typography.Text
                             className="f-12 c-grey"
@@ -1120,6 +1123,7 @@ export default function Chat() {
                         </Col>
                       </Row>
                     </Card>
+					</Badge.Ribbon>
                   )
                   )
                 }
