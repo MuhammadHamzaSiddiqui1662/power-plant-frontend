@@ -13,7 +13,11 @@ import {
   Avatar,
   Drawer,
   FloatButton,
+  Anchor,
 } from "antd";
+
+
+const { Link } = Anchor;
 const { Title, Paragraph, Text } = Typography;
 import Navbar from "../componants/Navbar";
 import ReviewModal from "../componants/review/Modal";
@@ -1168,9 +1172,9 @@ export default function Chat() {
                     </Col>
 
                     <Col xs={3} sm={3} md={6} lg={5} className="pd-0-15">
-                      <a className="anchor-design" href=`${/profile/chat.receiver._id}`> <text className="f-16 b-7xx">
+                      <Link className="anchor-design" href=`${/profile/selectedChat.receiver._id}`> <text className="f-16 b-7xx">
                         {selectedChat.receiver.name}
-                      </text></a>
+                      </text></Link>
                       <br />
                       <Typography.Text className="f-16 b-7xx" ellipsis={{ rows: 1 }} >
                         {selectedChat.ip.name}
