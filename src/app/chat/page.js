@@ -1101,7 +1101,7 @@ export default function Chat() {
                         <Col xs={3} sm={3} md={3} lg={2} xl={3} xxl={2}></Col>
 
                         <Col xs={3} sm={3} md={3} lg={8} xl={8} xxl={16}>
-                          <a className="anchor-design" href=`${/profile/chat.receiver._id}`><text className="f-16 b-7xx">{chat.receiver.name}</text></a>
+                         <text className="f-16 b-7xx">{chat.receiver.name}</text>
 						 
                           <br />
                           <Typography.Text
@@ -1168,9 +1168,9 @@ export default function Chat() {
                     </Col>
 
                     <Col xs={3} sm={3} md={6} lg={5} className="pd-0-15">
-                      <text className="f-16 b-7xx">
+                      <a className="anchor-design" href=`${/profile/chat.receiver._id}`> <text className="f-16 b-7xx">
                         {selectedChat.receiver.name}
-                      </text>
+                      </text></a>
                       <br />
                       <Typography.Text className="f-16 b-7xx" ellipsis={{ rows: 1 }} >
                         {selectedChat.ip.name}
