@@ -1101,7 +1101,7 @@ export default function Chat() {
                         <Col xs={3} sm={3} md={3} lg={2} xl={3} xxl={2}></Col>
 
                         <Col xs={3} sm={3} md={3} lg={8} xl={8} xxl={16}>
-                          <text className="f-16 b-7xx">{chat.receiver.name}</text>
+                          <a className="anchor-design" href=`${/profile/chat.receiver._id}`><text className="f-16 b-7xx">{chat.receiver.name}</text></a>
 						 
                           <br />
                           <Typography.Text
