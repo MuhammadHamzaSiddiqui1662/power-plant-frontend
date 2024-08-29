@@ -487,7 +487,7 @@ export default function Chat() {
 
               <div className="chat-container">
                 {receiverList.map((chat, index) => (
-				<Badge.Ribbon text={chat.userType} color="purple">
+				
 					
                   <Card
                     key={chat._id}
@@ -495,6 +495,7 @@ export default function Chat() {
                       }`}
                     onClick={() => chatClickHandler(chat._id)}
                   >
+				  <Badge.Ribbon text={chat.userType} color="purple">
                     <Row className="pd-12">
                       <Col xs={3} sm={3} md={3} lg={5} xl={2} xxl={1}>
                         {chat.receiver != null &&
@@ -549,8 +550,9 @@ export default function Chat() {
                         )}
                       </Col>
                     </Row>
+				</Badge.Ribbon>
                   </Card>
-				  	</Badge.Ribbon>
+				  
                 ))}
               </div>
             </Col>
@@ -1063,7 +1065,7 @@ export default function Chat() {
                 {
                   receiverList.map((chat, index) =>
                   (
-				    <Badge.Ribbon text={chat.userType} color="purple">
+				   
 							
                     <Card
                       key={chat._id}
@@ -1071,6 +1073,7 @@ export default function Chat() {
                         }`}
                       onClick={() => chatClickHandler(chat._id)}
                     >
+					 <Badge.Ribbon text={chat.userType} color="purple">
                       <Row className="pd-12">
                         <Col xs={3} sm={3} md={3} lg={5} xl={2} xxl={1}>
                           {chat.receiver != null &&
@@ -1122,8 +1125,9 @@ export default function Chat() {
                           )}
                         </Col>
                       </Row>
+					  </Badge.Ribbon>
                     </Card>
-					</Badge.Ribbon>
+					
                   )
                   )
                 }
