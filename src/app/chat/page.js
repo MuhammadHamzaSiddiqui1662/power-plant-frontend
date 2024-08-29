@@ -210,7 +210,8 @@ export default function Chat() {
           lastMessage: ch.lastMessage,
           open: ch.open,
           reviewed: ch.reviewed,
-          ip: ch.ip
+          ip: ch.ip,
+		  userType: ch.broker != null ? "broker" : "investor"
         }));
       }
       if (userType == 1) {
@@ -222,7 +223,8 @@ export default function Chat() {
           lastMessage: ch.lastMessage,
           open: ch.open,
           reviewed: ch.reviewed,
-          ip: ch.ip
+          ip: ch.ip,
+		  userType: ch.broker != null ? "broker" : "innovator"
         }));
       }
       if (userType == 2) {
@@ -234,7 +236,8 @@ export default function Chat() {
           lastMessage: ch.lastMessage,
           open: ch.open,
           reviewed: ch.reviewed,
-          ip: ch.ip
+          ip: ch.ip,
+		  userType: ch.innovator != null ? "innovator" : "investor"
         }));
       }
       setReceiverList(_receiverList);
@@ -259,7 +262,8 @@ export default function Chat() {
           lastMessage: chatObject.lastMessage,
           open: chatObject.open,
           reviewed: chatObject.reviewed,
-          ip: chatObject.ip
+          ip: chatObject.ip,
+		  userType: chatObject.broker != null ? "broker" : "investor"
         };
       }
       if (userType == 1) {
@@ -275,7 +279,8 @@ export default function Chat() {
           lastMessage: chatObject.lastMessage,
           open: chatObject.open,
           reviewed: chatObject.reviewed,
-          ip: chatObject.ip
+          ip: chatObject.ip,
+		  userType: chatObject.broker != null ? "broker" : "innovator"
         };
       }
       if (userType == 2) {
@@ -291,7 +296,8 @@ export default function Chat() {
           lastMessage: chatObject.lastMessage,
           open: chatObject.open,
           reviewed: chatObject.reviewed,
-          ip: chatObject.ip
+          ip: chatObject.ip,
+		  userType: chatObject.innovator != null ? "innovator" : "investor"
         };
       }
 
@@ -518,6 +524,8 @@ export default function Chat() {
 
                       <Col xs={13} sm={10} md={8} lg={8} xl={8} xxl={16}>
                         <text className="f-16 b-7xx">{chat.receiver.name}</text>
+						<Badge.Ribbon text={chat.userType} color="purple">
+						</Badge.Ribbon>
                         <br />
                         <Typography.Text
                           className="f-12 c-grey"
@@ -1087,6 +1095,8 @@ export default function Chat() {
 
                         <Col xs={3} sm={3} md={3} lg={8} xl={8} xxl={16}>
                           <text className="f-16 b-7xx">{chat.receiver.name}</text>
+						   <Badge.Ribbon text={chat.userType} color="purple">
+							</Badge.Ribbon>
                           <br />
                           <Typography.Text
                             className="f-12 c-grey"
