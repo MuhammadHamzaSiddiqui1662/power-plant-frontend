@@ -215,7 +215,7 @@ export default function Chat() {
           open: ch.open,
           reviewed: ch.reviewed,
           ip: ch.ip,
-		  userType: ch.broker != null ? "broker" : "investor"
+          userType: ch.broker != null ? "broker" : "investor"
         }));
       }
       if (userType == 1) {
@@ -228,7 +228,7 @@ export default function Chat() {
           open: ch.open,
           reviewed: ch.reviewed,
           ip: ch.ip,
-		  userType: ch.broker != null ? "broker" : "innovator"
+          userType: ch.broker != null ? "broker" : "innovator"
         }));
       }
       if (userType == 2) {
@@ -241,7 +241,7 @@ export default function Chat() {
           open: ch.open,
           reviewed: ch.reviewed,
           ip: ch.ip,
-		  userType: ch.innovator != null ? "innovator" : "investor"
+          userType: ch.innovator != null ? "innovator" : "investor"
         }));
       }
       setReceiverList(_receiverList);
@@ -267,7 +267,7 @@ export default function Chat() {
           open: chatObject.open,
           reviewed: chatObject.reviewed,
           ip: chatObject.ip,
-		  userType: chatObject.broker != null ? "broker" : "investor"
+          userType: chatObject.broker != null ? "broker" : "investor"
         };
       }
       if (userType == 1) {
@@ -284,7 +284,7 @@ export default function Chat() {
           open: chatObject.open,
           reviewed: chatObject.reviewed,
           ip: chatObject.ip,
-		  userType: chatObject.broker != null ? "broker" : "innovator"
+          userType: chatObject.broker != null ? "broker" : "innovator"
         };
       }
       if (userType == 2) {
@@ -301,7 +301,7 @@ export default function Chat() {
           open: chatObject.open,
           reviewed: chatObject.reviewed,
           ip: chatObject.ip,
-		  userType: chatObject.innovator != null ? "innovator" : "investor"
+          userType: chatObject.innovator != null ? "innovator" : "investor"
         };
       }
 
@@ -342,7 +342,7 @@ export default function Chat() {
         router.replace(`/chat?chatId=${getChatByIdResponse._id}`);
         console.log(receiver.receiver._id)
         setBrokerId(receiver.receiver._id);
-        socket.emit("joinChat", { chatId: getChatByIdResponse._id });
+        socket.emit("joinChat", { chatId: getChatByIdResponse._id, userId: user._id });
         socket.on("previousMessages", (msgs) => {
           setMessages(msgs);
           unseenMessageIds = msgs.filter((m) => !m.seen).map((m) => m._id);
@@ -491,72 +491,72 @@ export default function Chat() {
 
               <div className="chat-container">
                 {receiverList.map((chat, index) => (
-				
-					
+
+
                   <Card
                     key={chat._id}
                     className={`m-40 chat-card ${chatClickedIndex === chat._id ? "active" : ""
                       }`}
                     onClick={() => chatClickHandler(chat._id)}
                   >
-				  <Badge.Ribbon text={chat.userType} color="purple">
-                    <Row className="pd-12">
-                      <Col xs={3} sm={3} md={3} lg={5} xl={2} xxl={1}>
-                        {chat.receiver != null &&
-                          chat.receiver.online === true ? (
-                          <Badge
-                            status="success"
-                            dot
-                            offset={[-5, 45]}
-                            className="pd-5"
-                          >
+                    <Badge.Ribbon text={chat.userType} color="purple">
+                      <Row className="pd-12">
+                        <Col xs={3} sm={3} md={3} lg={5} xl={2} xxl={1}>
+                          {chat.receiver != null &&
+                            chat.receiver.online === true ? (
+                            <Badge
+                              status="success"
+                              dot
+                              offset={[-5, 45]}
+                              className="pd-5"
+                            >
+                              <Avatar
+                                src={chat.receiver.imageUrl}
+                                shape="circle"
+                                className="h-5x w-5x"
+                              ></Avatar>
+                            </Badge>
+                          ) : (
                             <Avatar
                               src={chat.receiver.imageUrl}
                               shape="circle"
                               className="h-5x w-5x"
-                            ></Avatar>
-                          </Badge>
-                        ) : (
-                          <Avatar
-                            src={chat.receiver.imageUrl}
-                            shape="circle"
-                            className="h-5x w-5x"
+                            >
+                              {" "}
+                            </Avatar>
+                          )}
+                        </Col>
+
+                        <Col xs={2} sm={2} md={3} lg={0} xl={3} xxl={2}></Col>
+
+                        <Col xs={13} sm={10} md={8} lg={8} xl={8} xxl={16}>
+                          <text className="f-16 b-7xx">{chat.receiver.name}</text>
+
+                          <br />
+                          <Typography.Text
+                            className="f-12 c-grey"
+                            ellipsis={{ rows: 1 }}
                           >
-                            {" "}
-                          </Avatar>
-                        )}
-                      </Col>
+                            {chat.lastMessage}
+                          </Typography.Text>
+                          {/* <text className="f-12 c-grey">{chat.lastMessage}</text> */}
+                        </Col>
 
-                      <Col xs={2} sm={2} md={3} lg={0} xl={3} xxl={2}></Col>
-
-                      <Col xs={13} sm={10} md={8} lg={8} xl={8} xxl={16}>
-                        <text className="f-16 b-7xx">{chat.receiver.name}</text>
-						
-                        <br />
-                        <Typography.Text
-                          className="f-12 c-grey"
-                          ellipsis={{ rows: 1 }}
-                        >
-                          {chat.lastMessage}
-                        </Typography.Text>
-                        {/* <text className="f-12 c-grey">{chat.lastMessage}</text> */}
-                      </Col>
-
-                      <Col xs={3} sm={3} md={3} lg={1} xl={3} xxl={3}>
-                        {chat.unReadMessages > 0 ? (
-                          <Badge
-                            color="green"
-                            count={chat.unReadMessages}
-                            offset={[80, 20]}
-                          ></Badge>
-                        ) : (
-                          <text></text>
-                        )}
-                      </Col>
-                    </Row>
-				</Badge.Ribbon>
+                        <Col xs={3} sm={3} md={3} lg={1} xl={3} xxl={3}>
+                          {chat.unReadMessages > 0 ? (
+                            <Badge
+                              color="green"
+                              count={chat.unReadMessages}
+                              offset={[80, 20]}
+                            ></Badge>
+                          ) : (
+                            <text></text>
+                          )}
+                        </Col>
+                      </Row>
+                    </Badge.Ribbon>
                   </Card>
-				  
+
                 ))}
               </div>
             </Col>
@@ -582,13 +582,15 @@ export default function Chat() {
                           </Col>
 
                           <Col xs={3} sm={3} md={6} lg={5} className="pd-0-15">
-                            <text className="f-16 b-7xx">
+                            <a className="anchor-design" href={`/profile/${selectedChat.receiver._id}`}> <text className="f-16 b-7xx">
                               {selectedChat.receiver.name}
-                            </text>
+                            </text></a>
                             <br />
-                            <Typography.Text className="f-16 b-7xx" ellipsis={{ row: 1 }}>
-                              {selectedChat.ip.name}
-                            </Typography.Text>
+                            <a className="anchor-design" href={`/details/${selectedChat.ip._id}`}>
+                              <Typography.Text className="f-16 b-7xx" ellipsis={{ row: 1 }}>
+                                {selectedChat.ip.name}
+                              </Typography.Text>
+                            </a>
                           </Col>
 
                           <Col xs={10} sm={10} lg={12} xl={11}></Col>
@@ -1069,69 +1071,69 @@ export default function Chat() {
                 {
                   receiverList.map((chat, index) =>
                   (
-				   
-							
+
+
                     <Card
                       key={chat._id}
                       className={`chat-card ${chatClickedIndex === chat._id ? "active" : ""
                         }`}
                       onClick={() => chatClickHandler(chat._id)}
                     >
-					 <Badge.Ribbon text={chat.userType} color="purple">
-                      <Row className="pd-12">
-                        <Col xs={3} sm={3} md={3} lg={5} xl={2} xxl={1}>
-                          {chat.receiver != null &&
-                            chat.receiver.online === true ? (
-                            <Badge status="success" dot offset={[-6, 36]}>
+                      <Badge.Ribbon text={chat.userType} color="purple">
+                        <Row className="pd-12">
+                          <Col xs={3} sm={3} md={3} lg={5} xl={2} xxl={1}>
+                            {chat.receiver != null &&
+                              chat.receiver.online === true ? (
+                              <Badge status="success" dot offset={[-6, 36]}>
+                                <Avatar
+                                  // src={chat.receiver.imageUrl}
+                                  // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
+                                  shape="circle"
+                                  className="h-5x w-5x"
+                                ></Avatar>
+                              </Badge>
+                            ) : (
                               <Avatar
                                 // src={chat.receiver.imageUrl}
                                 // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
                                 shape="circle"
                                 className="h-5x w-5x"
-                              ></Avatar>
-                            </Badge>
-                          ) : (
-                            <Avatar
-                              // src={chat.receiver.imageUrl}
-                              // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
-                              shape="circle"
-                              className="h-5x w-5x"
+                              >
+                                {" "}
+                              </Avatar>
+                            )}
+                          </Col>
+
+                          <Col xs={3} sm={3} md={3} lg={2} xl={3} xxl={2}></Col>
+
+                          <Col xs={3} sm={3} md={3} lg={8} xl={8} xxl={16}>
+                            <text className="f-16 b-7xx">{chat.receiver.name}</text>
+
+                            <br />
+                            <Typography.Text
+                              className="f-12 c-grey"
+                              ellipsis={{ rows: 1 }}
                             >
-                              {" "}
-                            </Avatar>
-                          )}
-                        </Col>
+                              {chat.lastMessage}
+                            </Typography.Text>
+                            {/* //  <text className="f-12 c-grey">{chat.lastMessage}</text> */}
+                          </Col>
 
-                        <Col xs={3} sm={3} md={3} lg={2} xl={3} xxl={2}></Col>
-
-                        <Col xs={3} sm={3} md={3} lg={8} xl={8} xxl={16}>
-                         <text className="f-16 b-7xx">{chat.receiver.name}</text>
-						 
-                          <br />
-                          <Typography.Text
-                            className="f-12 c-grey"
-                            ellipsis={{ rows: 1 }}
-                          >
-                            {chat.lastMessage}
-                          </Typography.Text>
-                          {/* //  <text className="f-12 c-grey">{chat.lastMessage}</text> */}
-                        </Col>
-
-                        <Col xs={3} sm={3} md={3} lg={1} xl={3} xxl={3}>
-                          {chat.unReadMessages > 0 ? (
-                            <Badge
-                              color="green"
-                              count={chat.unReadMessages}
-                              offset={[80, 20]}
-                            ></Badge>
-                          ) : (
-                            <text></text>
-                          )}
-                        </Col>
-                      </Row>
-					  </Badge.Ribbon>
+                          <Col xs={3} sm={3} md={3} lg={1} xl={3} xxl={3}>
+                            {chat.unReadMessages > 0 ? (
+                              <Badge
+                                color="green"
+                                count={chat.unReadMessages}
+                                offset={[80, 20]}
+                              ></Badge>
+                            ) : (
+                              <text></text>
+                            )}
+                          </Col>
+                        </Row>
+                      </Badge.Ribbon>
                     </Card>
-					
+
                   )
                   )
                 }
@@ -1172,13 +1174,16 @@ export default function Chat() {
                     </Col>
 
                     <Col xs={3} sm={3} md={6} lg={5} className="pd-0-15">
-                      <Link className="anchor-design" href=`${/profile/selectedChat.receiver._id}`> <text className="f-16 b-7xx">
+                      <a className="anchor-design" href={`/profile/${selectedChat.receiver._id}`}> <text className="f-16 b-7xx">
                         {selectedChat.receiver.name}
-                      </text></Link>
+                      </text></a>
                       <br />
-                      <Typography.Text className="f-16 b-7xx" ellipsis={{ rows: 1 }} >
-                        {selectedChat.ip.name}
-                      </Typography.Text>
+                      <a className="anchor-design" href={`/details/${selectedChat.ip._id}`}>
+                        <Typography.Text className="f-16 b-7xx" ellipsis={{ rows: 1 }} >
+                          {selectedChat.ip.name}
+
+                        </Typography.Text>
+                      </a>
                     </Col>
 
                     <Col lg={12} xl={11}></Col>
