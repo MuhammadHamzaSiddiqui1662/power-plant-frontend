@@ -82,6 +82,7 @@ export default function Chat() {
   });
 
   socket.on("messageNotification", (chat) => {
+    console.log(chat.unReadMessages)
     setReceiverList((prevChats) => {
       return prevChats.map((c) => {
         if (c._id === chat._id) {
