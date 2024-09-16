@@ -5,6 +5,7 @@ const Navbar = dynamic(() => import("../componants/Navbar"));
 const Footer = dynamic(() => import("../componants/Footer"));
 const Progress = dynamic(() => import("../componants/Progress"));
 const Card = dynamic(() => import("../componants/Card"));
+const MyIpsPreview = dynamic(() => import("../componants/MyIpsPreview"));
 const MyBrokersPreview = dynamic(() =>
   import("../componants/MyBrokersPreview")
 );
@@ -192,6 +193,7 @@ export default function Welcome() {
                       </div>
                     </div>
                   )}
+                  {userType == UserType.Innovator && <MyIpsPreview />}
                   {userType == UserType.Innvestor && <MyBrokersPreview />}
                   {userType == UserType.Broker && <MyInvestorsPreview />}
                 </Grid>
