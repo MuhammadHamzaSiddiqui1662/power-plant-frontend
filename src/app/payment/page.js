@@ -46,7 +46,7 @@ export default function Payment() {
           <Col xs={22} md={20} lg={10} xl={8} xxl={8} className="mb-2">
             <Card className="subscriber-fee-card">
               <Typography>
-                <Title>Subscriber Fee</Title>
+                <Title>{stripeResponse.packageDetails.title}</Title>
                 <Paragraph className="c-grey">
                   Power Plant aims to make the IP transactions market more
                   transparent. It allows IP owners to profile their licensing,
@@ -128,7 +128,9 @@ export default function Payment() {
                 <Title className="f-24 b-5xx">Order Summary</Title>
                 <Row>
                   <Col span={8} offset={1}>
-                    <Text className="f-16 b-5xx"> Subscriber Fee</Text>
+                    <Text className="f-16 b-5xx">
+                      {stripeResponse.packageDetails.title}
+                    </Text>
                   </Col>
                   <Col span={6} offset={9}>
                     <Text className="f-16 b-5xx">
