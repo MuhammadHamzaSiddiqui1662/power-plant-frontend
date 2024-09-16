@@ -146,7 +146,7 @@ export default function UploadIP() {
   };
 
   const handleCancel = () => {
-    setError("");
+    setErrorMessage("");
     setData({ ...initialData, ...ip });
   };
 
@@ -159,9 +159,9 @@ export default function UploadIP() {
     });
 
     try {
-      const { data } = ip
-        ? await updateIp(formData).unwrap()
-        : await uploadIp(formData).unwrap();
+      const { data, error } = ip
+        ? await updateIp(formData)
+        : await uploadIp(formData);
 
       if (error) {
         console.log("error", error);
