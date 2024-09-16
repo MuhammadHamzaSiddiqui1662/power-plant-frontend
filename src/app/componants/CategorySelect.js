@@ -72,6 +72,9 @@ export default function CategorySelect({
           )),
         ])}
       </Select>
+      <Typography fontSize={12} fontStyle={"italic"}>
+        Add or remove options by toggling the selection from the dropdown menu.
+      </Typography>
     </FormControl>
   );
 }
