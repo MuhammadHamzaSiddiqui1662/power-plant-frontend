@@ -3,6 +3,14 @@ import { useGetUserQuery } from "../../../services/user/user";
 
 const ReviewCard = ({ review }) => {
   const { data: reviewer } = useGetUserQuery(review.userId);
+  const ratings =
+    (review.behaviour +
+      review.communication +
+      review.priceNegotiation +
+      review.responsiveness +
+      review.technicalSkills) /
+    5;
+
   return (
     <Box
       sx={{
@@ -60,7 +68,7 @@ const ReviewCard = ({ review }) => {
                     display: "block",
                   }}
                 >
-                  {reviewer.name}
+                  {reviewer?.name}
                 </Typography>
                 <Typography
                   sx={{
@@ -71,12 +79,12 @@ const ReviewCard = ({ review }) => {
                     marginBottom: "8px",
                   }}
                 >
-                  {reviewer.email}
+                  {reviewer?.email}
                 </Typography>
                 <Rating
                   name="ratings"
                   precision={0.1}
-                  value={4}
+                  value={ratings}
                   size="small"
                   readOnly
                 />
