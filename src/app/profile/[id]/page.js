@@ -6,7 +6,6 @@ const Navbar = dynamic(() => import("../../componants/Navbar"));
 const Switcher = dynamic(() => import("../../componants/Switcher"));
 const Footer = dynamic(() => import("../../componants/Footer"));
 
-
 import "./style.css";
 import Card from "../../componants/Card";
 import ReviewCard from "../../componants/review/Card";
@@ -37,11 +36,11 @@ export default function ViewProfile(props) {
   const [fireServerNotification, { isLoading: isNotifiying }] =
     useFireServerNotificationMutation();
   const router = useRouter();
-  
+
   const reviews = useMemo(() => {
     if (user) {
       return userType == UserType.Broker
-        ? user.reviewsAsBroker || []
+        ? user.reviewsAsBorker || []
         : userType == UserType.Innovator
         ? user.reviewsAsInnovator || []
         : userType == UserType.Innvestor
@@ -82,9 +81,8 @@ export default function ViewProfile(props) {
   };
 
   const unHireHandler = async () => {
-    let chatId = hiringDetails._id
-    router.push(`/chat?chatId=${chatId}&unhire=${true}`)
-
+    let chatId = hiringDetails._id;
+    router.push(`/chat?chatId=${chatId}&unhire=${true}`);
   };
 
   return (
