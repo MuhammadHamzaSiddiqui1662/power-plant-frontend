@@ -151,6 +151,13 @@ export default function UploadIP() {
   };
 
   const handleSaveSubmit = async () => {
+    if (isPatented) {
+      if (!data.patentNumber)
+        return setErrorMessage("Patent Number is required feild.");
+      if (!data.publishedDate)
+        return setErrorMessage("Patent published date is required feild.");
+    }
+
     const formData = new FormData();
     formData.append("data", JSON.stringify(data));
 
@@ -216,7 +223,17 @@ export default function UploadIP() {
     setData((prev) => ({
       ...prev,
       ...ip,
+      publishedDate: ip?.publishedDate
+        ? ((date) =>
+            `${date.getFullYear()}-${(date.getMonth() + 1)
+              .toString()
+              .padStart(2, "0")}-${date
+              .getDate()
+              .toString()
+              .padStart(2, "0")}`)(new Date(ip?.publishedDate))
+        : "",
     }));
+    setIsPatented(ip?.patentNumber ? true : false);
   }, [ip]);
 
   return (
