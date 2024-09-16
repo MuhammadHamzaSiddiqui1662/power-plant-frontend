@@ -148,13 +148,6 @@ const theme = createTheme({
         },
       },
     },
-    MuiModal: {
-      styleOverrides: {
-        root: {
-          backdropFilter: "blur(8px)",
-        },
-      },
-    },
     MuiSwitch: {
       styleOverrides: {
         track: {
