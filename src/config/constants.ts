@@ -1,11 +1,11 @@
 export const BACKEND_URL =
   process.env.NODE_ENV === "production"
-    ? "http://ec2-15-157-25-235.ca-central-1.compute.amazonaws.com/api/v1"
+    ? "https://api.pwrplant.ca/api/v1"
     : "http://localhost:3001/api/v1";
 
 export const BACKEND_SOCKET_URL =
   process.env.NODE_ENV === "production"
-    ? "http://ec2-15-157-25-235.ca-central-1.compute.amazonaws.com"
+    ? "https://api.pwrplant.ca"
     : "http://localhost:3001";
 
 export const CATEGORIES = {
