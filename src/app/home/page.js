@@ -67,8 +67,8 @@ export default function Welcome() {
             <Grid item xs={12} sm={6} md={8}>
               <div
                 className={`grid lg:grid-cols-${
-                  ips && ips.length > 0 ? 3 : 1
-                } md:grid-cols-1 grid-cols-1 mt-8 gap-[20px] text-start`}
+                  ips && ips.length > 0 ? 2 : 1
+                } md:grid-cols-2 grid-cols-1 mt-5 gap-[20px] text-start`}
               >
                 {ips && ips.length > 0 ? (
                   ips.map((ip, index) => (
@@ -118,12 +118,12 @@ export default function Welcome() {
               <Grid container>
                 <Grid item xs={12}>
                   <div className="avatar-div mb-5">
-                    <div className="flex items-center  avatar-text mb-14">
+                    <div className="flex items-center avatar-text">
                       <div className="mx-2">
                         <Avatar
                           sx={{ width: 56, height: 56 }}
-                          alt="Remy Sharp"
-                          src="/images/client/01.jpg"
+                          alt={user?.name}
+                          src={user?.imageUrl}
                         />
                       </div>
                       <div className="flex flex-col flex-wrap">
@@ -136,12 +136,6 @@ export default function Welcome() {
                             : "Innovator"}
                         </p>
                       </div>
-                    </div>
-                    <div>
-                      <p className="text-customGreen text-xl sm:text-2xl ">
-                        Complete your profile
-                      </p>
-                      <Progress value={100} />
                     </div>
                   </div>
                   {userType === UserType.Broker && currentInvestor ? (
