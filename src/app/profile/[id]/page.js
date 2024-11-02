@@ -3,7 +3,6 @@ import { Chip, Grid, Stack } from "@mui/material";
 import dynamic from "next/dynamic";
 import React, { useMemo } from "react";
 const Navbar = dynamic(() => import("../../componants/Navbar"));
-const Switcher = dynamic(() => import("../../componants/Switcher"));
 const Footer = dynamic(() => import("../../componants/Footer"));
 
 import "./style.css";
@@ -18,7 +17,6 @@ import { useRouter } from "next/navigation";
 import { useGetHiringDetailsQuery } from "../../../services/hiring/hiring";
 import { UserType } from "../../../types/user";
 import { useFireServerNotificationMutation } from "../../../services/notification/notification";
-import { message } from "antd";
 
 export default function ViewProfile(props) {
   const loginUser = useSelector((state) => state.auth.user);
@@ -266,7 +264,6 @@ export default function ViewProfile(props) {
       <div className="mt-28">
         <Footer />
       </div>
-      <Switcher />
     </>
   );
 }

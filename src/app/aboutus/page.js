@@ -5,7 +5,6 @@ import CountUp from "../../components/CountUp/CountUp";
 import { Hexagon } from "react-feather";
 
 const Navbar = dynamic(() => import("../componants/Navbar"));
-const Switcher = dynamic(() => import("../componants/Switcher"));
 const Footer = dynamic(() => import("../componants/Footer"));
 const Feature = dynamic(() => import("../componants/Feature"));
 const About = dynamic(() => import("../componants/About"));

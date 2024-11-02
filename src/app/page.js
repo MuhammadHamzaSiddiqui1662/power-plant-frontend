@@ -1,48 +1,14 @@
 "use client"; // This is a client component 👈🏽
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import Link from "next/link";
-
-import Select from "react-select";
-
-import * as Unicons from "@iconscout/react-unicons";
 import "./style.css";
-import { properties } from "./componants/Data";
-import Image from "next/image";
 import { useGetAllQuery } from "../services/ip/ip";
 const Navbar = dynamic(() => import("./componants/Navbar"));
-const Switcher = dynamic(() => import("./componants/Switcher"));
 const Footer = dynamic(() => import("./componants/Footer"));
 const About = dynamic(() => import("./componants/About"));
 const Feature = dynamic(() => import("./componants/Feature"));
-const Property = dynamic(() => import("./componants/Property"));
 const Client = dynamic(() => import("./componants/Client"));
-const GetInTuch = dynamic(() => import("./componants/Get-in-tuch"));
 const Card = dynamic(() => import("./componants/Card"));
-
-const Houses = [
-  { value: "AF", label: "Apartment" },
-  { value: "AZ", label: " Offices" },
-  { value: "BS", label: "Townhome" },
-];
-const minPrice = [
-  { value: "1", label: "500" },
-  { value: "2", label: "1000" },
-  { value: "3", label: "2000" },
-  { value: "4", label: "3000" },
-  { value: "5", label: "4000" },
-  { value: "5", label: "5000" },
-  { value: "5", label: "6000" },
-];
-const maxPrice = [
-  { value: "1", label: "500" },
-  { value: "2", label: "1000" },
-  { value: "3", label: "2000" },
-  { value: "4", label: "3000" },
-  { value: "5", label: "4000" },
-  { value: "5", label: "5000" },
-  { value: "5", label: "6000" },
-];
 
 export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);

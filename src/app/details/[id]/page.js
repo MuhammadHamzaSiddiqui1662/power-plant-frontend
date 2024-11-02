@@ -14,7 +14,6 @@ import { useCreateChatMutation } from "../../../services/chat/chat";
 import { formatDate, getChatObject } from "../../../utils";
 import { UserType } from "../../../types/user";
 const Navbar = dynamic(() => import("../../componants/Navbar"));
-const Switcher = dynamic(() => import("../../componants/Switcher"));
 const Footer = dynamic(() => import("../../componants/Footer"));
 
 function CustomTabPanel(props) {

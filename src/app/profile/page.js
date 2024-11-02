@@ -4,7 +4,6 @@ import dynamic from "next/dynamic";
 import { Grid } from "@mui/material";
 import "./style.css";
 const Navbar = dynamic(() => import("../componants/Navbar"));
-const Switcher = dynamic(() => import("../componants/Switcher"));
 const Footer = dynamic(() => import("../componants/Footer"));
 const Uploader = dynamic(() => import("../componants/UploadImage"));
 const ManageCertificates = dynamic(() =>
@@ -119,7 +118,6 @@ export default function Profile() {
       ToastMessage({ message: "Failed to update data!", type: "error" });
     }
   };
-  
 
   return (
     <>

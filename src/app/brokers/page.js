@@ -4,14 +4,10 @@ import dynamic from "next/dynamic";
 const Navbar = dynamic(() => import("../componants/Navbar"));
 const Footer = dynamic(() => import("../componants/Footer"));
 const BrokerCard = dynamic(() => import("../componants/BrokerCard"));
-const Switcher = dynamic(() => import("../componants/Switcher"));
-const PaginationTwo = dynamic(() => import("../componants/Pagination-two"));
 const CategorySelect = dynamic(() => import("../componants/CategorySelect"));
 import "./style.css";
 import { Grid } from "@mui/material";
 import { useGetBrokersQuery } from "../../services/user/user";
-import { FormControl, OutlinedInput } from "@mui/material";
-import { useGetAllQuery, useGetIpQuery } from "../../services/ip/ip";
 import ButtonContained from "../../components/ButtonContained/ButtonContained";
 
 const calculateRating = (reviews) =>

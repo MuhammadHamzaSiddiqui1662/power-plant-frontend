@@ -4,14 +4,12 @@ import dynamic from "next/dynamic";
 import React, { useState } from "react";
 
 const Navbar = dynamic(() => import("../componants/Navbar"));
-const Switcher = dynamic(() => import("../componants/Switcher"));
 const Footer = dynamic(() => import("../componants/Footer"));
 
 import "./style.css";
 import { properties } from "../componants/Data";
 import Card from "../componants/Card";
 export default function ViewProfile(props) {
-  // return <>hello</>
   const [user, setUser] = useState(1);
   return (
     <>
@@ -173,7 +171,6 @@ export default function ViewProfile(props) {
       <div className="mt-28">
         <Footer />
       </div>
-      <Switcher />
     </>
   );
 }

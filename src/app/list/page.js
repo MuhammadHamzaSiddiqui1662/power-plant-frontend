@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import dynamic from "next/dynamic";
 
 const Navbar = dynamic(() => import("../componants/Navbar"));
-const Switcher = dynamic(() => import("../componants/Switcher"));
 const Footer = dynamic(() => import("../componants/Footer"));
 const PaginationTwo = dynamic(() => import("../componants/Pagination-two"));
 const CategorySelect = dynamic(() => import("../componants/CategorySelect"));
@@ -204,7 +203,6 @@ export default function List() {
         </div>
       </section>
       <Footer />
-      <Switcher />
     </>
   );
 }
