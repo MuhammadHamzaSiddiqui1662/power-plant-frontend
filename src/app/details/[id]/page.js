@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-import { Box, Chip, Grid, Rating, Tab, Tabs } from "@mui/material";
+import { Box, Chip, Grid, Tab, Tabs } from "@mui/material";
 import PropTypes from "prop-types";
 import { setCurrentIp } from "../../../lib/features/ipSlice";
 import { useGetIpQuery } from "../../../services/ip/ip";
@@ -59,13 +59,6 @@ export default function PropertiesDetail(props) {
   const { currentIp } = useSelector((state) => state.ip);
   const [value, setValue] = useState(0);
   const { data: ipDetails, isLoading } = useGetIpQuery(props?.params?.id);
-  const innovatorsRating = useMemo(
-    () =>
-      ipDetails && ipDetails.userId && ipDetails.userId.reviewsAsInnovator
-        ? ipDetails.userId.reviewsAsInnovator.length > 0
-        : 0,
-    [ipDetails]
-  );
   const sections = useMemo(
     () =>
       ipDetails && ipDetails.sections
@@ -77,9 +70,6 @@ export default function PropertiesDetail(props) {
     [ipDetails]
   );
   const [createChat, { isLoading: isCreating }] = useCreateChatMutation();
-
-  console.log("ipDetails", ipDetails);
-  console.log("innovatorsRating", innovatorsRating);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -189,7 +179,6 @@ export default function PropertiesDetail(props) {
                   <div className="rounded-md border border-customDarkBlue">
                     <div className="p-6">
                       <h5 className="text-2xl font-medium">Price</h5>
-
                       <div className="flex justify-between items-center mt-2">
                         <span
                           className="text-4xl font-medium"
@@ -198,26 +187,6 @@ export default function PropertiesDetail(props) {
                           $ {ipDetails?.price}
                         </span>
                       </div>
-
-                      <h5 className="text-2xl font-medium mt-4">
-                        Innovator's Ratings
-                      </h5>
-
-                      {innovatorsRating ? (
-                        <div className="flex justify-between items-center mt-2">
-                          <Rating
-                            name="read-only"
-                            value={innovatorsRating}
-                            readOnly
-                            size="large"
-                            precision={0.1}
-                          />
-                        </div>
-                      ) : (
-                        <p className="leading-tight mt-2">
-                          No one rated this innovator yet.
-                        </p>
-                      )}
                     </div>
                   </div>
                 </div>
