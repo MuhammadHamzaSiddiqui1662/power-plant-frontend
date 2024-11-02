@@ -31,7 +31,7 @@ export default function Payment() {
   const payButtonRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const { accessToken } = useSelector((state) => state.auth);
-  if (!accessToken) router.push("/auth-signin");
+  if (!accessToken) router.push("/auth-login");
   const { data: stripeResponse } = useGetStripePaymentIntentQuery(type);
 
   return !stripeResponse ? (
