@@ -20,3 +20,16 @@ export const getChatObject = (chat, _id, _type) => {
   }
   return chat;
 };
+
+export const formatDate = (timestamp: string) => {
+  const date = new Date(timestamp);
+
+  // Format the date
+  const formattedDate = date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  return formattedDate;
+};

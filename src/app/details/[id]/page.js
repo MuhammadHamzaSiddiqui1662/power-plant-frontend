@@ -11,7 +11,7 @@ import { useGetIpQuery } from "../../../services/ip/ip";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { useCreateChatMutation } from "../../../services/chat/chat";
-import { getChatObject } from "../../../utils";
+import { formatDate, getChatObject } from "../../../utils";
 import { UserType } from "../../../types/user";
 const Navbar = dynamic(() => import("../../componants/Navbar"));
 const Switcher = dynamic(() => import("../../componants/Switcher"));
@@ -63,9 +63,9 @@ export default function PropertiesDetail(props) {
     () =>
       ipDetails && ipDetails.sections
         ? [
-          { title: "Abstract", content: ipDetails.abstract },
-          ...ipDetails.sections,
-        ]
+            { title: "Abstract", content: ipDetails.abstract },
+            ...ipDetails.sections,
+          ]
         : [],
     [ipDetails]
   );
@@ -152,7 +152,9 @@ export default function PropertiesDetail(props) {
                         <Chip
                           variant="outlined"
                           className=" xs:text-[24px] lg:text-[16px] text-customGrayColor border"
-                          label={`Published On ${ipDetails.publishedDate}`}
+                          label={`Published On ${formatDate(
+                            ipDetails.publishedDate
+                          )}`}
                         />
                       </li>
                     </>
