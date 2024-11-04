@@ -61,6 +61,13 @@ export default function List() {
     }));
   };
 
+  const handleCategoryRemove = (value) => {
+    setFilters((prev) => ({
+      ...prev,
+      categories: prev.categories.filter((category) => category !== value),
+    }));
+  };
+
   const handleSearch = () => {
     console.log(filterQuery);
     setFilterQuery(generateFilterQuery(filters));
@@ -119,6 +126,7 @@ export default function List() {
                     <CategorySelect
                       categories={filters.categories}
                       onChange={handleCategoryChange}
+                      onRemove={handleCategoryRemove}
                       fullWidth={true}
                     />
                   </div>

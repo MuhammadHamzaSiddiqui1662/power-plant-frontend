@@ -33,6 +33,7 @@ function getStyles(name, categories, theme) {
 export default function CategorySelect({
   categories,
   onChange,
+  onRemove,
   fullWidth = undefined,
   placeholder = "Select",
 }) {
@@ -52,7 +53,16 @@ export default function CategorySelect({
           ) : (
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
               {selected.map((value) => (
-                <Chip key={value} label={value} />
+                <Chip
+                  key={value}
+                  label={value}
+                  onDelete={() => {
+                    onRemove(value);
+                  }}
+                  onMouseDown={(event) => {
+                    event.stopPropagation();
+                  }}
+                />
               ))}
             </Box>
           )
@@ -72,9 +82,6 @@ export default function CategorySelect({
           )),
         ])}
       </Select>
-      <Typography fontSize={12} fontStyle={"italic"}>
-        Add or remove options by toggling the selection from the dropdown menu.
-      </Typography>
     </FormControl>
   );
 }

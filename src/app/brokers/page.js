@@ -75,6 +75,13 @@ export default function Welcome() {
     }));
   };
 
+  const handleCategoryRemove = (value) => {
+    setFilters((prev) => ({
+      ...prev,
+      categories: prev.categories.filter((category) => category !== value),
+    }));
+  };
+
   const handleSearch = (e) => {
     e.preventDefault();
     console.log(filterQuery);
@@ -113,6 +120,7 @@ export default function Welcome() {
                     <CategorySelect
                       categories={filters.categories}
                       onChange={handleCategoryChange}
+                      onRemove={handleCategoryRemove}
                       fullWidth={true}
                     />
                     <ButtonContained type="submit" size="small">

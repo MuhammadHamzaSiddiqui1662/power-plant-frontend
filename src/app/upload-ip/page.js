@@ -61,6 +61,13 @@ export default function UploadIP() {
     }));
   };
 
+  const handleCategoryRemove = (value) => {
+    setData((prev) => ({
+      ...prev,
+      categories: prev.categories.filter((category) => category !== value),
+    }));
+  };
+
   const handleFileUpload = (file, index) => {
     setErrorMessage("");
     setFiles((prevFiles) => ({
@@ -416,6 +423,7 @@ export default function UploadIP() {
                     <CategorySelect
                       categories={data.categories}
                       onChange={handleCategoryChange}
+                      onRemove={handleCategoryRemove}
                       fullWidth={true}
                     />
                   </div>

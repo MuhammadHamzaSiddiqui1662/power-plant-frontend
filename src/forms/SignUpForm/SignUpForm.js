@@ -71,6 +71,13 @@ export default function SignUpForm() {
     }));
   };
 
+  const handleCategoryRemove = (value) => {
+    setData((prev) => ({
+      ...prev,
+      interests: prev.interests.filter((interest) => interest !== value),
+    }));
+  };
+
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
@@ -302,6 +309,7 @@ export default function SignUpForm() {
                     <CategorySelect
                       categories={data.interests}
                       onChange={handleCategoryChange}
+                      onRemove={handleCategoryRemove}
                       fullWidth={true}
                     />
                   </div>

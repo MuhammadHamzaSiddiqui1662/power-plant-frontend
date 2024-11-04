@@ -75,6 +75,13 @@ export default function Profile() {
     }));
   };
 
+  const handleCategoryRemove = (value) => {
+    setData((prev) => ({
+      ...prev,
+      interests: prev.interests.filter((interest) => interest !== value),
+    }));
+  };
+
   const handleCancel = () => {
     setError("");
     setData({ ...initialData, ...user });
@@ -241,6 +248,7 @@ export default function Profile() {
                   <CategorySelect
                     categories={data.interests}
                     onChange={handleCategoryChange}
+                    onRemove={handleCategoryRemove}
                     fullWidth={true}
                   />
                 </div>
