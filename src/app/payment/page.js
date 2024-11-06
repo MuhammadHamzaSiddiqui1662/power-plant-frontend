@@ -69,38 +69,36 @@ export default function Payment() {
                 </Title>
               </Typography>
 
-              <Row>
-                <Space direction="horizontal" size="middle" className="flex">
-                  <Col>
-                    <Card className="visa-card">
-                      <Image
-                        preview={false}
-                        width={50}
-                        src="images/payment/visa.png"
-                      />
-                    </Card>
-                  </Col>
+              <Row justify="center" gutter={[16, 16]}>
+                <Col xs={24} md={8}>
+                  <Card className="visa-card">
+                    <Image
+                      preview={false}
+                      width={50}
+                      src="images/payment/visa.png"
+                    />
+                  </Card>
+                </Col>
 
-                  <Col>
-                    <Card className="paypal-card">
-                      <Image
-                        preview={false}
-                        width={60}
-                        src="images/payment/paypal.png"
-                      />
-                    </Card>
-                  </Col>
+                <Col xs={24} md={8}>
+                  <Card className="paypal-card">
+                    <Image
+                      preview={false}
+                      width={60}
+                      src="images/payment/paypal.png"
+                    />
+                  </Card>
+                </Col>
 
-                  <Col>
-                    <Card className="stripe-card">
-                      <Image
-                        preview={false}
-                        width={50}
-                        src="images/payment/stripe.png"
-                      />
-                    </Card>
-                  </Col>
-                </Space>
+                <Col xs={24} md={8}>
+                  <Card className="stripe-card">
+                    <Image
+                      preview={false}
+                      width={50}
+                      src="images/payment/stripe.png"
+                    />
+                  </Card>
+                </Col>
               </Row>
 
               <br />

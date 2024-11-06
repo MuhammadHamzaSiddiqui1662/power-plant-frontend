@@ -27,7 +27,7 @@ export default function Card({
       >
         <div className="relative">
           <Image
-            src={"/images/ip/mainImg.webp"}
+            src={image}
             alt=""
             width={0}
             height={0}
