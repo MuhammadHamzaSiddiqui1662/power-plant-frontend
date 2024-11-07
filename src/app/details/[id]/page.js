@@ -104,7 +104,7 @@ export default function PropertiesDetail(props) {
           <div className="container-fluid">
             <div className="md:flex mt-4">
               <Image
-                src="/images/ip/mainImg.webp"
+                src={ipDetails?.mainImg}
                 alt=""
                 width={0}
                 height={500}
@@ -196,46 +196,15 @@ export default function PropertiesDetail(props) {
             <div className="px-3 lg:w-11/12 md:w-2/2 md:p-4 my-12">
               <div className="md:flex ">
                 <Grid container spacing={2}>
-                  <Grid item xs={3}>
-                    <div>
-                      <img width="100%" src="/images/ip/ip2.png" />
-                    </div>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <div>
-                      <img width="100%" src="/images/ip/ip3.png" />
-                    </div>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <div>
-                      <img width="100%" src="/images/ip/ip4.png" />
-                    </div>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <div>
-                      <img width="100%" src="/images/ip/ip5.png" />
-                    </div>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <div>
-                      <img width="100%" src="/images/ip/ip2.png" />
-                    </div>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <div>
-                      <img width="100%" src="/images/ip/ip3.png" />
-                    </div>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <div>
-                      <img width="100%" src="/images/ip/ip4.png" />
-                    </div>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <div>
-                      <img width="100%" src="/images/ip/ip5.png" />
-                    </div>
-                  </Grid>
+                  {ipDetails.images &&
+                    ipDetails.images.length > 0 &&
+                    ipDetails.images.map((image, index) => (
+                      <Grid item xs={3} key={index}>
+                        <div>
+                          <img width="100%" src={image} />
+                        </div>
+                      </Grid>
+                    ))}
                 </Grid>
               </div>
             </div>
