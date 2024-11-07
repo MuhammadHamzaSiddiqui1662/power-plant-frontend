@@ -55,7 +55,7 @@ export default function PaginationTwo({
             categories={item.categories}
             price={item.price}
             patentNumber={item.patentNumber}
-            image={item.image}
+            image={item.mainImg}
           />
           // <div key={index} className="group rounded-xl bg-white dark:bg-slate-900 shadow hover:shadow-xl dark:hover:shadow-xl dark:shadow-gray-700 dark:hover:shadow-gray-700 overflow-hidden ease-in-out duration-500 w-full mx-auto xl:max-w-4xl">
           //     <div className="md:flex">
