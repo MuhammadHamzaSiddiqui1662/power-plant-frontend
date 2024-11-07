@@ -7,12 +7,13 @@ import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, setUserType } from "../../lib/features/authSlice";
-import { UserType } from "../../types/user";
+import { UserStatus, UserType } from "../../types/user";
+import ToastMessage from "./Toast";
 
 const MainMenu = ({ onClose, ...props }) => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const userType = useSelector((state) => state.auth.userType);
+  const { user, userType } = useSelector((state) => state.auth);
   return (
     <Menu
       anchorOrigin={{
@@ -57,8 +58,15 @@ const MainMenu = ({ onClose, ...props }) => {
         {userType !== UserType.Broker && (
           <MenuItem
             onClick={async () => {
-              await dispatch(setUserType(UserType.Broker));
-              router.push("/investors");
+              if (user?.brokerStatus === UserStatus.Active) {
+                await dispatch(setUserType(UserType.Broker));
+                router.push("/investors");
+              } else {
+                ToastMessage({
+                  message: "Your broker account is not active",
+                  type: "error",
+                });
+              }
               onClose();
             }}
           >
