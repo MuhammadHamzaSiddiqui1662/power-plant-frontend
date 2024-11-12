@@ -28,7 +28,7 @@ export const userApi = createApi({
         return {
           url: `/${body.userId}/${body.reviewType}/reviews`,
           method: "POST",
-          body:body.data,
+          body: body.data,
         };
       },
     }),
@@ -53,6 +53,23 @@ export const userApi = createApi({
         };
       },
     }),
+    addCertificate: build.mutation({
+      query(body) {
+        return {
+          url: `${BACKEND_URL}/certificates`,
+          method: "POST",
+          body: body,
+        };
+      },
+    }),
+    deleteCertificate: build.mutation({
+      query(id) {
+        return {
+          url: `${BACKEND_URL}/certificates/${id}`,
+          method: "DELETE",
+        };
+      },
+    }),
   }),
 });
 
@@ -65,4 +82,6 @@ export const {
   useGetInvestorsQuery,
   useGetUserQuery,
   useUpdateUserMutation,
+  useAddCertificateMutation,
+  useDeleteCertificateMutation,
 } = userApi;

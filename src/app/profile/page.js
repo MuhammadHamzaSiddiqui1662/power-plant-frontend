@@ -1,5 +1,5 @@
 "use client"; // This is a client component 👈🏽
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { Grid } from "@mui/material";
 import "./style.css";
@@ -16,6 +16,8 @@ const CategorySelect = dynamic(() => import("../componants/CategorySelect"));
 
 import { useSelector } from "react-redux";
 import {
+  useAddCertificateMutation,
+  useDeleteCertificateMutation,
   useGetUserQuery,
   useUpdateUserMutation,
 } from "../../services/user/user";
@@ -37,7 +39,15 @@ export default function Profile() {
   const [data, setData] = useState({ ...initialData, ...user });
   const [error, setError] = useState("");
   const [updateUser, { _error }] = useUpdateUserMutation();
-  const { refetch } = useGetUserQuery(user._id);
+  const { refetch } = useGetUserQuery(user?._id);
+  const [addCertificate, { isLoading: addCertificateLoading }] =
+    useAddCertificateMutation();
+  const [deleteCertificate, { isLoading: deleteCertificateLoading }] =
+    useDeleteCertificateMutation();
+  const isLoading = useMemo(
+    () => deleteCertificateLoading || addCertificateLoading,
+    [deleteCertificateLoading, addCertificateLoading]
+  );
 
   const [files, setFiles] = useState([]);
 
@@ -49,6 +59,7 @@ export default function Profile() {
       return newFiles;
     });
   };
+
   const [uploaders, setUploaders] = useState([
     {
       key: 0,
@@ -62,6 +73,61 @@ export default function Profile() {
       ...prev,
       [event.target.name]: event.target.value,
     }));
+  };
+
+  const handleCertificateUpload = async (file, interest) => {
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("interest", interest);
+    try {
+      const { error } = await addCertificate(formData);
+
+      if (error) {
+        console.log("error", error);
+        setError(
+          error.shortMessage || error.message || "Failed to upload certificate"
+        );
+        ToastMessage({
+          message: "Failed to upload certificate!",
+          type: "error",
+        });
+        return;
+      }
+
+      ToastMessage({
+        message: "Certificate uploaded successfully!",
+        type: "success",
+      });
+
+      refetch();
+    } catch (error) {
+      console.error("Error uploading data:", error);
+      setError(
+        error.shortMessage || error.message || "Failed to upload certificate"
+      );
+      ToastMessage({ message: "Failed to upload certificate!", type: "error" });
+    }
+  };
+
+  // certificate delete handler
+  const handleCertificateDelete = async (id) => {
+    try {
+      const { error } = await deleteCertificate(id);
+      ToastMessage({
+        message: "Certificate deleted successfully!",
+        type: "success",
+      });
+      refetch();
+    } catch (error) {
+      console.error("Error deleting certificate:", error);
+      setError(
+        error.shortMessage || error.message || "Failed to delete certificate"
+      );
+      ToastMessage({
+        message: "Failed to delete certificate!",
+        type: "error",
+      });
+    }
   };
 
   const handleCategoryChange = (event) => {
@@ -125,6 +191,10 @@ export default function Profile() {
       ToastMessage({ message: "Failed to update data!", type: "error" });
     }
   };
+
+  useEffect(() => {
+    setData((prev) => ({ ...prev, ...user }));
+  }, [user]);
 
   return (
     <>
@@ -262,7 +332,12 @@ export default function Profile() {
             >
               Upload Profile Picture:
             </label>
-            <div className="flex justify-center mb-4">
+            <div className="flex justify-center mb-4 gap-2">
+              <img
+                src={user.imageUrl}
+                alt="profile"
+                className="w-28 object-cover"
+              />
               {uploaders.map((uploader) => uploader.component)}
             </div>
           </Grid>
@@ -298,7 +373,11 @@ export default function Profile() {
                 </p>
                 <ManageCertificates
                   columns={columns2}
+                  certificates={data.certificates}
                   rows={transformIntoRowObjects(data.interests)}
+                  onCertificateUpload={handleCertificateUpload}
+                  onCertificateDelete={handleCertificateDelete}
+                  isLoading={isLoading}
                 />
               </div>
             </Grid>

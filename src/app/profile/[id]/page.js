@@ -105,7 +105,7 @@ export default function ViewProfile(props) {
         </Grid>
         <Grid item xs={4}>
           <div className="rounded-lg">
-            <img width="100%" src="/images/certificate.png" />
+            <img width="100%" src={user?.imageUrl} />
           </div>
         </Grid>
         <Grid item xs={8}>
@@ -151,7 +151,7 @@ export default function ViewProfile(props) {
                     user?.certificates.map((certificate) => (
                       <Grid item xs={3}>
                         <div className="p-2">
-                          <img width="100%" src="/images/certificate.png" />
+                          <img width="100%" src={certificate.imageUrl} />
                         </div>
                       </Grid>
                     ))
@@ -231,7 +231,7 @@ export default function ViewProfile(props) {
                           categories={item.categories}
                           price={item.price}
                           patentNumber={item.patentNumber}
-                          image={item.image}
+                          image={item.mainImg}
                         />
                       ))
                     ) : (
