@@ -50,7 +50,7 @@ const ReviewCard = ({ review }) => {
             <Stack direction={"row"} gap={2}>
               <Box
                 component={"img"}
-                src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
+                src={reviewer?.imageUrl}
                 alt="Profile"
                 sx={{
                   width: 40,
