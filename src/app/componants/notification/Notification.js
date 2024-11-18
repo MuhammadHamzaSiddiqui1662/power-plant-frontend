@@ -42,7 +42,7 @@ export default function NotificationMenu({ open, setOpen }) {
             <Grid xs={2}>
               <div className="">
                 <Image
-                  src="/images/property/3.jpg"
+                  src={notification.imageUrl}
                   className="h-16 rounded-md shadow dark:shadow-gray-800"
                   alt=""
                   width={200}
