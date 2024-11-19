@@ -23,21 +23,22 @@ export default function BrokerCard({
   successfulDeals,
 }) {
   return (
-    <Link href={`/profile/${id}?userType=2`}>
+    <Link
+      href={`/profile/${id}?userType=2`}
+      style={{ height: "100%", display: "block" }}
+    >
       <Card
         sx={{
           border: "2px solid #8F98A5",
           borderRadius: "10px",
-          marginLeft: "15px",
-          marginRight: "15px",
-          marginBottom: "12px",
-          marginTop: "50px",
+          height: "100%",
           textAlign: "center",
           paddingTop: "30px",
-          marginBottom: "1px",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        <Box mb={2}>
+        <Box mb={2} height={"100%"}>
           <div className="flex flex-col justify-center items-center">
             <Avatar
               sx={{ width: 100, height: 100 }}

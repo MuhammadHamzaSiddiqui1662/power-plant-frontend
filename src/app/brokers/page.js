@@ -10,18 +10,23 @@ import { Grid } from "@mui/material";
 import { useGetBrokersQuery } from "../../services/user/user";
 import ButtonContained from "../../components/ButtonContained/ButtonContained";
 
-const calculateRating = (reviews) =>
-  reviews.reduce(
-    (prev, curr) =>
-      prev +
-      (curr.priceNegotiation +
-        curr.responsiveness +
-        curr.communication +
-        curr.technicalSkills +
-        curr.behaviour) /
+const calculateRating = (reviews) => {
+  if (reviews.length === 0) return 0;
+  console.log("reviews", reviews);
+  const total = reviews.reduce(
+    (total, review) =>
+      total +
+      (review.behaviour +
+        review.communication +
+        review.priceNegotiation +
+        review.technicalSkills +
+        review.responsiveness) /
         5,
-    [0]
+    0
   );
+
+  return total / reviews.length;
+};
 
 const generateFilterQuery = (filterQuery) => {
   const matchStage = [];
@@ -136,7 +141,7 @@ export default function Welcome() {
 
       <div className="mb-40">
         <section>
-          <Grid container className="container">
+          <Grid container className="container" spacing={3}>
             {brokers &&
               brokers.length > 0 &&
               brokers?.map((element) => (
@@ -144,10 +149,7 @@ export default function Welcome() {
                   <BrokerCard
                     id={element._id}
                     name={element.name}
-                    imgSrc={
-                      "https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ" ||
-                      element.imageUrl
-                    }
+                    imgSrc={element.imageUrl}
                     interests={element.interests}
                     ratings={calculateRating(element.reviewsAsBorker)}
                     dealsInProgress={element.dealsInProgress}
