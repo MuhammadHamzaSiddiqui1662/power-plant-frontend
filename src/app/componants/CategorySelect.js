@@ -70,7 +70,14 @@ export default function CategorySelect({
         MenuProps={MenuProps}
       >
         {Object.keys(CATEGORIES).map((category) => [
-          <ListSubheader>{category}</ListSubheader>,
+          <ListSubheader
+            sx={{
+              fontSize: "18px",
+              fontWeight: 600,
+            }}
+          >
+            {category}
+          </ListSubheader>,
           ...CATEGORIES[category].map((name) => (
             <MenuItem
               key={name}
