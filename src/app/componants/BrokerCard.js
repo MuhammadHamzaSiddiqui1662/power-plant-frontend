@@ -40,11 +40,7 @@ export default function BrokerCard({
       >
         <Box mb={2} height={"100%"}>
           <div className="flex flex-col justify-center items-center">
-            <Avatar
-              sx={{ width: 100, height: 100 }}
-              alt="Remy Sharp"
-              src={imgSrc}
-            />
+            <Avatar sx={{ width: 100, height: 100 }} alt={name} src={imgSrc} />
             <p className="text-customDarkBlue mt-8 text-2xl sm:text-2xl">
               {name}
             </p>
