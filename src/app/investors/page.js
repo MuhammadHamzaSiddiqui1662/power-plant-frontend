@@ -67,9 +67,7 @@ export default function Welcome() {
                 <Grid key={investor._id} item xs={12} sm={6} md={3}>
                   <InvestorCard
                     name={investor.investor.name}
-                    imgSrc={
-                      "/images/client/01.jpg" || investor.investor.imageUrl
-                    }
+                    imgSrc={investor.investor.imageUrl}
                     current={investor.investor._id === currentInvestor._id}
                     onClick={() => handleSelectInvestor(investor)}
                   />
