@@ -514,6 +514,7 @@ export default function Chat() {
                             >
                               <Avatar
                                 src={chat.receiver.imageUrl}
+                                alt={chat.receiver.name}
                                 shape="circle"
                                 className="h-5x w-5x"
                               ></Avatar>
@@ -521,6 +522,7 @@ export default function Chat() {
                           ) : (
                             <Avatar
                               src={chat.receiver.imageUrl}
+                              alt={chat.receiver.name}
                               shape="circle"
                               className="h-5x w-5x"
                             >
@@ -543,7 +545,7 @@ export default function Chat() {
                           >
                             {chat.lastMessage}
                           </Typography.Text>
-                          {/* <text className="f-12 c-grey">{chat.lastMessage}</text> */}
+                          {/* // <text className="f-12 c-grey">{chat.lastMessage}</text> */}
                         </Col>
 
                         <Col xs={3} sm={3} md={3} lg={1} xl={3} xxl={3}>
@@ -776,8 +778,8 @@ export default function Chat() {
                                     </Col>
                                     <Col xs={{ span: 1 }} className="m-0-20">
                                       <Avatar
-                                        // src={message.sender.imageUrl}
-                                        // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
+                                        src={message.sender.imageUrl}
+                                        alt={message.sender.name}
                                         shape="circle"
                                       />
                                     </Col>
@@ -928,8 +930,8 @@ export default function Chat() {
                                   <Row justify={"start"}>
                                     <Col xs={{ span: 1 }} className="m-0-20">
                                       <Avatar
-                                        // src={message.sender.imageUrl}
-                                        // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
+                                        src={message.sender.imageUrl}
+                                        alt={message.sender.name}
                                         shape="circle"
                                       />
                                     </Col>
@@ -1091,16 +1093,16 @@ export default function Chat() {
                           chat.receiver.online === true ? (
                             <Badge status="success" dot offset={[-6, 36]}>
                               <Avatar
-                                // src={chat.receiver.imageUrl}
-                                // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
+                                src={chat.receiver.imageUrl}
+                                alt={chat.receiver.name}
                                 shape="circle"
                                 className="h-5x w-5x"
                               ></Avatar>
                             </Badge>
                           ) : (
                             <Avatar
-                              // src={chat.receiver.imageUrl}
-                              // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
+                              src={chat.receiver.imageUrl}
+                              alt={chat.receiver.name}
                               shape="circle"
                               className="h-5x w-5x"
                             >
@@ -1169,8 +1171,8 @@ export default function Chat() {
                   <Col xs={{ span: 1 }}>
                     <Avatar
                       className="h-4x w-4x"
-                      // src={selectedChat.receiver.imageUrl}
-                      // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
+                      src={selectedChat.receiver.imageUrl}
+                      alt={selectedChat.receiver.name}
                       shape="circle"
                     />
                   </Col>
@@ -1345,8 +1347,8 @@ export default function Chat() {
 
                               <Col xs={{ span: 1 }}>
                                 <Avatar
-                                  // src={message.sender.imageUrl}
-                                  // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
+                                  src={message.sender.imageUrl}
+                                  alt={message.sender.name}
                                   shape="circle"
                                 />
                               </Col>
@@ -1393,8 +1395,8 @@ export default function Chat() {
                                   </Col>
                                   <Col xs={{ span: 1 }} className="m-0-20">
                                     <Avatar
-                                      // src={message.sender.imageUrl}
-                                      // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
+                                      src={message.sender.imageUrl}
+                                      alt={message.sender.name}
                                       shape="circle"
                                     />
                                   </Col>
@@ -1416,8 +1418,8 @@ export default function Chat() {
 
                                   <Col xs={{ span: 1 }}>
                                     <Avatar
-                                      // src={message.sender.imageUrl}
-                                      // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
+                                      src={message.sender.imageUrl}
+                                      alt={message.sender.name}
                                       shape="circle"
                                     />
                                   </Col>
@@ -1432,8 +1434,8 @@ export default function Chat() {
                             <Row justify={"start"}>
                               <Col xs={{ span: 1 }} className="m-0-20">
                                 <Avatar
-                                  // src={message.sender.imageUrl}
-                                  // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
+                                  src={message.sender.imageUrl}
+                                  alt={message.sender.name}
                                   shape="circle"
                                 />
                               </Col>
@@ -1524,8 +1526,8 @@ export default function Chat() {
                                   <Row justify={"start"}>
                                     <Col xs={{ span: 1 }} className="m-0-20">
                                       <Avatar
-                                        // src={message.sender.imageUrl}
-                                        // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
+                                        src={message.sender.imageUrl}
+                                        alt={message.sender.name}
                                         shape="circle"
                                       />
                                     </Col>
@@ -1573,8 +1575,8 @@ export default function Chat() {
                                   <Row justify={"start"}>
                                     <Col xs={{ span: 1 }} className="m-0-20">
                                       <Avatar
-                                        // src={message.sender.imageUrl}
-                                        // src="https://fastly.picsum.photos/id/413/200/200.jpg?hmac=e6w034LWyRaayerJY_efJywx28FwPjv-EC8F10jVtMQ"
+                                        src={message.sender.imageUrl}
+                                        alt={message.sender.name}
                                         shape="circle"
                                       />
                                     </Col>
