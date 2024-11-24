@@ -21,6 +21,9 @@ const generateFilterQuery = (filterQuery) => {
     );
   }
 
+  if (filterQuery.search !== "")
+    matchStage.push(`search=${filterQuery.search}`);
+
   if (filterQuery.min !== "") matchStage.push(`min=${filterQuery.min}`);
 
   if (filterQuery.max !== "") matchStage.push(`max=${filterQuery.max}`);
