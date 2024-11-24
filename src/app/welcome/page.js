@@ -81,7 +81,7 @@ export default function Welcome() {
                       category={item.category}
                       price={item.price}
                       patentNo={item.patentNo}
-                      image={item.image}
+                      image={item.mainImg}
                     />
                   ))}
                 </div>
