@@ -34,6 +34,7 @@ const initialData = {
   copyright: "",
   mainImg: "",
   images: [],
+  patentDocument: "",
   sections: [{ title: "", content: "" }],
 };
 
@@ -158,11 +159,15 @@ export default function UploadIP() {
   };
 
   const handleSaveSubmit = async () => {
+    console.log(data);
+
     if (isPatented) {
       if (!data.patentNumber)
-        return setErrorMessage("Patent Number is required feild.");
+        return setErrorMessage("Patent Number is a required field.");
       if (!data.publishedDate)
-        return setErrorMessage("Patent published date is required feild.");
+        return setErrorMessage("Patent published date is a required field.");
+      if (!files.filepatentDocument)
+        return setErrorMessage("Patent document (PDF) is required.");
     }
 
     const formData = new FormData();
@@ -178,7 +183,6 @@ export default function UploadIP() {
         : await uploadIp(formData);
 
       if (error) {
-        console.log("error", error);
         setErrorMessage("Incomplete Data");
         ToastMessage({
           message: "Failed to upload IP: Incomplete Data",
@@ -188,21 +192,14 @@ export default function UploadIP() {
       }
 
       setErrorMessage("");
-      if (ip) {
-        ToastMessage({
-          message: "IP has been uploaded successfully!",
-          type: "success",
-        });
-        refetch();
-      } else {
-        router.replace(`/upload-ip?id=${data._id}`);
-        ToastMessage({
-          message: "IP has been uploaded successfully!",
-          type: "success",
-        });
-      }
+      ToastMessage({
+        message: "IP has been uploaded successfully!",
+        type: "success",
+      });
+
+      if (!ip) router.replace(`/upload-ip?id=${data._id}`);
+      else refetch();
     } catch (error) {
-      console.error("Error uploading data:", error);
       setErrorMessage(
         error.shortMessage || error.message || "Error in updating IP!"
       );
@@ -242,6 +239,8 @@ export default function UploadIP() {
     }));
     setIsPatented(ip?.patentNumber ? true : false);
   }, [ip]);
+
+  console.log(data);
 
   return (
     <>
@@ -351,10 +350,7 @@ export default function UploadIP() {
                           Yes
                         </label>
                       </div>
-                      <div
-                        className="flex
-                 items-center ms-14"
-                      >
+                      <div className="flex items-center ms-14">
                         <input
                           type="radio"
                           id="option2"
@@ -394,6 +390,48 @@ export default function UploadIP() {
                         />
                       </div>
                     </Grid>
+                    {files.filepatentDocument?.url && (
+                      <div
+                        style={{
+                          marginTop: "20px",
+                          border: "1px solid #ccc",
+                          padding: "10px",
+                          borderRadius: "5px",
+                          backgroundColor: "#f9f9f9",
+                        }}
+                      >
+                        <h3>Uploaded PDF:</h3>
+                        <iframe
+                          src={data.patentDocument}
+                          width="100%"
+                          height="500px"
+                          title="PDF Preview"
+                        ></iframe>
+                      </div>
+                    )}
+                    <Grid item xs={12}>
+                      <div className="mb-4">
+                        <label
+                          className="font-medium text-customDarkBlue"
+                          htmlFor="patentDocument"
+                        >
+                          Upload Patent Document (PDF):
+                        </label>
+                        <input
+                          id="patentDocument"
+                          name="patentDocument"
+                          type="file"
+                          accept="application/pdf"
+                          className="form-input mt-1"
+                          onChange={(event) =>
+                            handleFileUpload(
+                              event.target.files[0],
+                              "patentDocument"
+                            )
+                          }
+                        />
+                      </div>
+                    </Grid>
                     <Grid item xs={12}>
                       <div className="mb-4">
                         <label
@@ -415,6 +453,7 @@ export default function UploadIP() {
                     </Grid>
                   </>
                 )}
+
                 <Grid item xs={12}>
                   <div className="mb-4">
                     <label className="font-medium text-customDarkBlue block mb-2">

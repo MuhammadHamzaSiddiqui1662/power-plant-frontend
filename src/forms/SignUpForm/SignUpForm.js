@@ -358,7 +358,14 @@ export default function SignUpForm() {
                   className="form-check-label text-customDarkBlue"
                   htmlFor="RememberMe"
                 >
-                  I accept Terms and Conditions
+                  I accept{" "}
+                  <Link
+                    href="/terms"
+                    style={{ textDecoration: "underline" }}
+                    target="_blank"
+                  >
+                    Terms and Conditions
+                  </Link>
                 </label>
               </div>
               <div className="mb-5 flex justify-center">
