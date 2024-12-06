@@ -160,9 +160,9 @@ export default function UploadIP() {
   const handleSaveSubmit = async () => {
     if (isPatented) {
       if (!data.patentNumber)
-        return setErrorMessage("Patent Number is required feild.");
+        return setErrorMessage("Patent Number is a required field.");
       if (!data.publishedDate)
-        return setErrorMessage("Patent published date is required feild.");
+        return setErrorMessage("Patent published date is a required field.");
     }
 
     const formData = new FormData();
@@ -188,19 +188,13 @@ export default function UploadIP() {
       }
 
       setErrorMessage("");
-      if (ip) {
-        ToastMessage({
-          message: "IP has been uploaded successfully!",
-          type: "success",
-        });
-        refetch();
-      } else {
-        router.replace(`/upload-ip?id=${data._id}`);
-        ToastMessage({
-          message: "IP has been uploaded successfully!",
-          type: "success",
-        });
-      }
+      ToastMessage({
+        message: "IP has been uploaded successfully!",
+        type: "success",
+      });
+
+      if (!ip) router.replace(`/upload-ip?id=${data._id}`);
+      else refetch();
     } catch (error) {
       console.error("Error uploading data:", error);
       setErrorMessage(
@@ -351,10 +345,7 @@ export default function UploadIP() {
                           Yes
                         </label>
                       </div>
-                      <div
-                        className="flex
-                 items-center ms-14"
-                      >
+                      <div className="flex items-center ms-14">
                         <input
                           type="radio"
                           id="option2"
