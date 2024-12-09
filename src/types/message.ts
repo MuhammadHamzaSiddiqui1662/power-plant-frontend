@@ -1,9 +1,15 @@
+import { MessageType } from "./MessageType";
+import { User } from "./user";
+
 export interface MessageData {
-    chatId: string;
-    sender: string;
-    content: string;
-    timestamp: Date;
-    seen: boolean;
-    seenAt: Date | null;
-  }
-  
+  _id: string;
+  chatId: string;
+  sender: User;
+  content: string;
+  type: MessageType;
+  disabled: boolean;
+  seen: boolean;
+  seenAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}

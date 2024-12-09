@@ -1,7 +1,9 @@
 export enum MessageType {
-    Text = "text",
-    Voice = "voice",
-    CloseChat = "close",
-    StartChat = "start",
-    ReviewChat = "review",
-  }
+  Text = "text",
+  Voice = "voice",
+  CloseChat = "close",
+  StartChat = "start",
+  DealClosed = "deal-closed",
+  ReviewChat = "review",
+  Notification = "notification",
+}

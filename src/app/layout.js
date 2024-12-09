@@ -7,6 +7,7 @@ import AntdStyledComponentsRegistry from "./componants/AntdStyledComponentsRegis
 import StoreProvider from "./StoreProvider";
 import ThemeProvider from "./ThemeProvider";
 import { MyToastContainer } from "./componants/Toast";
+import { SocketProvider } from "../providers/SocketProvider";
 
 const league_Spartan = League_Spartan({
   subsets: ["latin"],
@@ -28,10 +29,12 @@ export default function RootLayout({ children }) {
         <AppRouterCacheProvider>
           <ThemeProvider>
             <StoreProvider>
-              <AntdStyledComponentsRegistry>
-                {children}
-                <MyToastContainer />
-              </AntdStyledComponentsRegistry>
+              <SocketProvider>
+                <AntdStyledComponentsRegistry>
+                  {children}
+                  <MyToastContainer />
+                </AntdStyledComponentsRegistry>
+              </SocketProvider>
             </StoreProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
