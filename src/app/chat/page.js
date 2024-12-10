@@ -21,17 +21,6 @@ export default function Chat() {
 
   return (
     <>
-      {/* <ReviewModal
-        visible={reviewModalVisible}
-        setVisible={setReviewModalVisible}
-        sendReviewMessage={sendReviewMessageHandler}
-        brokerId={brokerId}
-        userType={brokerType}
-        isReviewBtnClicked={isReviewBtnClicked}
-        chat={selectedChat}
-        refresh={refresh}
-      /> */}
-
       <Navbar />
       <section className="section">
         <Row justify={"center"} className="h-full" style={{ gap: 32 }}>

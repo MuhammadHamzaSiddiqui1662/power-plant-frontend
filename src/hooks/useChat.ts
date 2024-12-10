@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams, useSearchParams } from "next/navigation";
+import { useSelector } from "react-redux";
+import { useSearchParams } from "next/navigation";
 import { MessageData } from "../types/message";
 import { useSocket } from "../providers/SocketProvider";
 import { ChatData } from "../types/chat";
@@ -10,12 +10,11 @@ import { UserType } from "../types/user";
 import { Review, ReviewType } from "../types/ReviewType";
 
 export const useChats = () => {
-  const dispatch = useDispatch();
   const { socket } = useSocket();
   const { user, userType } = useSelector((state: any) => state.auth);
   const userId: string = useMemo(() => user._id, [user]);
   const chatId = useSearchParams().get("chatId");
-  const isUnhire = useSearchParams().get("unhire");
+  // const isUnhire = useSearchParams().get("unhire");
   const [chatList, setChatList] = useState<ChatData[]>([]);
   const [chatDetails, setChatDetails] = useState<ChatData>();
   const { data: chats } = useGetMyChatsQuery(userType);
@@ -78,6 +77,8 @@ export const useChats = () => {
 
   const handleGetChatDetailsById = useCallback(
     async (chatId: string) => {
+      if (chatDetails?._id)
+        socket?.emit("leaveChat", { chatId: chatDetails._id });
       socket?.emit("joinChat", { chatId });
       socket?.on("previousMessages", async (msgs: MessageData[]) => {
         console.log("msgs", msgs);
@@ -85,7 +86,7 @@ export const useChats = () => {
         handleMarkMessagesAsSeen(chatId);
       });
     },
-    [userId, socket, handleMarkMessagesAsSeen]
+    [socket, userId, chatDetails, handleMarkMessagesAsSeen]
   );
 
   const handleSendMessage = useCallback(
@@ -104,16 +105,28 @@ export const useChats = () => {
   const handleNewMessagesListner = useCallback(() => {
     socket?.on("newMessage", async (message: MessageData) => {
       if (message.chatId == chatId) {
-        // dispatch(pushMessage(message));
         setMessages((prev) => [...prev, message]);
+        setChatList((prev) =>
+          prev.map((chat) => {
+            if (chat._id === message.chatId && message.content) {
+              return { ...chat, lastMessage: message.content };
+            }
+            return chat;
+          })
+        );
         handleMarkMessagesAsSeen(chatId);
       } else {
         if (message.sender._id !== userId)
-          // dispatch(increaseUnReadMessages(message));
           setChatList((prev) =>
             prev.map((chat) => {
               if (chat._id === message.chatId) {
-                return { ...chat, unReadMessages: chat.unReadMessages + 1 };
+                return message.content
+                  ? {
+                      ...chat,
+                      lastMessage: message.content,
+                      unReadMessages: chat.unReadMessages + 1,
+                    }
+                  : { ...chat, unReadMessages: chat.unReadMessages + 1 };
               }
               return chat;
             })
@@ -155,17 +168,9 @@ export const useChats = () => {
   const handleCancelCloseDeal = useCallback(
     (messageId: string) => {
       try {
-        // const { data: deleteMessageResponse, error } = await deleteMessage(
-        //   messageId
-        // );
-        // if (error) return setError(error.message);
-
         socket.emit("deleteMessage", {
           messageId,
         });
-
-        // let updatedMessageList = messages.filter((msg) => msg._id !== messageId);
-        // setMessages(updatedMessageList);
       } catch (error) {
         console.log(`error --> ${error}`);
       }
@@ -239,9 +244,10 @@ export const useChats = () => {
   }, [socket, setMessages]);
 
   const handleCloseChat = useCallback(() => {
-    // dispatch(closeChat());
+    if (chatDetails) socket?.emit("leaveChat", { chatId: chatDetails?._id });
     setMessages([]);
-  }, []);
+    setChatDetails(undefined);
+  }, [socket, chatDetails, setMessages, setChatDetails]);
 
   const handleSocketCleanUp = useCallback(() => {
     socket?.off("newMessage");
@@ -252,7 +258,6 @@ export const useChats = () => {
   }, [socket]);
 
   useEffect(() => {
-    // dispatch(getChatsThunk(userId));
     if (chatId) handleGetChatDetailsById(chatId);
     else handleCloseChat();
     handleNewMessagesListner();
