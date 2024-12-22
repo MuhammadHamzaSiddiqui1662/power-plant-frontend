@@ -66,16 +66,17 @@ const authSlice = createSlice({
       (state, { payload }) => {
         state.user = payload;
         state.user.interests = payload.interests;
-      }
-    );
-    builder.addMatcher(
-      userApi.endpoints.getUser.matchFulfilled,
-      (state, { payload }) => {
-        state.user = payload;
-        state.user.interests = payload.interests;
         state.certificates = payload.certificates;
       }
     );
+    // builder.addMatcher(
+    //   userApi.endpoints.getUser.matchFulfilled,
+    //   (state, { payload }) => {
+    //     state.user = payload;
+    //     state.user.interests = payload.interests;
+    //     state.certificates = payload.certificates;
+    //   }
+    // );
     builder.addMatcher(
       authApi.endpoints.resetPassword.matchFulfilled,
       (state, { payload }) => {

@@ -21,6 +21,7 @@ import {
   useGetUserQuery,
   useUpdateUserMutation,
 } from "../../services/user/user";
+import ButtonContained from "../../components/ButtonContained/ButtonContained";
 
 const transformIntoRowObjects = (interests) =>
   interests.map((interest) => ({ interest }));
@@ -38,7 +39,8 @@ export default function Profile() {
   const { user, userType } = useSelector((state) => state.auth);
   const [data, setData] = useState({ ...initialData, ...user });
   const [error, setError] = useState("");
-  const [updateUser, { _error }] = useUpdateUserMutation();
+  const [updateUser, { _error, isLoading: isUpdating }] =
+    useUpdateUserMutation();
   const { refetch } = useGetUserQuery(user?._id);
   const [addCertificate, { isLoading: addCertificateLoading }] =
     useAddCertificateMutation();
@@ -351,12 +353,14 @@ export default function Profile() {
             >
               Cancel
             </button>
-            <button
-              className="my-3 text-xl btn bg-customGreen hover:bg-customGreen text-white rounded-md py-6 w-40 px-0 text-[32px]"
+            <ButtonContained
               onClick={handleSave}
+              isLoading={isUpdating}
+              disabled={isUpdating}
+              className="my-3 text-xl text-[32px] px-4"
             >
               Save Changes
-            </button>
+            </ButtonContained>
           </div>
         </Grid>
 
