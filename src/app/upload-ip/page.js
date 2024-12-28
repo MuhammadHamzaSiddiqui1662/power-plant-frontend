@@ -88,6 +88,13 @@ export default function UploadIP() {
     );
   };
 
+  const handleDeleteImage = (url) => {
+    setData((prevData) => ({
+      ...prevData,
+      deletedImages: [...(prevData.deletedImages || []), url],
+    }));
+  };
+
   const handleBackgroundUpload = (file) => {
     setErrorMessage("");
     setFiles((prevFiles) => ({
@@ -240,7 +247,10 @@ export default function UploadIP() {
   return (
     <>
       <Navbar navClass="navbar-white" />
-      <BackgroundSection onBackgroundUpload={handleBackgroundUpload} />
+      <BackgroundSection
+        image={data.mainImg}
+        onBackgroundUpload={handleBackgroundUpload}
+      />
       <section>
         <Grid className="container" container>
           <Grid item xs={12}>
@@ -452,6 +462,24 @@ export default function UploadIP() {
               </label>
               <div className="flex items-center my-4">
                 <div className="flex flex-wrap">
+                  {data.images
+                    ?.filter((url) => !data.deletedImages?.includes(url))
+                    .map((image, index) => (
+                      <div key={index} className="relative mr-4">
+                        <img
+                          src={image}
+                          alt="image"
+                          className="w-28 h-28 object-cover rounded"
+                        />
+                        <button
+                          onClick={() => handleDeleteImage(image)}
+                          className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center transform translate-x-1/2 -translate-y-1/2 hover:bg-red-600 shadow-lg"
+                          style={{ fontSize: "24px", lineHeight: "1" }}
+                        >
+                          &times;
+                        </button>
+                      </div>
+                    ))}
                   {uploaders?.map((uploader, index) => (
                     <div key={index} className="relative mr-4">
                       {uploader.component}

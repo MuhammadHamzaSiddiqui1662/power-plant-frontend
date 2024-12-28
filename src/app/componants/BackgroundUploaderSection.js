@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 
-export default function BackgroundSection({ onBackgroundUpload }) {
+export default function BackgroundSection({ image, onBackgroundUpload }) {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
-  const [backgroundImage, setBackgroundImage] = useState("");
+  const [backgroundImage, setBackgroundImage] = useState(image);
 
   useEffect(() => {
     if (acceptedFiles.length > 0) {
