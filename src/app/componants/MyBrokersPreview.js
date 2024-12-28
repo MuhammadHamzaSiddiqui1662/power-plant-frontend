@@ -27,8 +27,8 @@ export default function MyBrokersPreview() {
               <div className="mx-2">
                 <Avatar
                   sx={{ width: 20, height: 20 }}
-                  alt="Remy Sharp"
-                  src="/images/client/01.jpg"
+                  src={broker.broker.imageUrl}
+                  alt={broker.broker.name}
                 />
               </div>
               <p className="text-base sm:text-sm md:text-lg lg:text-lg xl:text-2xl 2xl:text-2xl name">
