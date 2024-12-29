@@ -23,8 +23,8 @@ export const ChatList: FC<Props> = ({ chatList, extractReceiver }) => {
 
   return (
     <Col
-      xs={22}
-      md={22}
+      xs={chatId ? 0 : 24}
+      md={chatId ? 0 : 24}
       lg={6}
       xl={6}
       xxl={6}

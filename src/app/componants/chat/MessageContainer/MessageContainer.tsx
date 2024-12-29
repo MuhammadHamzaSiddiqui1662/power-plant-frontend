@@ -58,22 +58,22 @@ export const MessageContainer: FC<Props> = ({
 
   return !chatDetails ? (
     <Col
-      xs={22}
-      md={22}
-      lg={16}
-      xl={16}
-      xxl={12}
+      xs={24}
+      md={24}
+      lg={17}
+      xl={17}
+      xxl={17}
       className="h-full border custom-border rounded-2xl flex items-center justify-center"
     >
       <Title className="text-slate-400">Select Any Chat</Title>
     </Col>
   ) : (
     <Col
-      xs={22}
-      md={22}
-      lg={16}
-      xl={16}
-      xxl={12}
+      xs={24}
+      md={24}
+      lg={17}
+      xl={17}
+      xxl={17}
       className="h-full border custom-border rounded-2xl flex flex-col"
     >
       <ReviewModal

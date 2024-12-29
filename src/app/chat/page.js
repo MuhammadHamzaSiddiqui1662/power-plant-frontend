@@ -22,7 +22,7 @@ export default function Chat() {
   return (
     <>
       <Navbar />
-      <section className="section">
+      <section className="section px-4">
         <Row justify={"center"} className="h-full" style={{ gap: 32 }}>
           <ChatList chatList={chatList} extractReceiver={extractReceiver} />
           <MessageContainer

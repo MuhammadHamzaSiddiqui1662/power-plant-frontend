@@ -89,7 +89,7 @@
   .input-message {
     border-color: white !important;
     padding: 15px 10px !important;
-    max-width: 85% !important;
+    width: 100% !important;
     height: 50px !important;
   }
   .message-box {
@@ -188,7 +188,7 @@
   .input-message {
     border-color: white !important;
     padding: 15px 10px !important;
-    max-width: 85% !important;
+    width: 100% !important;
     height: 50px !important;
   }
   .message-box {
@@ -287,8 +287,7 @@
   .input-message {
     border-color: white !important;
     padding: 15px 10px !important;
-    max-width: 95% !important;
-    width: 95% !important;
+    width: 100% !important;
     height: 50px !important;
   }
   .message-box {
@@ -385,8 +384,7 @@
   .input-message {
     border-color: white !important;
     padding: 15px 10px !important;
-    max-width: 95% !important;
-    width: 95% !important;
+    width: 100% !important;
     height: 50px !important;
   }
   .message-box {
@@ -479,8 +477,7 @@
   .input-message {
     border-color: white !important;
     padding: 15px 10px !important;
-    max-width: 95% !important;
-    width: 95% !important;
+    width: 100% !important;
     height: 50px !important;
   }
   .message-box {
@@ -700,19 +697,19 @@
   text-align: center;
 }
 
-.ant-btn-default:disabled{
+.ant-btn-default:disabled {
   background-color: white;
 }
 
-.anchor-design{
-   color: inherit; 
+.anchor-design {
+  color: inherit;
   text-decoration: none;
-  cursor: pointer; 
+  cursor: pointer;
 }
 
 .anchor-design:hover {
   text-decoration: none;
-  color: inherit; 
+  color: inherit;
 }
 
 ::-webkit-scrollbar {
