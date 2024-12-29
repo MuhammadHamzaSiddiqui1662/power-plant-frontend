@@ -1,5 +1,5 @@
 "use client"; // This is a client component 👈🏽
-import React from "react";
+import React, { useMemo } from "react";
 import { Avatar } from "@mui/material";
 import { useGetMyInvestorsQuery } from "../../services/hiring/hiring";
 import { useRouter } from "next/navigation";
@@ -7,8 +7,18 @@ import { useSelector } from "react-redux";
 
 export default function MyInvestorsPreview() {
   const router = useRouter();
-  const { data: investors } = useGetMyInvestorsQuery();
   const { currentInvestor } = useSelector((state) => state.hiring);
+  const { data } = useGetMyInvestorsQuery();
+  const investors = useMemo(() => {
+    return data?.reduce((acc, current) => {
+      const x = acc.find((item) => item.investor._id === current.investor._id);
+      if (!x) {
+        return acc.concat([current]);
+      } else {
+        return acc;
+      }
+    }, []);
+  }, [data]);
 
   return (
     <div className="avatar-div">

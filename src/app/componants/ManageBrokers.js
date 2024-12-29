@@ -22,7 +22,6 @@ export default function ManageBrokers() {
     () => brokers?.map((hiring) => formatRows(hiring)) || [],
     [brokers]
   );
-  console.log(brokers);
 
   return (
     <>

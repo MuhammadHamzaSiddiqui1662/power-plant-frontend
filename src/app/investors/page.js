@@ -18,6 +18,7 @@ export default function Welcome() {
   const router = useRouter();
   const { user, accessToken } = useSelector((state) => state.auth);
   const { currentInvestor } = useSelector((state) => state.hiring);
+  const { currentIp } = useSelector((state) => state.ip);
   const { data: investors } = useGetMyInvestorsQuery();
 
   const handleSelectInvestor = (hiring) => {
@@ -67,8 +68,12 @@ export default function Welcome() {
                 <Grid key={investor._id} item xs={12} sm={6} md={3}>
                   <InvestorCard
                     name={investor.investor.name}
+                    ip={investor.ip.name}
                     imgSrc={investor.investor.imageUrl}
-                    current={investor.investor._id === currentInvestor._id}
+                    current={
+                      investor.investor._id === currentInvestor._id &&
+                      investor.ip._id === currentIp._id
+                    }
                     onClick={() => handleSelectInvestor(investor)}
                   />
                 </Grid>

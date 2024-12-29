@@ -1,12 +1,25 @@
 "use client"; // This is a client component 👈🏽
-import React from "react";
+import React, { useMemo } from "react";
 import { Avatar } from "@mui/material";
 import { useGetMyBrokersQuery } from "../../services/hiring/hiring";
 import { useRouter } from "next/navigation";
 
 export default function MyBrokersPreview() {
   const router = useRouter();
-  const { data: brokers } = useGetMyBrokersQuery();
+  const { data } = useGetMyBrokersQuery();
+  const brokers = useMemo(
+    () =>
+      data?.reduce((acc, current) => {
+        const x = acc.find((item) => item.broker._id === current.broker._id);
+        if (!x) {
+          return acc.concat([current]);
+        } else {
+          return acc;
+        }
+      }, []),
+    [data]
+  );
+
   return (
     <div className="avatar-div">
       <div className="flex items-center justify-between avatar-text">
@@ -22,8 +35,11 @@ export default function MyBrokersPreview() {
       </div>
       <div className="mt-3">
         {brokers && brokers.length > 0 ? (
-          brokers.map((broker, i) => (
-            <div key={i} className="flex items-center avatar-text mt-4">
+          brokers.map((broker) => (
+            <div
+              key={broker.broker._id}
+              className="flex items-center avatar-text mt-4"
+            >
               <div className="mx-2">
                 <Avatar
                   sx={{ width: 20, height: 20 }}
