@@ -8,6 +8,7 @@ import { useGetChatByIdQuery, useGetMyChatsQuery } from "../services/chat/chat";
 import { MessageType } from "../types/MessageType";
 import { UserType } from "../types/user";
 import { Review, ReviewType } from "../types/ReviewType";
+import { useFireServerNotificationMutation } from "../services/notification/notification";
 
 export const useChats = () => {
   const { socket } = useSocket();
@@ -20,6 +21,7 @@ export const useChats = () => {
   const { data: chats } = useGetMyChatsQuery(userType);
   const { data: _chatDetails } = useGetChatByIdQuery(chatId);
   const [messages, setMessages] = useState<MessageData[]>([]);
+  const [fireServerNotification] = useFireServerNotificationMutation();
 
   useEffect(() => {
     if (chats) {
@@ -145,6 +147,12 @@ export const useChats = () => {
           senderId: user._id,
           receiverId: extractReceiver(chatDetails)._id,
         });
+        fireServerNotification({
+          messages: "Close Deal request.",
+          imageUrl: user.imageUrl,
+          link: `/chat?chatId=${chatDetails._id}`,
+          userId: extractReceiver(chatDetails)._id,
+        });
       }
     } catch (error) {
       console.log(`error --> ${error}`);
@@ -158,6 +166,12 @@ export const useChats = () => {
           chatId,
           senderId: user._id,
         });
+        fireServerNotification({
+          messages: "Close Deal request rejected.",
+          imageUrl: user.imageUrl,
+          link: `/chat?chatId=${chatId}`,
+          userId: extractReceiver(chatDetails)._id,
+        });
       } catch (error) {
         console.log(`error --> ${error}`);
       }
@@ -170,6 +184,12 @@ export const useChats = () => {
       try {
         socket.emit("deleteMessage", {
           messageId,
+        });
+        fireServerNotification({
+          messages: "Close Deal request cancelled.",
+          imageUrl: user.imageUrl,
+          link: `/chat?chatId=${chatDetails._id}`,
+          userId: extractReceiver(chatDetails)._id,
         });
       } catch (error) {
         console.log(`error --> ${error}`);
@@ -192,6 +212,13 @@ export const useChats = () => {
         receiverId: receiver._id,
         reviewType,
         review,
+      });
+      fireServerNotification({
+        messages:
+          "Close Deal request accepted. Give your review about the deal.",
+        imageUrl: user.imageUrl,
+        link: `/chat?chatId=${chatDetails._id}`,
+        userId: receiver._id,
       });
     },
     [socket, chatDetails, extractReceiver]
@@ -224,6 +251,12 @@ export const useChats = () => {
         receiverId: receiver._id,
         reviewType,
         review,
+      });
+      fireServerNotification({
+        messages: "Deal closed.",
+        imageUrl: user.imageUrl,
+        link: `/chat?chatId=${chatDetails._id}`,
+        userId: receiver._id,
       });
     },
     [socket, chatDetails, extractReceiver]
