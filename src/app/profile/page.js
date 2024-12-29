@@ -193,7 +193,6 @@ export default function Profile() {
 
   return (
     <>
-      {console.log(files, "HREEEMYFILESSSSSSSS")}
       <Navbar navClass="navbar-white" />
       <Grid container>
         <Grid item xs={12}>

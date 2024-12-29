@@ -34,8 +34,6 @@ const authSlice = createSlice({
     },
     setUser: (state, action) => {
       state.user = action.payload;
-      state.user.interests = action.payload.interests;
-      state.certificates = action.payload.certificates;
     },
     setUserType: (state, action) => {
       state.userType = action.payload;
