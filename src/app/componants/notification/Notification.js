@@ -1,18 +1,34 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import { Grid } from "@mui/material";
 import Image from "next/image";
 import { useGetAllNotificationsQuery } from "../../../services/notification/notification";
+import { useSocket } from "../../../providers/SocketProvider";
+
 export default function NotificationMenu({ open, setOpen }) {
-  const { data: notifications, refetch } = useGetAllNotificationsQuery();
+  const { socket } = useSocket();
+  const { data } = useGetAllNotificationsQuery();
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      refetch();
-    }, 10000); // 1 minutes in milliseconds
+    if (data) {
+      setNotifications(data);
+    }
+  }, [data]);
 
-    return () => clearInterval(interval);
-  }, [refetch]);
+  useEffect(() => {
+    if (socket) {
+      socket.on("newNotification", (data) => {
+        setNotifications((prev) => [data, ...prev]);
+      });
+    }
+
+    return () => {
+      if (socket) {
+        socket.off("newNotification");
+      }
+    };
+  }, [socket]);
 
   return (
     <Paper
@@ -27,8 +43,7 @@ export default function NotificationMenu({ open, setOpen }) {
       }}
     >
       <p className="px-8 pt-5 pb-4 font-medium text-2xl">Notifications</p>
-      {notifications &&
-        notifications.length > 0 &&
+      {notifications && notifications.length > 0 ? (
         notifications.map((notification) => (
           <Grid
             container
@@ -59,7 +74,12 @@ export default function NotificationMenu({ open, setOpen }) {
               </div>
             </Grid>
           </Grid>
-        ))}
+        ))
+      ) : (
+        <p className="text-center text-customGrayColor py-4">
+          No notification available
+        </p>
+      )}
     </Paper>
   );
 }

@@ -11,7 +11,6 @@ import { paymentApi } from "../services/payment/payment";
 import authReducer from "./features/authSlice";
 import ipReducer from "./features/ipSlice";
 import hiringReducer from "./features/hiringSlice";
-import notificationReducer from "./features/notificationSlice";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 
@@ -43,7 +42,6 @@ const rootReducer = combineReducers({
   [hiringApi.reducerPath]: hiringApi.reducer,
   hiring: persistReducer(hiringPersistConfig, hiringReducer),
   [notificationApi.reducerPath]: notificationApi.reducer,
-  notification: notificationReducer,
   [userApi.reducerPath]: userApi.reducer,
   [chatApi.reducerPath]: chatApi.reducer,
   [messageApi.reducerPath]: messageApi.reducer,
