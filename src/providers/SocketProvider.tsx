@@ -26,16 +26,17 @@ export const SocketProvider = ({ children }: Props) => {
   const { user, accessToken } = useSelector((state: any) => state.auth);
 
   const socket = useMemo(() => {
+    if (!user || !accessToken) return null;
     return io(BACKEND_SOCKET_URL, {
       query: { userId: user._id },
     });
   }, [user, accessToken]);
 
   useEffect(() => {
-    if (accessToken && user) {
+    if (socket) {
       socket.emit("userOnline", user._id);
     }
-  }, [socket, accessToken, user]);
+  }, [socket, user]);
 
   return (
     <SocketContext.Provider value={{ socket }}>
