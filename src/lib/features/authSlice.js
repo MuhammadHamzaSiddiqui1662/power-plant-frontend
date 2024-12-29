@@ -1,6 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { authApi } from "../../services/auth/auth";
-import { userApi } from "../../services/user/user";
 
 const initialState = {
   user: {
@@ -28,66 +26,23 @@ const authSlice = createSlice({
       state.refreshTokenExpiry = initialState.refreshTokenExpiry;
     },
     setAuthCreds: (state, action) => {
+      state.user = action.payload.user;
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
       state.accessTokenExpiry = action.payload.accessTokenExpiry;
       state.refreshTokenExpiry = action.payload.refreshTokenExpiry;
     },
+    setUser: (state, action) => {
+      state.user = action.payload;
+      state.user.interests = action.payload.interests;
+      state.certificates = action.payload.certificates;
+    },
     setUserType: (state, action) => {
       state.userType = action.payload;
     },
   },
-  extraReducers: (builder) => {
-    builder.addMatcher(
-      authApi.endpoints.login.matchFulfilled,
-      (state, { payload }) => {
-        state.user = payload.user;
-        state.accessToken = payload.accessToken;
-        state.refreshToken = payload.refreshToken;
-        state.accessTokenExpiry = payload.accessTokenExpiry;
-        state.refreshTokenExpiry = payload.refreshTokenExpiry;
-      }
-    );
-    builder.addMatcher(
-      authApi.endpoints.verifyOtp.matchFulfilled,
-      (state, { payload }) => {
-        state.user = payload.user;
-        state.accessToken = payload.accessToken;
-        state.refreshToken = payload.refreshToken;
-        state.accessTokenExpiry = payload.accessTokenExpiry;
-        state.refreshTokenExpiry = payload.refreshTokenExpiry;
-      }
-    );
-    builder.addMatcher(
-      authApi.endpoints.refreshToken.matchFulfilled,
-      (state, { payload }) => {
-        state.accessToken = payload.accessToken;
-        state.refreshToken = payload.refreshToken;
-        state.accessTokenExpiry = payload.accessTokenExpiry;
-        state.refreshTokenExpiry = payload.refreshTokenExpiry;
-      }
-    );
-    builder.addMatcher(
-      userApi.endpoints.updateUser.matchFulfilled,
-      (state, { payload }) => {
-        state.user = payload;
-        state.user.interests = payload.interests;
-        state.certificates = payload.certificates;
-      }
-    );
-    builder.addMatcher(
-      authApi.endpoints.resetPassword.matchFulfilled,
-      (state, { payload }) => {
-        state.user = payload.user;
-        state.accessToken = payload.accessToken;
-        state.refreshToken = payload.refreshToken;
-        state.accessTokenExpiry = payload.accessTokenExpiry;
-        state.refreshTokenExpiry = payload.refreshTokenExpiry;
-      }
-    );
-  },
 });
 
-export const { logout, setUserType, setAuthCreds } = authSlice.actions;
+export const { logout, setUser, setUserType, setAuthCreds } = authSlice.actions;
 
 export default authSlice.reducer;

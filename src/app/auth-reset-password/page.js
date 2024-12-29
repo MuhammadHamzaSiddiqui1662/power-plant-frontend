@@ -12,7 +12,7 @@ import {
 import { Alert } from "@mui/material";
 import ButtonContained from "../../components/ButtonContained/ButtonContained";
 import { useDispatch } from "react-redux";
-import { setUserType } from "../../lib/features/authSlice";
+import { setAuthCreds, setUserType } from "../../lib/features/authSlice";
 
 export default function Login() {
   const router = useRouter();
@@ -46,17 +46,17 @@ export default function Login() {
 
   const handleSend = async () => {
     try {
-      const { data: verifyOtpResponse, error } = await resetPassword({
+      const payload = await resetPassword({
         email,
         otp,
         password,
-      });
-      if (error) return setError(error.message);
+      }).unwrap();
+      dispatch(setAuthCreds(payload));
       dispatch(setUserType(userType));
-      console.log(verifyOtpResponse);
       router.replace("/home");
     } catch (error) {
       console.log(`error --> ${error}`);
+      setError(error.data.message);
     }
   };
 

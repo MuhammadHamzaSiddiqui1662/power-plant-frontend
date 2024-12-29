@@ -14,7 +14,7 @@ const ManageIPs = dynamic(() => import("../componants/ManageIPs"));
 const ManageBrokers = dynamic(() => import("../componants/ManageBrokers"));
 const CategorySelect = dynamic(() => import("../componants/CategorySelect"));
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   useAddCertificateMutation,
   useDeleteCertificateMutation,
@@ -22,6 +22,7 @@ import {
   useUpdateUserMutation,
 } from "../../services/user/user";
 import ButtonContained from "../../components/ButtonContained/ButtonContained";
+import { setUser } from "../../lib/features/authSlice";
 
 const transformIntoRowObjects = (interests) =>
   interests.map((interest) => ({ interest }));
@@ -36,12 +37,13 @@ const initialData = {
 };
 
 export default function Profile() {
-  const { user, userType } = useSelector((state) => state.auth);
-  const [data, setData] = useState({ ...initialData, ...user });
+  const dispatch = useDispatch();
+  const { user: _user, userType } = useSelector((state) => state.auth);
+  const [data, setData] = useState({ ...initialData, ..._user });
   const [error, setError] = useState("");
+  const { data: user, refetch } = useGetUserQuery(_user?._id);
   const [updateUser, { _error, isLoading: isUpdating }] =
     useUpdateUserMutation();
-  const { refetch } = useGetUserQuery(user?._id);
   const [addCertificate, { isLoading: addCertificateLoading }] =
     useAddCertificateMutation();
   const [deleteCertificate, { isLoading: deleteCertificateLoading }] =
@@ -170,23 +172,14 @@ export default function Profile() {
     if (files[0]) formData.append("image", files[0]);
 
     try {
-      const { error } = await updateUser(formData);
-
-      if (error) {
-        console.log("error", error);
-        setError(
-          error.shortMessage || error.message || "Failed to update data"
-        );
-        ToastMessage({ message: "Failed to update data!", type: "error" });
-        return;
-      }
+      const payload = await updateUser(formData).unwrap();
+      dispatch(setUser(payload));
+      refetch();
 
       ToastMessage({
         message: "User data updated successfully!",
         type: "success",
       });
-
-      refetch();
     } catch (error) {
       console.error("Error uploading data:", error);
       setError(error.shortMessage || error.message || "Failed to update data");
@@ -336,7 +329,7 @@ export default function Profile() {
             </label>
             <div className="flex justify-center mb-4 gap-2">
               <img
-                src={user.imageUrl}
+                src={user?.imageUrl}
                 alt="profile"
                 className="w-28 object-cover"
               />

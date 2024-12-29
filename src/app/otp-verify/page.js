@@ -13,7 +13,7 @@ import { Alert } from "@mui/material";
 import ToastMessage from "../componants/Toast";
 import ButtonContained from "../../components/ButtonContained/ButtonContained";
 import { useDispatch } from "react-redux";
-import { setUserType } from "../../lib/features/authSlice";
+import { setAuthCreds, setUserType } from "../../lib/features/authSlice";
 
 export default function OTPVerify() {
   const router = useRouter();
@@ -52,21 +52,18 @@ export default function OTPVerify() {
 
   const handleSend = async () => {
     try {
-      const { data: verifyOtpResponse, error } = await verifyOtp({
+      const payload = await verifyOtp({
         email,
         otp,
-      });
-      if (error) {
-        setError(error.message);
-        ToastMessage({ message: "OTP verification failed!", type: "error" });
-        return;
-      }
-      ToastMessage({ message: "OTP verified successfully!", type: "success" });
+      }).unwrap();
+      dispatch(setAuthCreds(payload));
       dispatch(setUserType(userType));
-      console.log(verifyOtpResponse);
+      ToastMessage({ message: "OTP verified successfully!", type: "success" });
       router.replace("/home");
     } catch (error) {
       console.log(`error --> ${error}`);
+      setError(error.data.message);
+      ToastMessage({ message: "OTP verification failed!", type: "error" });
     }
   };
 

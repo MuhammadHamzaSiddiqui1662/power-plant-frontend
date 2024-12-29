@@ -14,7 +14,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useUpdateUserMutation } from "../../../services/user/user";
 import { useUpdateIpMutation } from "../../../services/ip/ip";
 import { IpStatus } from "../../../types/ip";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../../../lib/features/authSlice";
 
 export default function CheckoutForm({
   clientSecret,
@@ -25,6 +26,7 @@ export default function CheckoutForm({
   const router = useRouter();
   const stripe = useStripe();
   const elements = useElements();
+  const dispatch = useDispatch();
   const id = useSearchParams().get("id");
   const { user } = useSelector((state) => state.auth);
   const [updateUser] = useUpdateUserMutation();
@@ -75,7 +77,8 @@ export default function CheckoutForm({
               subscriber: true,
             })
           );
-          await updateUser(formData);
+          const payload = await updateUser(formData).unwrap();
+          dispatch(setUser(payload));
           ToastMessage({ message: "You have Subscribed!", type: "success" });
           router.push(`/list`);
         }
@@ -113,6 +116,10 @@ export default function CheckoutForm({
       }
     } catch (error) {
       console.log("error: ", error);
+      ToastMessage({
+        message: error.data?.message || error.shortMessage || error.message,
+        type: "error",
+      });
     }
   };
 
