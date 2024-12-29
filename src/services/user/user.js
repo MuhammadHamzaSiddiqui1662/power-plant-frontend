@@ -1,24 +1,14 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { BACKEND_URL } from "../../config/constants";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import baseQueryWithReauth from "..";
 
 export const userApi = createApi({
   reducerPath: "userApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${BACKEND_URL}/users`,
-    prepareHeaders: (headers, { getState }) => {
-      // By default, if we have a token in the store, let's use that for authenticated requests
-      const token = getState().auth.accessToken;
-      if (token) {
-        headers.set("authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithReauth,
   endpoints: (build) => ({
     getProfile: build.mutation({
       query(id) {
         return {
-          url: `/profile?id=${id}`,
+          url: `/users/profile?id=${id}`,
           method: "GET",
         };
       },
@@ -26,28 +16,28 @@ export const userApi = createApi({
     addReview: build.mutation({
       query(body) {
         return {
-          url: `/${body.userId}/${body.reviewType}/reviews`,
+          url: `/users/${body.userId}/${body.reviewType}/reviews`,
           method: "POST",
           body: body.data,
         };
       },
     }),
     getAllUsers: build.query({
-      query: (filter = "") => `/${filter}`,
+      query: (filter = "") => `/users/${filter}`,
     }),
     getUser: build.query({
-      query: (id) => `/${id}`,
+      query: (id) => `/users/${id}`,
     }),
     getBrokers: build.query({
-      query: (filter = "") => `/brokers/${filter}`,
+      query: (filter = "") => `/users/brokers/${filter}`,
     }),
     getInvestors: build.query({
-      query: (filter = "") => `/investors/${filter}`,
+      query: (filter = "") => `/users/investors/${filter}`,
     }),
     updateUser: build.mutation({
       query(body) {
         return {
-          url: `/`,
+          url: `/users`,
           method: "PUT",
           body,
         };
@@ -56,7 +46,7 @@ export const userApi = createApi({
     addCertificate: build.mutation({
       query(body) {
         return {
-          url: `${BACKEND_URL}/certificates`,
+          url: `/certificates`,
           method: "POST",
           body: body,
         };
@@ -65,7 +55,7 @@ export const userApi = createApi({
     deleteCertificate: build.mutation({
       query(id) {
         return {
-          url: `${BACKEND_URL}/certificates/${id}`,
+          url: `/certificates/${id}`,
           method: "DELETE",
         };
       },

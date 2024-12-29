@@ -1,33 +1,23 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { BACKEND_URL } from "../../config/constants";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import baseQueryWithReauth from "..";
 
 export const ipApi = createApi({
   reducerPath: "ipApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${BACKEND_URL}/ips`,
-    prepareHeaders: (headers, { getState }) => {
-      // By default, if we have a token in the store, let's use that for authenticated requests
-      const token = getState().auth.accessToken;
-      if (token) {
-        headers.set("authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithReauth,
   endpoints: (build) => ({
     getAll: build.query({
-      query: (filter = "") => `/${filter}`,
+      query: (filter = "") => `/ips/${filter}`,
     }),
     getIp: build.query({
-      query: (id) => `/${id}`,
+      query: (id) => `/ips/${id}`,
     }),
     getMyIps: build.query({
-      query: () => `/my-ips`,
+      query: () => `/ips/my-ips`,
     }),
     createIp: build.mutation({
       query(body) {
         return {
-          url: `/`,
+          url: `/ips`,
           method: "POST",
           body,
         };
@@ -36,7 +26,7 @@ export const ipApi = createApi({
     updateIp: build.mutation({
       query(body) {
         return {
-          url: `/`,
+          url: `/ips`,
           method: "PUT",
           body,
         };
@@ -45,7 +35,7 @@ export const ipApi = createApi({
     publishIp: build.mutation({
       query(body) {
         return {
-          url: `/${body.id}/publish`,
+          url: `/ips/${body.id}/publish`,
           method: "PUT",
           body,
         };

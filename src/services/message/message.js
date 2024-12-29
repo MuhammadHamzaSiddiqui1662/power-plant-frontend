@@ -1,24 +1,14 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { BACKEND_URL } from "../../config/constants";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import baseQueryWithReauth from "..";
 
 export const messageApi = createApi({
   reducerPath: "messageApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${BACKEND_URL}/messages`,
-    prepareHeaders: (headers, { getState }) => {
-      // By default, if we have a token in the store, let's use that for authenticated requests
-      const token = getState().auth.accessToken;
-      if (token) {
-        headers.set("authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithReauth,
   endpoints: (build) => ({
     messages: build.mutation({
       query(body) {
         return {
-          url: `/`,
+          url: `/messages`,
           method: "GET",
           body,
         };
@@ -27,7 +17,7 @@ export const messageApi = createApi({
     message: build.mutation({
       query(id) {
         return {
-          url: `/${id}`,
+          url: `/messages/${id}`,
           method: "GET",
         };
       },
@@ -35,7 +25,7 @@ export const messageApi = createApi({
     sendMessage: build.mutation({
       query(body) {
         return {
-          url: `/`,
+          url: `/messages`,
           method: "POST",
           body,
         };
@@ -44,16 +34,16 @@ export const messageApi = createApi({
     updateMessage: build.mutation({
       query(body) {
         return {
-          url: `/${body.id}`,
+          url: `/messages/${body.id}`,
           method: "PUT",
-          body:body.data,
+          body: body.data,
         };
       },
     }),
     deleteMessage: build.mutation({
       query(Id) {
         return {
-          url: `/${Id}`,
+          url: `/messages/${Id}`,
           method: "DELETE",
         };
       },

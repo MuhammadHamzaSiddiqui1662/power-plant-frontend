@@ -1,28 +1,18 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { BACKEND_URL } from "../../config/constants";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import baseQueryWithReauth from "..";
 
 export const hiringApi = createApi({
   reducerPath: "hiringApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${BACKEND_URL}/chats`,
-    prepareHeaders: (headers, { getState }) => {
-      // By default, if we have a token in the store, let's use that for authenticated requests
-      const token = getState().auth.accessToken;
-      if (token) {
-        headers.set("authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithReauth,
   endpoints: (build) => ({
     getHiringDetails: build.query({
-      query: (query) => `/hiring-details${query}`,
+      query: (query) => `/chats/hiring-details${query}`,
     }),
     getMyBrokers: build.query({
-      query: () => `/brokers`,
+      query: () => `/chats/brokers`,
     }),
     getMyInvestors: build.query({
-      query: () => `/investors`,
+      query: () => `/chats/investors`,
     }),
   }),
 });

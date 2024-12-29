@@ -27,6 +27,12 @@ const authSlice = createSlice({
       state.accessTokenExpiry = initialState.accessTokenExpiry;
       state.refreshTokenExpiry = initialState.refreshTokenExpiry;
     },
+    setAuthCreds: (state, action) => {
+      state.accessToken = action.payload.accessToken;
+      state.refreshToken = action.payload.refreshToken;
+      state.accessTokenExpiry = action.payload.accessTokenExpiry;
+      state.refreshTokenExpiry = action.payload.refreshTokenExpiry;
+    },
     setUserType: (state, action) => {
       state.userType = action.payload;
     },
@@ -69,14 +75,6 @@ const authSlice = createSlice({
         state.certificates = payload.certificates;
       }
     );
-    // builder.addMatcher(
-    //   userApi.endpoints.getUser.matchFulfilled,
-    //   (state, { payload }) => {
-    //     state.user = payload;
-    //     state.user.interests = payload.interests;
-    //     state.certificates = payload.certificates;
-    //   }
-    // );
     builder.addMatcher(
       authApi.endpoints.resetPassword.matchFulfilled,
       (state, { payload }) => {
@@ -90,6 +88,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout, setUserType } = authSlice.actions;
+export const { logout, setUserType, setAuthCreds } = authSlice.actions;
 
 export default authSlice.reducer;

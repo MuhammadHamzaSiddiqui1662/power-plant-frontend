@@ -19,7 +19,6 @@ export default function Home() {
   }, [currentIndex]);
 
   const handleRadioChange = (index) => {
-    console.log(index, "INDESISHEREE");
     setCurrentIndex(index);
   };
 

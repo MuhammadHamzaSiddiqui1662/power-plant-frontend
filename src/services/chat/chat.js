@@ -1,31 +1,20 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { BACKEND_URL } from "../../config/constants";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import baseQueryWithReauth from "..";
 
 export const chatApi = createApi({
   reducerPath: "chatApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${BACKEND_URL}/chats`,
-    prepareHeaders: (headers, { getState }) => {
-      // By default, if we have a token in the store, let's use that for authenticated requests
-      const token = getState().auth.accessToken;
-      console.log("token---->" + token);
-      if (token) {
-        headers.set("authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithReauth,
   endpoints: (build) => ({
     getMyChats: build.query({
-      query: (userType) => `/?userType=${userType}`,
+      query: (userType) => `/chats/?userType=${userType}`,
     }),
     getChatById: build.query({
-      query: (id) => `/${id}`,
+      query: (id) => `/chats/${id}`,
     }),
     chats: build.mutation({
       query(userType) {
         return {
-          url: `/?userType=${userType}`,
+          url: `/chats/?userType=${userType}`,
           method: "GET",
         };
       },
@@ -33,7 +22,7 @@ export const chatApi = createApi({
     chat: build.mutation({
       query(id) {
         return {
-          url: `/${id}`,
+          url: `/chats/${id}`,
           method: "GET",
         };
       },
@@ -41,7 +30,7 @@ export const chatApi = createApi({
     createChat: build.mutation({
       query(body) {
         return {
-          url: `/`,
+          url: `/chats/`,
           method: "POST",
           body,
         };
@@ -50,7 +39,7 @@ export const chatApi = createApi({
     updateChat: build.mutation({
       query(chat) {
         return {
-          url: `/${chat._id}`,
+          url: `/chats/${chat._id}`,
           method: "PUT",
           body: chat,
         };
@@ -59,7 +48,7 @@ export const chatApi = createApi({
     deleteChat: build.mutation({
       query(body) {
         return {
-          url: `/${id}`,
+          url: `/chats/${id}`,
           method: "DELETE",
           body,
         };
