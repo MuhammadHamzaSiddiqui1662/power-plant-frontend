@@ -81,7 +81,7 @@ export default function Welcome() {
                       categories={ip.categories}
                       price={ip.price}
                       patentNumber={ip.patentNumber}
-                      image={ip.image}
+                      image={ip.mainImage}
                     />
                   ))
                 ) : (
