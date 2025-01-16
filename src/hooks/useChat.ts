@@ -148,7 +148,7 @@ export const useChats = () => {
           receiverId: extractReceiver(chatDetails)._id,
         });
         fireServerNotification({
-          messages: "Close Deal request.",
+          message: "Close Deal request.",
           imageUrl: user.imageUrl,
           link: `/chat?chatId=${chatDetails._id}`,
           userId: extractReceiver(chatDetails)._id,
@@ -167,7 +167,7 @@ export const useChats = () => {
           senderId: user._id,
         });
         fireServerNotification({
-          messages: "Close Deal request rejected.",
+          message: "Close Deal request rejected.",
           imageUrl: user.imageUrl,
           link: `/chat?chatId=${chatId}`,
           userId: extractReceiver(chatDetails)._id,
@@ -176,7 +176,7 @@ export const useChats = () => {
         console.log(`error --> ${error}`);
       }
     },
-    [socket, user]
+    [socket, user, chatDetails, extractReceiver]
   );
 
   const handleCancelCloseDeal = useCallback(
@@ -186,7 +186,7 @@ export const useChats = () => {
           messageId,
         });
         fireServerNotification({
-          messages: "Close Deal request cancelled.",
+          message: "Close Deal request cancelled.",
           imageUrl: user.imageUrl,
           link: `/chat?chatId=${chatDetails._id}`,
           userId: extractReceiver(chatDetails)._id,
@@ -195,7 +195,7 @@ export const useChats = () => {
         console.log(`error --> ${error}`);
       }
     },
-    [socket]
+    [socket, user, chatDetails, extractReceiver]
   );
 
   const handleAcceptCloseDeal = useCallback(
@@ -214,14 +214,14 @@ export const useChats = () => {
         review,
       });
       fireServerNotification({
-        messages:
+        message:
           "Close Deal request accepted. Give your review about the deal.",
         imageUrl: user.imageUrl,
         link: `/chat?chatId=${chatDetails._id}`,
         userId: receiver._id,
       });
     },
-    [socket, chatDetails, extractReceiver]
+    [socket, user, chatDetails, extractReceiver]
   );
 
   const handleDealClosedListner = useCallback(() => {
@@ -253,13 +253,13 @@ export const useChats = () => {
         review,
       });
       fireServerNotification({
-        messages: "Deal closed.",
+        message: "Deal closed.",
         imageUrl: user.imageUrl,
         link: `/chat?chatId=${chatDetails._id}`,
         userId: receiver._id,
       });
     },
-    [socket, chatDetails, extractReceiver]
+    [socket, user, chatDetails, extractReceiver]
   );
 
   const handleReviewSubmit = useCallback(
@@ -267,7 +267,7 @@ export const useChats = () => {
       if (chatDetails.closed) handleCloseDeal(review);
       else handleAcceptCloseDeal(review);
     },
-    [chatDetails, handleAcceptCloseDeal]
+    [chatDetails, handleAcceptCloseDeal, handleCloseDeal]
   );
 
   const handleMessageRemovedListner = useCallback(() => {
