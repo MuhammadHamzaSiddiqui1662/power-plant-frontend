@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Power Plant",
   "private": true,
+  "author": {
+    "name": "Muhammad Hamza Siddiqui",
+    "email": "m.hamza1662@gmail.com"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
